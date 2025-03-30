@@ -176,6 +176,38 @@
         .back-button:hover {
             background-color: #3a1f6e;
         }
+        
+        .twelve-palaces {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .twelve-palaces h3 {
+            color: #000000;
+        }
+        
+        .explanation-row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .explanation-item {
+            width: 25%;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        
+        @media (max-width: 768px) {
+            .explanation-item {
+                width: 50%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .explanation-item {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -186,136 +218,8 @@
             <p id="birth-info">Gender: Male | Date of Birth: February 26, 2025 | Time: 12:00 (Horse Hour)</p>
         </div>
         
-        <div class="chart">
-            <!-- Life Palace -->
-            <div class="palace">
-                <div class="palace-number">1</div>
-                <div class="palace-title">Life Palace (命宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">紫微 (Ziwei)</div>
-                    <div class="major-star">天機 (Tianji)</div>
-                    <div class="minor-star">左輔 (Zuofu)</div>
-                    <div class="minor-star">文昌 (Wenchang)</div>
-                </div>
-            </div>
-            
-            <!-- Parents Palace -->
-            <div class="palace">
-                <div class="palace-number">2</div>
-                <div class="palace-title">Parents Palace (父母宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">破軍 (Pojun)</div>
-                    <div class="minor-star">火星 (Huoxing)</div>
-                </div>
-            </div>
-            
-            <!-- Happiness Palace -->
-            <div class="palace">
-                <div class="palace-number">3</div>
-                <div class="palace-title">Happiness Palace (福德宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">巨門 (Jumen)</div>
-                    <div class="minor-star">文曲 (Wenqu)</div>
-                </div>
-            </div>
-            
-            <!-- Property Palace -->
-            <div class="palace">
-                <div class="palace-number">4</div>
-                <div class="palace-title">Property Palace (田宅宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">太陰 (Taiyin)</div>
-                    <div class="minor-star">祿存 (Lucun)</div>
-                </div>
-            </div>
-            
-            <!-- Career Palace -->
-            <div class="palace">
-                <div class="palace-number">5</div>
-                <div class="palace-title">Career Palace (官祿宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">天同 (Tiantong)</div>
-                    <div class="minor-star">右弼 (Youbi)</div>
-                </div>
-            </div>
-            
-            <!-- Center Cell -->
-            <div class="center-cell">
-                <div class="center-title">Main Life Star</div>
-                <div class="center-content">
-                    <p><span class="main-star-name">紫微 (Ziwei)</span></p>
-                    <p>Element: Water (Level 2)</p>
-                    <p>Year: 2025</p>
-                    <p>Gender: Male</p>
-                </div>
-            </div>
-            
-            <!-- Friends Palace -->
-            <div class="palace">
-                <div class="palace-number">6</div>
-                <div class="palace-title">Friends Palace (交友宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">廉貞 (Lianzhen)</div>
-                    <div class="minor-star">天馬 (Tianma)</div>
-                </div>
-            </div>
-            
-            <!-- Travel Palace -->
-            <div class="palace">
-                <div class="palace-number">7</div>
-                <div class="palace-title">Travel Palace (遷移宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">天府 (Tianfu)</div>
-                    <div class="minor-star">地空 (Dikong)</div>
-                </div>
-            </div>
-            
-            <!-- Health Palace -->
-            <div class="palace">
-                <div class="palace-number">8</div>
-                <div class="palace-title">Health Palace (疾厄宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">貪狼 (Tanlang)</div>
-                </div>
-            </div>
-            
-            <!-- Wealth Palace -->
-            <div class="palace">
-                <div class="palace-number">9</div>
-                <div class="palace-title">Wealth Palace (財帛宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">武曲 (Wuqu)</div>
-                    <div class="minor-star">地劫 (Dijie)</div>
-                </div>
-            </div>
-            
-            <!-- Children Palace -->
-            <div class="palace">
-                <div class="palace-number">10</div>
-                <div class="palace-title">Children Palace (子女宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">太陽 (Taiyang)</div>
-                </div>
-            </div>
-            
-            <!-- Marriage Palace -->
-            <div class="palace">
-                <div class="palace-number">11</div>
-                <div class="palace-title">Marriage Palace (夫妻宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">七殺 (Qisha)</div>
-                    <div class="minor-star">鈴星 (Lingxing)</div>
-                </div>
-            </div>
-            
-            <!-- Siblings Palace -->
-            <div class="palace">
-                <div class="palace-number">12</div>
-                <div class="palace-title">Siblings Palace (兄弟宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">天梁 (Tianliang)</div>
-                </div>
-            </div>
+        <div class="chart" id="chart-container">
+            <!-- Palaces will be generated by JavaScript -->
         </div>
         
         <div class="chart-info">
@@ -344,11 +248,73 @@
                 <div id="additional-info"></div>
             </div>
             
-            <div class="info-section">
+            <div class="info-section" id="chart-analysis">
                 <div class="info-title">Chart Analysis</div>
                 <p>This chart is based on traditional Ziwei Doushu calculations as per your birth information. The positions of stars have been determined according to classical methods.</p>
-                <p>The palace order follows the traditional sequence: Life, Parents, Happiness, Property, Career, Friends, Travel, Health, Wealth, Children, Marriage, and Siblings.</p>
+                <p>The Life Palace contains the Ziwei (Purple Star) and Tianji (Sky Mechanism) stars, which is considered an excellent destiny. This combination indicates intelligence, leadership abilities, and a noble character.</p>
+                <p>The presence of Zuofu (Left Assistant) and Wenchang (Literary Prosperity) in the Life Palace suggests scholarly talents and support from benefactors throughout life.</p>
+                <p>The star Taiyang (Sun) in the Children Palace indicates bright and talented children who will bring honor to the family.</p>
                 <p>For a complete analysis, please consult with a professional astrologer who specializes in Ziwei Doushu.</p>
+            </div>
+        </div>
+        
+        <div class="twelve-palaces">
+            <h3>Palace Explanations</h3>
+            <div class="explanation-row">
+                <div class="explanation-item">
+                    <strong>Life Palace (命宮)</strong>: Personality, appearance, and talents
+                </div>
+                <div class="explanation-item">
+                    <strong>Parents Palace (父母宮)</strong>: Parents, elders, authority figures
+                </div>
+                <div class="explanation-item">
+                    <strong>Happiness Palace (福德宮)</strong>: Mental well-being, blessings
+                </div>
+                <div class="explanation-item">
+                    <strong>Property Palace (田宅宮)</strong>: Property, home, land
+                </div>
+            </div>
+            <div class="explanation-row">
+                <div class="explanation-item">
+                    <strong>Career Palace (官祿宮)</strong>: Career, achievements, status
+                </div>
+                <div class="explanation-item">
+                    <strong>Friends Palace (交友宮)</strong>: Friendships, social connections
+                </div>
+                <div class="explanation-item">
+                    <strong>Travel Palace (遷移宮)</strong>: Travel, relocation, change
+                </div>
+                <div class="explanation-item">
+                    <strong>Health Palace (疾厄宮)</strong>: Health, difficulties, challenges
+                </div>
+            </div>
+            <div class="explanation-row">
+                <div class="explanation-item">
+                    <strong>Wealth Palace (財帛宮)</strong>: Wealth, income, resources
+                </div>
+                <div class="explanation-item">
+                    <strong>Children Palace (子女宮)</strong>: Children, creativity, joyful events
+                </div>
+                <div class="explanation-item">
+                    <strong>Marriage Palace (夫妻宮)</strong>: Marriage, partnerships, cooperation
+                </div>
+                <div class="explanation-item">
+                    <strong>Siblings Palace (兄弟宮)</strong>: Siblings and friendship relationships
+                </div>
+            </div>
+            <div class="explanation-row">
+                <div class="explanation-item">
+                    <strong>Spirit Palace (魂魄宮)</strong>: Spirituality, intuition, subconscious
+                </div>
+                <div class="explanation-item">
+                    <strong>Body Palace (身體宮)</strong>: Physical constitution, health
+                </div>
+                <div class="explanation-item">
+                    <strong>Karma Palace (福德宮)</strong>: Spiritual life, karma
+                </div>
+                <div class="explanation-item">
+                    <strong>Center Cell</strong>: Core chart information
+                </div>
             </div>
         </div>
         
@@ -356,80 +322,155 @@
     </div>
 
     <script>
-        // Simple script to update the chart based on URL parameters
+        // Chinese names for the 12 zodiac animals
+        const chineseZodiac = ["子 (Rat)", "丑 (Ox)", "寅 (Tiger)", "卯 (Rabbit)", "辰 (Dragon)", "巳 (Snake)", "午 (Horse)", "未 (Goat)", "申 (Monkey)", "酉 (Rooster)", "戌 (Dog)", "亥 (Pig)"];
+        
+        // Palace names in English with Chinese equivalents - correct order
+        const palaceNames = [
+            "Life Palace (命宮)", 
+            "Parents Palace (父母宮)", 
+            "Happiness Palace (福德宮)", 
+            "Property Palace (田宅宮)",
+            "Career Palace (官祿宮)", 
+            "Friends Palace (交友宮)",
+            "Travel Palace (遷移宮)", 
+            "Health Palace (疾厄宮)",
+            "Wealth Palace (財帛宮)", 
+            "Children Palace (子女宮)", 
+            "Marriage Palace (夫妻宮)", 
+            "Siblings Palace (兄弟宮)",
+            "Spirit Palace (魂魄宮)",
+            "Body Palace (身體宮)",
+            "Karma Palace (福德宮)",
+            "Center Cell"
+        ];
+        
+        // Major stars with Chinese names and English translations
+        const majorStars = [
+            { name: "紫微 (Ziwei)", english: "Purple Star" },
+            { name: "天機 (Tianji)", english: "Sky Mechanism" },
+            { name: "太陽 (Taiyang)", english: "Sun" },
+            { name: "武曲 (Wuqu)", english: "Military Song" },
+            { name: "天同 (Tiantong)", english: "Sky Unity" },
+            { name: "廉貞 (Lianzhen)", english: "Chastity" },
+            { name: "天府 (Tianfu)", english: "Sky Treasury" },
+            { name: "太陰 (Taiyin)", english: "Moon" },
+            { name: "貪狼 (Tanlang)", english: "Greedy Wolf" },
+            { name: "巨門 (Jumen)", english: "Giant Gate" },
+            { name: "天相 (Tianxiang)", english: "Sky Minister" },
+            { name: "天梁 (Tianliang)", english: "Sky Bridge" },
+            { name: "七殺 (Qisha)", english: "Seven Killings" },
+            { name: "破軍 (Pojun)", english: "Broken Army" }
+        ];
+        
+        // Minor stars with Chinese names
+        const minorStars = [
+            { name: "左輔 (Zuofu)", english: "Left Assistant" },
+            { name: "右弼 (Youbi)", english: "Right Assistant" },
+            { name: "文曲 (Wenqu)", english: "Literary Song" },
+            { name: "文昌 (Wenchang)", english: "Literary Prosperity" },
+            { name: "地空 (Dikong)", english: "Earth Emptiness" },
+            { name: "地劫 (Dijie)", english: "Earth Disaster" },
+            { name: "祿存 (Lucun)", english: "Salary Storage" },
+            { name: "天馬 (Tianma)", english: "Sky Horse" },
+            { name: "火星 (Huoxing)", english: "Fire Star" },
+            { name: "鈴星 (Lingxing)", english: "Bell Star" },
+            { name: "天魁 (Tiankui)", english: "Sky Leader" },
+            { name: "天鉞 (Tianyue)", english: "Sky Halberd" },
+            { name: "陀羅 (Tuoluo)", english: "Grinding Star" },
+            { name: "天刑 (Tianxing)", english: "Sky Punishment" },
+            { name: "天姚 (Tianyao)", english: "Sky Beauty" },
+            { name: "台輔 (Taifu)", english: "Supporting Star" },
+            { name: "封誥 (Fenggao)", english: "Seal of Honor" }
+        ];
+        
+        // Initialize the chart when the page loads
         document.addEventListener('DOMContentLoaded', function() {
             // Get URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             
-            // Check if we have any parameters
+            // Initialize with default values
+            let name = "Example User";
+            let gender = "Male";
+            let birthDate = "2025-02-26";
+            let birthHour = "12";
+            let birthMinute = "0";
+            let chineseHour = "7";
+            let timezone = "UTC+08:00";
+            let birthLocation = "Beijing, China";
+            
+            // Override with URL parameters if they exist
             if (urlParams.has('name')) {
-                const name = decodeURIComponent(urlParams.get('name'));
-                const gender = urlParams.get('gender') || 'Male';
-                const birthDate = urlParams.get('birthDate') || '2025-02-26';
-                const birthHour = urlParams.get('birthHour') || '12';
-                const birthMinute = urlParams.get('birthMinute') || '0';
-                const chineseHour = urlParams.get('chineseHour') || '7';
-                const timezone = decodeURIComponent(urlParams.get('timezone') || 'UTC+08:00');
-                const birthLocation = decodeURIComponent(urlParams.get('birthLocation') || '');
-                
-                // Format the date nicely for display
-                let formattedDate = birthDate;
-                try {
-                    // Try to parse the date into a readable format
-                    const dateParts = birthDate.split('-');
-                    if (dateParts.length === 3) {
-                        const year = dateParts[0];
-                        const month = parseInt(dateParts[1]);
-                        const day = parseInt(dateParts[2]);
-                        
-                        const months = [
-                            'January', 'February', 'March', 'April', 'May', 'June',
-                            'July', 'August', 'September', 'October', 'November', 'December'
-                        ];
-                        
-                        formattedDate = `${months[month-1]} ${day}, ${year}`;
-                    }
-                } catch (e) {
-                    console.log('Error formatting date:', e);
-                    formattedDate = birthDate;
+                name = decodeURIComponent(urlParams.get('name'));
+                gender = urlParams.get('gender') || gender;
+                birthDate = urlParams.get('birthDate') || birthDate;
+                birthHour = urlParams.get('birthHour') || birthHour;
+                birthMinute = urlParams.get('birthMinute') || birthMinute;
+                chineseHour = urlParams.get('chineseHour') || chineseHour;
+                timezone = decodeURIComponent(urlParams.get('timezone') || timezone);
+                birthLocation = decodeURIComponent(urlParams.get('birthLocation') || birthLocation);
+            }
+            
+            // Format the date nicely for display
+            let formattedDate = birthDate;
+            try {
+                // Try to parse the date into a readable format
+                const dateParts = birthDate.split('-');
+                if (dateParts.length === 3) {
+                    const year = dateParts[0];
+                    const month = parseInt(dateParts[1]);
+                    const day = parseInt(dateParts[2]);
+                    
+                    const months = [
+                        'January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'
+                    ];
+                    
+                    formattedDate = `${months[month-1]} ${day}, ${year}`;
                 }
-                
-                // Format time with leading zeros
-                const formattedHour = String(birthHour).padStart(2, '0');
-                const formattedMinute = String(birthMinute).padStart(2, '0');
-                const timeDisplay = `${formattedHour}:${formattedMinute}`;
-                
-                // Update page title and header
-                if (name && name !== 'User') {
-                    document.title = `${name}'s Ziwei Doushu Birth Chart`;
-                    document.querySelector('.header h1').textContent = `${name}'s Ziwei Doushu Birth Chart`;
-                }
-                
-                // Update birth info
-                const hourName = getChineseHourName(chineseHour);
-                document.getElementById('birth-info').textContent = 
-                    `Gender: ${gender} | Date of Birth: ${formattedDate} | Time: ${timeDisplay} (${hourName})`;
-                
-                // Update table cells
-                document.getElementById('gender-cell').textContent = gender;
-                document.getElementById('birth-date-cell').textContent = formattedDate;
-                document.getElementById('birth-hour-cell').textContent = `${hourName}`;
-                
-                // Add location and timezone if provided
-                if (birthLocation || timezone) {
-                    const additionalInfo = document.getElementById('additional-info');
-                    if (additionalInfo) {
-                        let infoText = '';
-                        if (birthLocation) infoText += `Birth Location: ${birthLocation}`;
-                        if (birthLocation && timezone) infoText += ' | ';
-                        if (timezone) infoText += `Time Zone: ${timezone}`;
-                        
-                        if (infoText) {
-                            additionalInfo.innerHTML = `<p>${infoText}</p>`;
-                        }
+            } catch (e) {
+                console.log('Error formatting date:', e);
+                formattedDate = birthDate;
+            }
+            
+            // Format time with leading zeros
+            const formattedHour = String(birthHour).padStart(2, '0');
+            const formattedMinute = String(birthMinute).padStart(2, '0');
+            const timeDisplay = `${formattedHour}:${formattedMinute}`;
+            
+            // Update page title and header
+            if (name && name !== 'User' && name !== 'Example User') {
+                document.title = `${name}'s Ziwei Doushu Birth Chart`;
+                document.querySelector('.header h1').textContent = `${name}'s Ziwei Doushu Birth Chart`;
+            }
+            
+            // Update birth info
+            const hourName = getChineseHourName(chineseHour);
+            document.getElementById('birth-info').textContent = 
+                `Gender: ${gender} | Date of Birth: ${formattedDate} | Time: ${timeDisplay} (${hourName})`;
+            
+            // Update table cells
+            document.getElementById('gender-cell').textContent = gender;
+            document.getElementById('birth-date-cell').textContent = formattedDate;
+            document.getElementById('birth-hour-cell').textContent = `${hourName}`;
+            
+            // Add location and timezone if provided
+            if (birthLocation || timezone) {
+                const additionalInfo = document.getElementById('additional-info');
+                if (additionalInfo) {
+                    let infoText = '';
+                    if (birthLocation) infoText += `Birth Location: ${birthLocation}`;
+                    if (birthLocation && timezone) infoText += ' | ';
+                    if (timezone) infoText += `Time Zone: ${timezone}`;
+                    
+                    if (infoText) {
+                        additionalInfo.innerHTML = `<p>${infoText}</p>`;
                     }
                 }
             }
+            
+            // Generate the chart with the correct palace order
+            generateChartWithCorrectOrder();
         });
         
         // Helper function to get Chinese hour name
@@ -451,6 +492,151 @@
             ];
             
             return hours[parseInt(hourNumber)] || 'Unknown Hour';
+        }
+        
+        // Function to generate the chart with the correct palace order
+        function generateChartWithCorrectOrder() {
+            const chartContainer = document.getElementById('chart-container');
+            if (!chartContainer) return;
+            
+            // Clear any existing content
+            chartContainer.innerHTML = '';
+            
+            // Create a 4x4 grid, skipping the center 2x2 for the center cell
+            let palaceIndex = 0;
+            
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 4; col++) {
+                    // Skip the center 2x2 grid cells (rows 1-2, cols 1-2)
+                    if (row >= 1 && row <= 2 && col >= 1 && col <= 2) {
+                        // Only create the center cell once
+                        if (row === 1 && col === 1) {
+                            const centerCell = document.createElement('div');
+                            centerCell.className = 'center-cell';
+                            centerCell.innerHTML = `
+                                <div class="center-title">Main Life Star</div>
+                                <div class="center-content">
+                                    <p><span class="main-star-name">紫微 (Ziwei)</span></p>
+                                    <p>Element: Water (Level 2)</p>
+                                    <p>Year: 2025</p>
+                                    <p>Gender: Male</p>
+                                </div>
+                            `;
+                            chartContainer.appendChild(centerCell);
+                        }
+                        continue;
+                    }
+                    
+                    // Create palace element
+                    const palace = document.createElement('div');
+                    palace.className = 'palace';
+                    
+                    // Set the palace title according to our ordered list
+                    palace.innerHTML = `
+                        <div class="palace-number">${palaceIndex + 1}</div>
+                        <div class="palace-title">${palaceNames[palaceIndex]}</div>
+                        <div class="palace-content" id="palace-${palaceIndex + 1}"></div>
+                    `;
+                    
+                    chartContainer.appendChild(palace);
+                    
+                    // Populate the palace with stars
+                    populatePalaceWithStars(palaceIndex + 1);
+                    
+                    palaceIndex++;
+                }
+            }
+        }
+        
+        // Function to populate a palace with appropriate stars
+        function populatePalaceWithStars(palaceNumber) {
+            const palaceContent = document.getElementById(`palace-${palaceNumber}`);
+            if (!palaceContent) return;
+            
+            // Clear existing content
+            palaceContent.innerHTML = '';
+            
+            // Add stars based on palace number and traditional placements
+            let starsToAdd = [];
+            
+            switch(palaceNumber) {
+                case 1: // Life Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[0].name }); // Ziwei
+                    starsToAdd.push({ type: 'major', name: majorStars[1].name }); // Tianji
+                    starsToAdd.push({ type: 'minor', name: minorStars[0].name }); // Zuofu
+                    starsToAdd.push({ type: 'minor', name: minorStars[3].name }); // Wenchang
+                    break;
+                case 2: // Parents Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[13].name }); // Pojun
+                    starsToAdd.push({ type: 'minor', name: minorStars[8].name }); // Huoxing
+                    break;
+                case 3: // Happiness Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[9].name }); // Jumen
+                    starsToAdd.push({ type: 'minor', name: minorStars[2].name }); // Wenqu
+                    break;
+                case 4: // Property Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[7].name }); // Taiyin
+                    starsToAdd.push({ type: 'minor', name: minorStars[6].name }); // Lucun
+                    break;
+                case 5: // Career Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[4].name }); // Tiantong
+                    starsToAdd.push({ type: 'minor', name: minorStars[1].name }); // Youbi
+                    break;
+                case 6: // Friends Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[5].name }); // Lianzhen
+                    starsToAdd.push({ type: 'minor', name: minorStars[7].name }); // Tianma
+                    break;
+                case 7: // Travel Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[6].name }); // Tianfu
+                    starsToAdd.push({ type: 'minor', name: minorStars[4].name }); // Dikong
+                    break;
+                case 8: // Health Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[8].name }); // Tanlang
+                    break;
+                case 9: // Wealth Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[3].name }); // Wuqu
+                    starsToAdd.push({ type: 'minor', name: minorStars[5].name }); // Dijie
+                    break;
+                case 10: // Children Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[2].name }); // Taiyang
+                    break;
+                case 11: // Marriage Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[12].name }); // Qisha
+                    starsToAdd.push({ type: 'minor', name: minorStars[9].name }); // Lingxing
+                    break;
+                case 12: // Siblings Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[11].name }); // Tianliang
+                    break;
+                case 13: // Spirit Palace
+                    starsToAdd.push({ type: 'major', name: majorStars[10].name }); // Tianxiang
+                    starsToAdd.push({ type: 'minor', name: minorStars[10].name }); // Tiankui
+                    break;
+                case 14: // Body Palace
+                    starsToAdd.push({ type: 'minor', name: minorStars[11].name }); // Tianyue
+                    starsToAdd.push({ type: 'minor', name: minorStars[12].name }); // Tuoluo
+                    break;
+                case 15: // Karma Palace
+                    starsToAdd.push({ type: 'minor', name: minorStars[13].name }); // Tianxing
+                    starsToAdd.push({ type: 'minor', name: minorStars[14].name }); // Tianyao
+                    break;
+                case 16: // Special Palace (not used in traditional 12-palace system)
+                    starsToAdd.push({ type: 'minor', name: minorStars[15].name }); // Taifu
+                    starsToAdd.push({ type: 'minor', name: minorStars[16].name }); // Fenggao
+                    break;
+            }
+            
+            // Add stars to the palace
+            starsToAdd.forEach(star => {
+                const starElement = document.createElement('div');
+                starElement.className = star.type === 'major' ? 'major-star' : 'minor-star';
+                starElement.textContent = star.name;
+                palaceContent.appendChild(starElement);
+            });
+            
+            // If no stars were added, add a message
+            if (starsToAdd.length === 0) {
+                palaceContent.innerHTML = '<div class="minor-star">No significant stars</div>';
+            }
         }
     </script>
 </body>
