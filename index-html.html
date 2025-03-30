@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zi Wei Dou Shu Chart</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        #chart-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 4px;
+            margin-top: 20px;
+            height: 600px;
+        }
+        
+        .palace {
+            border: 1px solid #333;
+            padding: 10px;
+            background-color: #f9f9f9;
+            position: relative;
+            overflow: auto;
+        }
+        
+        .palace-header {
+            font-weight: bold;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .special-marker {
+            font-size: 0.85em;
+            color: #666;
+            margin-left: 5px;
+        }
+        
+        .star {
+            margin: 3px 0;
+        }
+        
+        .main-star {
+            color: #d63031;
+            font-weight: bold;
+        }
+        
+        .minor-star {
+            color: #0984e3;
+        }
+        
+        .birth-palace {
+            background-color: #fff8dc;
+        }
+        
+        .body-palace {
+            background-color: #e6f7ff;
+        }
+        
+        .fields {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .fields > div {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        /* Palace positions in the grid */
+        .palace-1 { grid-area: 2 / 2 / 3 / 3; }
+        .palace-2 { grid-area: 1 / 2 / 2 / 3; }
+        .palace-3 { grid-area: 1 / 3 / 2 / 4; }
+        .palace-4 { grid-area: 2 / 3 / 3 / 4; }
+        .palace-5 { grid-area: 3 / 3 / 4 / 4; }
+        .palace-6 { grid-area: 4 / 3 / 5 / 4; }
+        .palace-7 { grid-area: 4 / 2 / 5 / 3; }
+        .palace-8 { grid-area: 4 / 1 / 5 / 2; }
+        .palace-9 { grid-area: 3 / 1 / 4 / 2; }
+        .palace-10 { grid-area: 2 / 1 / 3 / 2; }
+        .palace-11 { grid-area: 1 / 1 / 2 / 2; }
+        .palace-12 { grid-area: 3 / 2 / 4 / 3; }
+        
+        .calculation-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Zi Wei Dou Shu Chart</h1>
+        
+        <div class="fields">
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="year">Year of Birth:</label>
+                <input type="number" id="year" min="1900" max="2100" value="2025">
+            </div>
+            
+            <div class="form-group">
+                <label for="month">Month of Birth:</label>
+                <select id="month">
+                    <option value="1">January</option>
+                    <option value="2" selected>February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="day">Day of Birth:</label>
+                <input type="number" id="day" min="1" max="31" value="11">
+            </div>
+            
+            <div class="form-group">
+                <label for="hour">Hour of Birth:</label>
+                <select id="hour">
+                    <option value="1">23:00-00:59 (Rat/子 Hour)</option>
+                    <option value="2">01:00-02:59 (Ox/丑 Hour)</option>
+                    <option value="3">03:00-04:59 (Tiger/寅 Hour)</option>
+                    <option value="4">05:00-06:59 (Rabbit/卯 Hour)</option>
+                    <option value="5">07:00-08:59 (Dragon/辰 Hour)</option>
+                    <option value="6" selected>09:00-10:59 (Snake/巳 Hour)</option>
+                    <option value="7">11:00-12:59 (Horse/午 Hour)</option>
+                    <option value="8">13:00-14:59
