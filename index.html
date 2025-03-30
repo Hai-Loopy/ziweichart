@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zi Wei Dou Shu Chart Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    label, input, select {
+      margin-bottom: 10px;
+      display: block;
+    }
+    #chart {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Zi Wei Dou Shu Chart Generator</h2>
+  <form id="chartForm">
+    <label for="birthDate">Birth Date (YYYY-MM-DD):</label>
+    <input type="date" id="birthDate" required>
+
+    <label for="birthTime">Birth Time (0-23):</label>
+    <input type="number" id="birthTime" min="0" max="23" required>
+
+    <label for="gender">Gender:</label>
+    <select id="gender" required>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+
+    <button type="submit">Generate Chart</button>
+  </form>
+
+  <div id="chart"></div>
+
+  <!-- Use a CDN-based module script -->
+  <script type="module">
+    import { astro } from 'https://unpkg.com/iztro@1.1.4/dist/index.esm.js';
+
+    document.getElementById('chartForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const birthDate = document.getElementById('birthDate').value;
+      const birthTime = parseInt(document.getElementById('birthTime').value, 10);
+      const gender = document.getElementById('gender').value;
+
+      if (!birthDate || isNaN(birthTime) || !gender) {
+        alert('Please fill in all fields correctly.');
+        return;
+      }
+
+      try {
+        const astrolabe = astro.bySolar(birthDate, birthTime, gender, true, 'en-US');
+        displayChart(astrolabe);
+      } catch (error) {
+        console.error('Error generating chart:', error);
+        alert('An error occurred while generating the chart. Please check your inputs and try again.');
+      }
+    });
+
+    function displayChart(astrolabe) {
+      const chartDiv = document.getElementById('chart');
+      chartDiv.innerHTML = '';
+
+      const pre = document.createElement('pre');
+      pre.textContent = JSON.stringify(astrolabe, null, 2);
+      chartDiv.appendChild(pre);
+    }
+  </script>
+</body>
+</html>
