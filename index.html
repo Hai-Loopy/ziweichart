@@ -141,6 +141,43 @@
             background-color: #f0f0f0;
             border-radius: 5px;
         }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        
+        .legend-color.main {
+            background-color: #d63031;
+        }
+        
+        .legend-color.minor {
+            background-color: #0984e3;
+        }
+        
+        .legend-color.birth {
+            background-color: #fff8dc;
+            border: 1px solid #ccc;
+        }
+        
+        .legend-color.body {
+            background-color: #e6f7ff;
+            border: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
@@ -194,4 +231,50 @@
                     <option value="5">07:00-08:59 (Dragon/辰 Hour)</option>
                     <option value="6" selected>09:00-10:59 (Snake/巳 Hour)</option>
                     <option value="7">11:00-12:59 (Horse/午 Hour)</option>
-                    <option value="8">13:00-14:59
+                    <option value="8">13:00-14:59 (Goat/未 Hour)</option>
+                    <option value="9">15:00-16:59 (Monkey/申 Hour)</option>
+                    <option value="10">17:00-18:59 (Rooster/酉 Hour)</option>
+                    <option value="11">19:00-20:59 (Dog/戌 Hour)</option>
+                    <option value="12">21:00-22:59 (Pig/亥 Hour)</option>
+                </select>
+            </div>
+        </div>
+        
+        <button id="generate-btn">Generate Chart</button>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color main"></div>
+                <span>Main Stars</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color minor"></div>
+                <span>Minor Stars</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color birth"></div>
+                <span>Birth Palace</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color body"></div>
+                <span>Body Palace</span>
+            </div>
+        </div>
+        
+        <div id="calculation-info" class="calculation-info">
+            <h3>Birth Information</h3>
+            <div id="birth-info"></div>
+            
+            <h3>Calculation Details</h3>
+            <div id="calculation-details"></div>
+        </div>
+        
+        <h2>Zi Wei Dou Shu Chart</h2>
+        <div id="chart-container">
+            <!-- Palace elements will be generated here -->
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
