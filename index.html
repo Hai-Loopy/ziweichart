@@ -1,56 +1,702 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lá Số Tử Vi - Cohoc Style</title>
-  <link rel="stylesheet" href="cohoc-tuvi-style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zi Wei Dou Shu Chart</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        #chart-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 4px;
+            margin-top: 20px;
+            height: 600px;
+        }
+        
+        .palace {
+            border: 1px solid #333;
+            padding: 10px;
+            background-color: #f9f9f9;
+            position: relative;
+            overflow: auto;
+        }
+        
+        .palace-header {
+            font-weight: bold;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .special-marker {
+            font-size: 0.85em;
+            color: #666;
+            margin-left: 5px;
+        }
+        
+        .star {
+            margin: 3px 0;
+        }
+        
+        .main-star {
+            color: #d63031;
+            font-weight: bold;
+        }
+        
+        .minor-star {
+            color: #0984e3;
+        }
+        
+        .birth-palace {
+            background-color: #fff8dc;
+        }
+        
+        .body-palace {
+            background-color: #e6f7ff;
+        }
+        
+        .fields {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .fields > div {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        /* Palace positions in the grid */
+        .palace-1 { grid-area: 2 / 2 / 3 / 3; }
+        .palace-2 { grid-area: 1 / 2 / 2 / 3; }
+        .palace-3 { grid-area: 1 / 3 / 2 / 4; }
+        .palace-4 { grid-area: 2 / 3 / 3 / 4; }
+        .palace-5 { grid-area: 3 / 3 / 4 / 4; }
+        .palace-6 { grid-area: 4 / 3 / 5 / 4; }
+        .palace-7 { grid-area: 4 / 2 / 5 / 3; }
+        .palace-8 { grid-area: 4 / 1 / 5 / 2; }
+        .palace-9 { grid-area: 3 / 1 / 4 / 2; }
+        .palace-10 { grid-area: 2 / 1 / 3 / 2; }
+        .palace-11 { grid-area: 1 / 1 / 2 / 2; }
+        .palace-12 { grid-area: 3 / 2 / 4 / 3; }
+        
+        .calculation-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        
+        .legend-color.main {
+            background-color: #d63031;
+        }
+        
+        .legend-color.minor {
+            background-color: #0984e3;
+        }
+        
+        .legend-color.birth {
+            background-color: #fff8dc;
+            border: 1px solid #ccc;
+        }
+        
+        .legend-color.body {
+            background-color: #e6f7ff;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Lá Số Tử Vi</h1>
-    
-    <div class="chart-form" id="chartForm">
-      <div class="form-group">
-        <label for="birthDate">Ngày Sinh:</label>
-        <input type="date" id="birthDate" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="birthTime">Giờ Sinh:</label>
-        <select id="birthTime" required>
-          <option value="0">Tý (23h-1h)</option>
-          <option value="2">Sửu (1h-3h)</option>
-          <option value="4">Dần (3h-5h)</option>
-          <option value="6">Mão (5h-7h)</option>
-          <option value="8">Thìn (7h-9h)</option>
-          <option value="10">Tỵ (9h-11h)</option>
-          <option value="12">Ngọ (11h-13h)</option>
-          <option value="14">Mùi (13h-15h)</option>
-          <option value="16">Thân (15h-17h)</option>
-          <option value="18">Dậu (17h-19h)</option>
-          <option value="20">Tuất (19h-21h)</option>
-          <option value="22">Hợi (21h-23h)</option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label for="gender">Giới Tính:</label>
-        <select id="gender" required>
-          <option value="male">Nam</option>
-          <option value="female">Nữ</option>
-        </select>
-      </div>
-      
-      <button type="submit">Xem Lá Số</button>
+    <div class="container">
+        <h1>Zi Wei Dou Shu Chart</h1>
+        
+        <div class="fields">
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="year">Year of Birth:</label>
+                <input type="number" id="year" min="1900" max="2100" value="2025">
+            </div>
+            
+            <div class="form-group">
+                <label for="month">Month of Birth:</label>
+                <select id="month">
+                    <option value="1">January</option>
+                    <option value="2" selected>February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="day">Day of Birth:</label>
+                <input type="number" id="day" min="1" max="31" value="11">
+            </div>
+            
+            <div class="form-group">
+                <label for="hour">Hour of Birth:</label>
+                <select id="hour">
+                    <option value="1">23:00-00:59 (Rat/子 Hour)</option>
+                    <option value="2">01:00-02:59 (Ox/丑 Hour)</option>
+                    <option value="3">03:00-04:59 (Tiger/寅 Hour)</option>
+                    <option value="4">05:00-06:59 (Rabbit/卯 Hour)</option>
+                    <option value="5">07:00-08:59 (Dragon/辰 Hour)</option>
+                    <option value="6" selected>09:00-10:59 (Snake/巳 Hour)</option>
+                    <option value="7">11:00-12:59 (Horse/午 Hour)</option>
+                    <option value="8">13:00-14:59 (Goat/未 Hour)</option>
+                    <option value="9">15:00-16:59 (Monkey/申 Hour)</option>
+                    <option value="10">17:00-18:59 (Rooster/酉 Hour)</option>
+                    <option value="11">19:00-20:59 (Dog/戌 Hour)</option>
+                    <option value="12">21:00-22:59 (Pig/亥 Hour)</option>
+                </select>
+            </div>
+        </div>
+        
+        <button id="generate-btn">Generate Chart</button>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color main"></div>
+                <span>Main Stars</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color minor"></div>
+                <span>Minor Stars</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color birth"></div>
+                <span>Birth Palace</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color body"></div>
+                <span>Body Palace</span>
+            </div>
+        </div>
+        
+        <div id="calculation-info" class="calculation-info">
+            <h3>Birth Information</h3>
+            <div id="birth-info"></div>
+            
+            <h3>Calculation Details</h3>
+            <div id="calculation-details"></div>
+        </div>
+        
+        <h2>Zi Wei Dou Shu Chart</h2>
+        <div id="chart-container">
+            <!-- Palace elements will be generated here -->
+        </div>
     </div>
 
-    <div class="chart-container">
-      <!-- Chart will be generated here -->
-    </div>
-  </div>
+    <script>
+        // ===== CALCULATION FUNCTIONS =====
 
-  <!-- JavaScript file -->
-  <script src="cohoc-tuvi-chart.js"></script>
-</body>
-</html>
+        /**
+         * Calculate the Chinese year data (Heavenly Stems and Earthly Branches)
+         * @param {number} year - The Gregorian year
+         * @returns {Object} Chinese calendar data
+         */
+        function calculateChineseCalendarData(year) {
+            const stemIndex = (year - 4) % 10;
+            const branchIndex = (year - 4) % 12;
+            
+            const stems = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+            const branches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+            
+            return {
+                stem: stems[stemIndex],
+                branch: branches[branchIndex],
+                stemIndex: stemIndex,
+                branchIndex: branchIndex,
+                yearCycle: `${stems[stemIndex]}${branches[branchIndex]}`
+            };
+        }
+
+        /**
+         * Calculate Birth Palace (命宫) Position
+         * @param {number} month - Month (1-12)
+         * @param {number} hour - Chinese double-hour (1-12)
+         * @returns {number} Birth Palace position (1-12)
+         */
+        function calculateBirthPalace(month, hour) {
+            // Birth Palace = (Month + Hour - 2) % 12
+            let position = (month + hour - 2) % 12;
+            if (position <= 0) position += 12;
+            
+            return position;
+        }
+
+        /**
+         * Calculate Body Palace (身宫) Position - Opposite to Birth Palace
+         * @param {number} birthPalace - Birth Palace position
+         * @returns {number} Body Palace position
+         */
+        function calculateBodyPalace(birthPalace) {
+            return ((birthPalace + 6 - 1) % 12) + 1;
+        }
+
+        /**
+         * Calculate Zi Wei Star Position based on Birth Day and Year Stem
+         * @param {number} day - Day of birth (1-30)
+         * @param {number} stemIndex - Heavenly Stem index (0-9)
+         * @returns {number} Zi Wei position (1-12)
+         */
+        function calculateZiWeiPosition(day, stemIndex) {
+            // These are the lookup tables for Zi Wei position based on the day and year stem
+            const ziWeiPositionTables = {
+                0: [11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4],
+                1: [9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2],
+                2: [7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                3: [5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                4: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8],
+                5: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6],
+                6: [11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4],
+                7: [9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2],
+                8: [7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                9: [5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            };
+            
+            // If day is out of bounds, default to day 1
+            const adjustedDay = (day >= 1 && day <= 30) ? day : 1;
+            const dayIndex = adjustedDay - 1;
+            
+            return ziWeiPositionTables[stemIndex][dayIndex];
+        }
+
+        /**
+         * Calculate positions of all main stars based on Zi Wei position
+         * @param {number} ziWeiPosition - Zi Wei star position
+         * @param {number} stemIndex - Heavenly Stem index
+         * @param {number} branchIndex - Earthly Branch index
+         * @returns {Object} Main stars positions
+         */
+        function calculateMainStars(ziWeiPosition, stemIndex, branchIndex) {
+            const stars = {};
+            
+            // Emperor Group stars (紫微垣)
+            stars.ziwei = ziWeiPosition;
+            stars.tianji = ((ziWeiPosition + 0) % 12) + 1;
+            stars.taiyang = ((ziWeiPosition + 2) % 12) + 1;
+            stars.wuqu = ((ziWeiPosition + 3) % 12) + 1;
+            stars.tiantong = ((ziWeiPosition + 4) % 12) + 1;
+            stars.lianzhen = ((ziWeiPosition + 6) % 12) + 1;
+            stars.tianxiang = ((ziWeiPosition + 8) % 12) + 1;
+            
+            // Calculate Tian Fu position (opposite to Zi Wei, with adjustment)
+            const tianFuPosition = ((ziWeiPosition + 4) % 12) + 1;
+            stars.tianfu = tianFuPosition;
+            
+            // Empress Group stars (天府垣)
+            stars.taiyin = ((tianFuPosition + 0) % 12) + 1;
+            stars.tanlang = ((tianFuPosition + 1) % 12) + 1;
+            stars.jumen = ((tianFuPosition + 2) % 12) + 1;
+            stars.tianliang = ((tianFuPosition + 4) % 12) + 1;
+            stars.qisha = ((tianFuPosition + 5) % 12) + 1;
+            stars.pojun = ((tianFuPosition + 9) % 12) + 1;
+            
+            return stars;
+        }
+
+        /**
+         * Calculate positions of important minor stars
+         * @param {number} birthPalace - Birth Palace position
+         * @param {number} stemIndex - Heavenly Stem index
+         * @param {number} branchIndex - Earthly Branch index
+         * @param {string} gender - Gender ('male' or 'female')
+         * @returns {Object} Minor stars positions
+         */
+        function calculateMinorStars(birthPalace, stemIndex, branchIndex, gender) {
+            const stars = {};
+            
+            // Left Assistant and Right Assistant
+            stars.zuofu = ((birthPalace + stemIndex - 1) % 12) + 1;
+            stars.youbi = ((birthPalace - stemIndex + 11) % 12) + 1;
+            
+            // Literary stars
+            stars.wenchang = ((birthPalace + 12 - branchIndex) % 12) + 1;
+            stars.wenqu = ((birthPalace + branchIndex - 1) % 12) + 1;
+            
+            // Gender-specific calculations
+            if (gender === 'female') {
+                // For female charts
+                stars.tiankui = [1, 3, 5, 7, 9][stemIndex % 5];
+                stars.tianyue = [11, 9, 7, 5, 3][stemIndex % 5];
+            } else {
+                // For male charts
+                stars.tiankui = [2, 4, 6, 8, 10][stemIndex % 5];
+                stars.tianyue = [12, 10, 8, 6, 4][stemIndex % 5];
+            }
+            
+            // Additional minor stars
+            stars.huagai = ((birthPalace + 11 - branchIndex) % 12) + 1;
+            stars.tianyao = ((birthPalace + branchIndex - 1) % 12) + 1;
+            stars.longchi = (((birthPalace + 4) % 12) + 1);
+            stars.fengge = (((birthPalace + 8) % 12) + 1);
+            
+            return stars;
+        }
+
+        /**
+         * Generate a complete Zi Wei Dou Shu chart
+         * @param {Object} birthData - Object containing birth information
+         * @returns {Object} Complete chart data
+         */
+        function generateZiWeiChart(birthData) {
+            const { year, month, day, hour, gender } = birthData;
+            
+            // 1. Calculate Chinese calendar data
+            const chineseData = calculateChineseCalendarData(year);
+            
+            // 2. Calculate birth palace
+            const birthPalace = calculateBirthPalace(month, hour);
+            
+            // 3. Calculate body palace
+            const bodyPalace = calculateBodyPalace(birthPalace);
+            
+            // 4. Calculate Zi Wei position
+            const ziWeiPosition = calculateZiWeiPosition(day, chineseData.stemIndex);
+            
+            // 5. Calculate main stars positions
+            const mainStars = calculateMainStars(ziWeiPosition, chineseData.stemIndex, chineseData.branchIndex);
+            
+            // 6. Calculate minor stars positions
+            const minorStars = calculateMinorStars(birthPalace, chineseData.stemIndex, chineseData.branchIndex, gender);
+            
+            // 7. Generate palace map
+            const palaces = {};
+            for (let i = 1; i <= 12; i++) {
+                palaces[i] = {
+                    position: i,
+                    isBirthPalace: (i === birthPalace),
+                    isBodyPalace: (i === bodyPalace),
+                    stars: {
+                        main: [],
+                        minor: []
+                    }
+                };
+            }
+            
+            // Assign main stars to palaces
+            for (const [key, position] of Object.entries(mainStars)) {
+                palaces[position].stars.main.push(key);
+            }
+            
+            // Assign minor stars to palaces
+            for (const [key, position] of Object.entries(minorStars)) {
+                palaces[position].stars.minor.push(key);
+            }
+            
+            return {
+                birthData,
+                chineseData,
+                birthPalace,
+                bodyPalace,
+                ziWeiPosition,
+                mainStars,
+                minorStars,
+                palaces
+            };
+        }
+
+        // ===== MAIN APPLICATION =====
+
+        // Star and palace name mappings (full Chinese characters)
+        const STAR_NAMES = {
+            // Main stars (14 major stars)
+            ziwei: '紫微',
+            tianji: '天機',
+            taiyang: '太陽',
+            wuqu: '武曲',
+            tianfu: '天府',
+            tianxiang: '天相',
+            lianzhen: '廉貞',
+            tiantong: '天同',
+            taiyin: '太陰',
+            tanlang: '貪狼',
+            jumen: '巨門',
+            tianliang: '天梁',
+            qisha: '七殺',
+            pojun: '破軍',
+            
+            // Minor stars
+            zuofu: '左輔',
+            youbi: '右弼',
+            wenchang: '文昌',
+            wenqu: '文曲',
+            tiankui: '天魁',
+            tianyue: '天鉞',
+            huagai: '華蓋',
+            tianyao: '天鑰',
+            longchi: '龍池',
+            fengge: '鳳閣'
+        };
+
+        // Palace names in correct order
+        const PALACE_NAMES = [
+            '命宮', '兄弟宮', '夫妻宮', '子女宮',
+            '財帛宮', '疾厄宮', '遷移宮', '交友宮',
+            '官祿宮', '田宅宮', '福德宮', '父母宮'
+        ];
+
+        class ZiWeiChart {
+            constructor() {
+                this.birthData = {
+                    year: 2025,  // Default values matching example
+                    month: 2,
+                    day: 11,
+                    hour: 6,    // 9:00-10:59 (Snake hour)
+                    gender: 'male'
+                };
+                
+                this.chartData = null;
+                this.initialize();
+            }
+            
+            /**
+             * Initialize the chart and UI
+             */
+            initialize() {
+                // Add event listeners to form inputs
+                document.getElementById('generate-btn').addEventListener('click', () => this.generateFromForm());
+                
+                // Initial chart generation
+                this.generate();
+                this.renderToHTML('chart-container');
+                this.displayCalculationDetails();
+            }
+            
+            /**
+             * Generate chart from form data
+             */
+            generateFromForm() {
+                const year = parseInt(document.getElementById('year').value || 2025);
+                const month = parseInt(document.getElementById('month').value || 2);
+                const day = parseInt(document.getElementById('day').value || 11);
+                const hour = parseInt(document.getElementById('hour').value || 6);
+                const gender = document.getElementById('gender').value || 'male';
+                
+                this.setBirthData({ year, month, day, hour, gender });
+            }
+            
+            /**
+             * Set birth data and generate chart
+             * @param {Object} birthData - Object containing birth information
+             */
+            setBirthData(birthData) {
+                this.birthData = {
+                    ...this.birthData,
+                    ...birthData
+                };
+                
+                this.generate();
+                this.renderToHTML('chart-container');
+                this.displayCalculationDetails();
+            }
+            
+            /**
+             * Generate the Zi Wei Dou Shu chart
+             */
+            generate() {
+                this.chartData = generateZiWeiChart(this.birthData);
+                return this.chartData;
+            }
+            
+            /**
+             * Get star name by key
+             * @param {string} key - Star key
+             * @returns {string} Star name
+             */
+            getStarName(key) {
+                return STAR_NAMES[key] || key;
+            }
+            
+            /**
+             * Get palace name by position
+             * @param {number} position - Palace position (1-12)
+             * @returns {string} Palace name
+             */
+            getPalaceName(position) {
+                return PALACE_NAMES[(position - 1) % 12];
+            }
+            
+            /**
+             * Render the chart to HTML
+             * @param {string} containerId - Container element ID
+             */
+            renderToHTML(containerId) {
+                if (!this.chartData) this.generate();
+                
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                
+                // Clear the container
+                container.innerHTML = '';
+                
+                // Create palace elements
+                for (let i = 1; i <= 12; i++) {
+                    const palace = this.chartData.palaces[i];
+                    const palaceElement = document.createElement('div');
+                    palaceElement.className = `palace palace-${i}`;
+                    if (palace.isBirthPalace) palaceElement.classList.add('birth-palace');
+                    if (palace.isBodyPalace) palaceElement.classList.add('body-palace');
+                    
+                    // Palace header
+                    const palaceHeader = document.createElement('div');
+                    palaceHeader.className = 'palace-header';
+                    palaceHeader.textContent = this.getPalaceName(i);
+                    
+                    // Add special markers for birth and body palaces
+                    if (palace.isBirthPalace || palace.isBodyPalace) {
+                        let specialText = '';
+                        if (palace.isBirthPalace) specialText += '命宮 ';
+                        if (palace.isBodyPalace) specialText += '身宮';
+                        
+                        const specialMarker = document.createElement('span');
+                        specialMarker.className = 'special-marker';
+                        specialMarker.textContent = specialText;
+                        palaceHeader.appendChild(specialMarker);
+                    }
+                    
+                    palaceElement.appendChild(palaceHeader);
+                    
+                    // Main stars
+                    if (palace.stars.main.length > 0) {
+                        const mainStarsContainer = document.createElement('div');
+                        mainStarsContainer.className = 'main-stars';
+                        
+                        palace.stars.main.forEach(starKey => {
+                            const starElement = document.createElement('div');
+                            starElement.className = 'star main-star';
+                            starElement.textContent = this.getStarName(starKey);
+                            mainStarsContainer.appendChild(starElement);
+                        });
+                        
+                        palaceElement.appendChild(mainStarsContainer);
+                    }
+                    
+                    // Minor stars
+                    if (palace.stars.minor.length > 0) {
+                        const minorStarsContainer = document.createElement('div');
+                        minorStarsContainer.className = 'minor-stars';
+                        
+                        palace.stars.minor.forEach(starKey => {
+                            const starElement = document.createElement('div');
+                            starElement.className = 'star minor-star';
+                            starElement.textContent = this.getStarName(starKey);
+                            minorStarsContainer.appendChild(starElement);
+                        });
+                        
+                        palaceElement.appendChild(minorStarsContainer);
+                    }
+                    
+                    container.appendChild(palaceElement);
+                }
+            }
+            
+            /**
+             * Display calculation details in the info section
+             */
+            displayCalculationDetails() {
+                if (!this.chartData) return;
+                
+                const birthInfoElement = document.getElementById('birth-info');
+                const calculationElement = document.getElementById('calculation-details');
+                
+                if (!birthInfoElement || !calculationElement) return;
+                
+                // Display birth information
+                const hourOptions = document.getElementById('hour').options;
+                const hourText = hourOptions ? hourOptions[this.birthData.hour-1].text : '';
+                
+                birthInfoElement.innerHTML = `
+                    <p><strong>Date:</strong> ${this.birthData.year}-${this.birthData.month}-${this.birthData.day}</p>
+                    <p><strong>Hour:</strong> ${hourText || `Hour ${this.birthData.hour}`}</p>
+                    <p><strong>Gender:</strong> ${this.birthData.gender === 'male' ? 'Male' : 'Female'}</p>
+                    <p><strong>Chinese Year:</strong> ${this.chartData.chineseData.yearCycle}
