@@ -715,4 +715,14 @@
             /**
              * Display calculation details in the info section
              */
-            displayCalculationDetails
+            displayCalculationDetails() {
+                if (!this.chartData) return;
+                
+                const birthInfoElement = document.getElementById('birth-info');
+                const calculationElement = document.getElementById('calculation-details');
+                
+                if (!birthInfoElement || !calculationElement) return;
+                
+                // Display birth information
+                const hourOptions = document.getElementById('hour').options;
+                const hourText = hourOptions ? hourOptions[this.
