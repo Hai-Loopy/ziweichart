@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Lá Số Tử Vi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Lá Số Tử Vi</h1>
+
+    <div class="chart-grid">
+      <div class="palace">Mệnh (命宮)</div>
+      <div class="palace">Phụ Mẫu (父母宮)</div>
+      <div class="palace">Phúc Đức (福德宮)</div>
+      <div class="palace">Điền Trạch (田宅宮)</div>
+      <div class="palace">Quan Lộc (官祿宮)</div>
+      <div class="palace">Nô Bộc (奴僕宮)</div>
+      <div class="palace">Thiên Di (遷移宮)</div>
+      <div class="palace">Tật Ách (疾厄宮)</div>
+      <div class="palace">Tài Bạch (財帛宮)</div>
+      <div class="palace">Tử Tức (子女宮)</div>
+      <div class="palace">Phu Thê (夫妻宮)</div>
+      <div class="palace">Huynh Đệ (兄弟宮)</div>
+    </div>
+
+    <form id="chartForm">
+      <label>Ngày Sinh:
+        <input type="date" id="birthDate" required>
+      </label>
+      <label>Giờ Sinh:
+        <select id="birthTime" required>
+          <option value="0">0h-1h</option>
+          <option value="1">1h-3h</option>
+          <option value="3">3h-5h</option>
+          <option value="5">5h-7h</option>
+          <option value="7">7h-9h</option>
+          <option value="9">9h-11h</option>
+          <option value="11">11h-13h</option>
+          <option value="13">13h-15h</option>
+          <option value="15">15h-17h</option>
+          <option value="17">17h-19h</option>
+          <option value="19">19h-21h</option>
+          <option value="21">21h-23h</option>
+        </select>
+      </label>
+      <label>Giới Tính:
+        <select id="gender" required>
+          <option value="male">Nam</option>
+          <option value="female">Nữ</option>
+        </select>
+      </label>
+      <button type="submit">Xem Lá Số</button>
+    </form>
+
+    <div class="chart-details"></div>
+  </div>
+
+  <script src="chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/iztro@1.1.4/dist/index.umd.js"></script>
+</body>
+</html>

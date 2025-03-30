@@ -1,0 +1,49 @@
+
+body {
+  font-family: Arial, serif;
+  background-color: #f9f4e7;
+  color: #333;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  text-align: center;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.palace {
+  border: 1px solid #a58c6e;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+form label {
+  display: inline-block;
+  margin-right: 15px;
+}
+
+button {
+  background-color: #c0392b;
+  color: #fff;
+  border: none;
+  padding: 5px 15px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+button:hover {
+  background-color: #a93226;
+}
