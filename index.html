@@ -3,16 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lá Số Tử Vi</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Load iztro before our script -->
-  <script src="https://cdn.jsdelivr.net/npm/iztro@1.1.4/dist/index.umd.js"></script>
+  <title>Lá Số Tử Vi - Cohoc Style</title>
+  <link rel="stylesheet" href="cohoc-tuvi-style.css">
 </head>
 <body>
   <div class="container">
     <h1>Lá Số Tử Vi</h1>
     
-    <form id="chartForm">
+    <div class="chart-form" id="chartForm">
       <div class="form-group">
         <label for="birthDate">Ngày Sinh:</label>
         <input type="date" id="birthDate" required>
@@ -22,17 +20,17 @@
         <label for="birthTime">Giờ Sinh:</label>
         <select id="birthTime" required>
           <option value="0">Tý (23h-1h)</option>
-          <option value="1">Sửu (1h-3h)</option>
-          <option value="3">Dần (3h-5h)</option>
-          <option value="5">Mão (5h-7h)</option>
-          <option value="7">Thìn (7h-9h)</option>
-          <option value="9">Tỵ (9h-11h)</option>
-          <option value="11">Ngọ (11h-13h)</option>
-          <option value="13">Mùi (13h-15h)</option>
-          <option value="15">Thân (15h-17h)</option>
-          <option value="17">Dậu (17h-19h)</option>
-          <option value="19">Tuất (19h-21h)</option>
-          <option value="21">Hợi (21h-23h)</option>
+          <option value="2">Sửu (1h-3h)</option>
+          <option value="4">Dần (3h-5h)</option>
+          <option value="6">Mão (5h-7h)</option>
+          <option value="8">Thìn (7h-9h)</option>
+          <option value="10">Tỵ (9h-11h)</option>
+          <option value="12">Ngọ (11h-13h)</option>
+          <option value="14">Mùi (13h-15h)</option>
+          <option value="16">Thân (15h-17h)</option>
+          <option value="18">Dậu (17h-19h)</option>
+          <option value="20">Tuất (19h-21h)</option>
+          <option value="22">Hợi (21h-23h)</option>
         </select>
       </div>
       
@@ -45,30 +43,14 @@
       </div>
       
       <button type="submit">Xem Lá Số</button>
-    </form>
-
-    <div class="chart-container">
-      <h2>Lá Số</h2>
-      <div class="chart-grid">
-        <div class="palace palace-0" data-index="0">Mệnh (命宮)</div>
-        <div class="palace palace-1" data-index="1">Phụ Mẫu (父母宮)</div>
-        <div class="palace palace-2" data-index="2">Phúc Đức (福德宮)</div>
-        <div class="palace palace-3" data-index="3">Điền Trạch (田宅宮)</div>
-        <div class="palace palace-4" data-index="4">Quan Lộc (官祿宮)</div>
-        <div class="palace palace-5" data-index="5">Nô Bộc (奴僕宮)</div>
-        <div class="palace palace-6" data-index="6">Thiên Di (遷移宮)</div>
-        <div class="palace palace-7" data-index="7">Tật Ách (疾厄宮)</div>
-        <div class="palace palace-8" data-index="8">Tài Bạch (財帛宮)</div>
-        <div class="palace palace-9" data-index="9">Tử Tức (子女宮)</div>
-        <div class="palace palace-10" data-index="10">Phu Thê (夫妻宮)</div>
-        <div class="palace palace-11" data-index="11">Huynh Đệ (兄弟宮)</div>
-      </div>
     </div>
 
-    <div class="chart-details"></div>
+    <div class="chart-container">
+      <!-- Chart will be generated here -->
+    </div>
   </div>
 
-  <!-- Load our script after iztro and DOM are ready -->
-  <script src="chart.js"></script>
+  <!-- JavaScript file -->
+  <script src="cohoc-tuvi-chart.js"></script>
 </body>
 </html>
