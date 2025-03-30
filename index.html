@@ -178,6 +178,16 @@
             background-color: #e6f7ff;
             border: 1px solid #ccc;
         }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nav-buttons button {
+            width: 48%;
+        }
     </style>
 </head>
 <body>
@@ -272,6 +282,11 @@
         <h2>Zi Wei Dou Shu Chart</h2>
         <div id="chart-container">
             <!-- Palace elements will be generated here -->
+        </div>
+        
+        <div class="nav-buttons">
+            <button id="birth-chart-btn">Go to Birth Chart Generator</button>
+            <button id="reset-btn">Reset Chart</button>
         </div>
     </div>
 
@@ -545,6 +560,10 @@
             initialize() {
                 // Add event listeners to form inputs
                 document.getElementById('generate-btn').addEventListener('click', () => this.generateFromForm());
+                document.getElementById('reset-btn').addEventListener('click', () => this.resetForm());
+                document.getElementById('birth-chart-btn').addEventListener('click', () => {
+                    window.location.href = 'birth-chart.html';
+                });
                 
                 // Initial chart generation
                 this.generate();
@@ -563,6 +582,19 @@
                 const gender = document.getElementById('gender').value || 'male';
                 
                 this.setBirthData({ year, month, day, hour, gender });
+            }
+            
+            /**
+             * Reset the form to default values
+             */
+            resetForm() {
+                document.getElementById('year').value = 2025;
+                document.getElementById('month').value = 2;
+                document.getElementById('day').value = 11;
+                document.getElementById('hour').value = 6;
+                document.getElementById('gender').value = 'male';
+                
+                this.generateFromForm();
             }
             
             /**
@@ -683,20 +715,4 @@
             /**
              * Display calculation details in the info section
              */
-            displayCalculationDetails() {
-                if (!this.chartData) return;
-                
-                const birthInfoElement = document.getElementById('birth-info');
-                const calculationElement = document.getElementById('calculation-details');
-                
-                if (!birthInfoElement || !calculationElement) return;
-                
-                // Display birth information
-                const hourOptions = document.getElementById('hour').options;
-                const hourText = hourOptions ? hourOptions[this.birthData.hour-1].text : '';
-                
-                birthInfoElement.innerHTML = `
-                    <p><strong>Date:</strong> ${this.birthData.year}-${this.birthData.month}-${this.birthData.day}</p>
-                    <p><strong>Hour:</strong> ${hourText || `Hour ${this.birthData.hour}`}</p>
-                    <p><strong>Gender:</strong> ${this.birthData.gender === 'male' ? 'Male' : 'Female'}</p>
-                    <p><strong>Chinese Year:</strong> ${this.chartData.chineseData.yearCycle}
+            displayCalculationDetails
