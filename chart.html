@@ -6,109 +6,148 @@
     <title>Ziwei Doushu Birth Chart</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
+            font-family: "SimSun", "NSimSun", "FangSong", Arial, sans-serif;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 20px;
-            color: #000000;
+            color: #333;
         }
         
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            background-color: #ffffff;
-            border: 2px solid #000000;
-            border-radius: 5px;
-            padding: 15px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .header {
             text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #000000;
-            padding-bottom: 10px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
         }
         
         .header h1 {
-            color: #000000;
+            color: #333;
             font-size: 28px;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
         
         .header p {
             margin: 5px 0;
             font-size: 16px;
+            color: #666;
+        }
+        
+        /* Chart styles based on react-iztro */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin: 0 auto 30px;
         }
         
         .chart {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 4px;
+            aspect-ratio: 1/1;
         }
         
         .palace {
-            border: 2px solid #000000;
-            padding: 10px;
-            min-height: 140px;
+            border: 1px solid #d1d1d1;
+            background-color: #fff;
+            padding: 8px;
             position: relative;
-            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
         }
         
         .palace-title {
             text-align: center;
-            color: #000000;
             font-weight: bold;
-            padding: 4px;
-            border-bottom: 1px solid #000000;
-            margin-bottom: 10px;
-            font-size: 16px;
+            padding: 4px 0;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 6px;
+            font-size: 15px;
         }
         
         .palace-content {
-            font-size: 14px;
-            line-height: 1.5;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            font-size: 13px;
+            line-height: 1.4;
         }
         
         .major-star {
-            color: #ff0000;
+            color: #d81e06;
             font-weight: bold;
             margin: 2px 0;
         }
         
         .minor-star {
-            color: #000000;
-            margin: 2px 0;
+            color: #333;
+            margin: 1px 0;
         }
         
         .palace-number {
             position: absolute;
             top: 2px;
             right: 5px;
-            font-size: 12px;
-            color: #000000;
+            font-size: 11px;
+            color: #999;
         }
         
+        .center-cell {
+            grid-column: 2 / span 2;
+            grid-row: 2 / span 2;
+            background-color: #f9f9f9;
+            border: 1px solid #d1d1d1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .center-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .center-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .main-star-name {
+            color: #d81e06;
+            font-weight: bold;
+        }
+        
+        /* Information section */
         .chart-info {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #000000;
-            background-color: #ffffff;
-            border-radius: 5px;
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
         }
         
         .info-section {
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
         
         .info-title {
-            color: #000000;
+            font-size: 18px;
             font-weight: bold;
-            margin-bottom: 5px;
-            border-bottom:.5px solid #000000;
-            padding-bottom: 2px;
+            margin-bottom: 15px;
+            color: #333;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
         }
         
         table {
@@ -118,63 +157,61 @@
         }
         
         table, th, td {
-            border: 1px solid #000000;
+            border: 1px solid #ddd;
         }
         
         th, td {
-            padding: 8px;
+            padding: 10px;
             text-align: left;
         }
         
         th {
             background-color: #f5f5f5;
-            color: #000000;
-        }
-        
-        .center-cell {
-            grid-column: 2 / span 2;
-            grid-row: 2 / span 2;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background-color: #f5f5f5;
-            border: 2px solid #000000;
-        }
-        
-        .center-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #000000;
-            margin-bottom: 10px;
-        }
-        
-        .center-content {
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        
-        .main-star-name {
-            color: #ff0000;
             font-weight: bold;
         }
         
+        /* Navigation button */
         .back-button {
-            display: block;
+            display: inline-block;
             background-color: #4a2882;
             color: white;
             text-align: center;
             padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 4px;
             text-decoration: none;
-            margin: 20px auto;
-            width: 200px;
-            font-weight: bold;
+            font-weight: 500;
+            margin-top: 20px;
+            transition: background-color 0.2s;
         }
         
         .back-button:hover {
             background-color: #3a1f6e;
+        }
+        
+        /* Additional palace styling to match react-iztro */
+        .palace-zodiac {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            font-size: 11px;
+            color: #666;
+        }
+        
+        /* Star containers */
+        .star-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -183,137 +220,175 @@
         <div class="header">
             <h1>Ziwei Doushu Birth Chart</h1>
             <p>Purple Star Astrology Chart</p>
-            <p>Gender: Male | Date of Birth: February 26, 2025 | Time: 12:00 (Horse Hour)</p>
+            <p id="birth-info">Gender: Male | Date of Birth: February 26, 2025 | Time: 12:00 (Horse Hour)</p>
         </div>
         
-        <div class="chart">
-            <!-- Life Palace -->
-            <div class="palace">
-                <div class="palace-number">1</div>
-                <div class="palace-title">Life Palace (命宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">紫微 (Ziwei)</div>
-                    <div class="major-star">天機 (Tianji)</div>
-                    <div class="minor-star">左輔 (Zuofu)</div>
-                    <div class="minor-star">文昌 (Wenchang)</div>
+        <div class="chart-container">
+            <div class="chart">
+                <!-- Life Palace -->
+                <div class="palace">
+                    <span class="palace-zodiac">子 (Rat)</span>
+                    <div class="palace-number">1</div>
+                    <div class="palace-title">Life Palace (命宮)</div>
+                    <div class="palace-content">
+                        <div class="star-container">
+                            <div class="major-star">紫微 (Ziwei)</div>
+                            <div class="major-star">天機 (Tianji)</div>
+                            <div class="minor-star">左輔 (Zuofu)</div>
+                            <div class="minor-star">文昌 (Wenchang)</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Parents Palace -->
-            <div class="palace">
-                <div class="palace-number">2</div>
-                <div class="palace-title">Parents Palace (父母宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">破軍 (Pojun)</div>
-                    <div class="minor-star">火星 (Huoxing)</div>
+                
+                <!-- Parents Palace -->
+                <div class="palace">
+                    <span class="palace-zodiac">丑 (Ox)</span>
+                    <div class="palace-number">2</div>
+                    <div class="palace-title">Parents Palace (父母宮)</div>
+                    <div class="palace-content">
+                        <div class="star-container">
+                            <div class="major-star">破軍 (Pojun)</div>
+                            <div class="minor-star">火星 (Huoxing)</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Happiness Palace -->
-            <div class="palace">
-                <div class="palace-number">3</div>
-                <div class="palace-title">Happiness Palace (福德宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">巨門 (Jumen)</div>
-                    <div class="minor-star">文曲 (Wenqu)</div>
+                
+                <!-- Happiness Palace -->
+                <div class="palace">
+                    <span class="palace-zodiac">寅 (Tiger)</span>
+                    <div class="palace-number">3</div>
+                    <div class="palace-title">Happiness Palace (福德宮)</div>
+                    <div class="palace-content">
+                        <div class="star-container">
+                            <div class="major-star">巨門 (Jumen)</div>
+                            <div class="minor-star">文曲 (Wenqu)</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Property Palace -->
-            <div class="palace">
-                <div class="palace-number">4</div>
-                <div class="palace-title">Property Palace (田宅宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">太陰 (Taiyin)</div>
-                    <div class="minor-star">祿存 (Lucun)</div>
+                
+                <!-- Property Palace -->
+                <div class="palace">
+                    <span class="palace-zodiac">卯 (Rabbit)</span>
+                    <div class="palace-number">4</div>
+                    <div class="palace-title">Property Palace (田宅宮)</div>
+                    <div class="palace-content">
+                        <div class="star-container">
+                            <div class="major-star">太陰 (Taiyin)</div>
+                            <div class="minor-star">祿存 (Lucun)</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Career Palace -->
-            <div class="palace">
-                <div class="palace-number">5</div>
-                <div class="palace-title">Career Palace (官祿宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">天同 (Tiantong)</div>
-                    <div class="minor-star">右弼 (Youbi)</div>
+                
+                <!-- Career Palace -->
+                <div class="palace">
+                    <span class="palace-zodiac">辰 (Dragon)</span>
+                    <div class="palace-number">5</div>
+                    <div class="palace-title">Career Palace (官祿宮)</div>
+                    <div class="palace-content">
+                        <div class="star-container">
+                            <div class="major-star">天同 (Tiantong)</div>
+                            <div class="minor-star">右弼 (Youbi)</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Center Cell -->
-            <div class="center-cell">
-                <div class="center-title">Main Life Star</div>
-                <div class="center-content">
-                    <p><span class="main-star-name">紫微 (Ziwei)</span></p>
-                    <p>Element: Water (Level 2)</p>
-                    <p>Year: 2025</p>
-                    <p>Gender: Male</p>
+                
+                <!-- Center Cell -->
+                <div class="center-cell">
+                    <div class="center-title">Birth Information</div>
+                    <div class="center-content">
+                        <p>Main Star: <span class="main-star-name">紫微 (Ziwei)</span></p>
+                        <p>Element: Water (Level 2)</p>
+                        <p>Birth Year: 2025 (乙巳)</p>
+                        <p>Gender: Male</p>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Friends Palace -->
-            <div class="palace">
-                <div class="palace-number">6</div>
-                <div class="palace-title">Friends Palace (交友宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">廉貞 (Lianzhen)</div>
-                    <div class="minor-star">天馬 (Tianma)</div>
+                
+                <!-- Friends Palace -->
+                <div class="palace">
+                    <span class="palace-zodiac">巳 (Snake)</span>
+                    <div class="palace-number">6</div>
+                    <div class="palace-title">Friends Palace (交友宮)</div>
+                    <div class="palace-content">
+                        <div class="star-container">
+                            <div class="major-star">廉貞 (Lianzhen)</div>
+                            <div class="minor-star">天馬 (Tianma)</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Travel Palace -->
-            <div class="palace">
-                <div class="palace-number">7</div>
-                <div class="palace-title">Travel Palace (遷移宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">天府 (Tianfu)</div>
-                    <div class="minor-star">地空 (Dikong)</div>
+                
+                <!-- Travel Palace -->
+                <div class="palace">
+                    <span class="palace-zodiac">午 (Horse)</span>
+                    <div class="palace-number">7</div>
+                    <div class="palace-title">Travel Palace (遷移宮)</div>
+                    <div class="palace-content">
+                        <div class="star-container">
+                            <div class="major-star">天府 (Tianfu)</div>
+                            <div class="minor-star">地空 (Dikong)</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Health Palace -->
-            <div class="palace">
-                <div class="palace-number">8</div>
-                <div class="palace-title">Health Palace (疾厄宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">貪狼 (Tanlang)</div>
+                
+                <!-- Health Palace -->
+                <div class="palace">
+                    <span class="palace-zodiac">未 (Goat)</span>
+                    <div class="palace-number">8</div>
+                    <div class="palace-title">Health Palace (疾厄宮)</div>
+                    <div class="palace-content">
+                        <div class="star-container">
+                            <div class="major-star">貪狼 (Tanlang)</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Wealth Palace -->
-            <div class="palace">
-                <div class="palace-number">9</div>
-                <div class="palace-title">Wealth Palace (財帛宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">武曲 (Wuqu)</div>
-                    <div class="minor-star">地劫 (Dijie)</div>
+                
+                <!-- Wealth Palace -->
+                <div class="palace">
+                    <span class="palace-zodiac">申 (Monkey)</span>
+                    <div class="palace-number">9</div>
+                    <div class="palace-title">Wealth Palace (財帛宮)</div>
+                    <div class="palace-content">
+                        <div class="star-container">
+                            <div class="major-star">武曲 (Wuqu)</div>
+                            <div class="minor-star">地劫 (Dijie)</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Children Palace -->
-            <div class="palace">
-                <div class="palace-number">10</div>
-                <div class="palace-title">Children Palace (子女宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">太陽 (Taiyang)</div>
+                
+                <!-- Children Palace -->
+                <div class="palace">
+                    <span class="palace-zodiac">酉 (Rooster)</span>
+                    <div class="palace-number">10</div>
+                    <div class="palace-title">Children Palace (子女宮)</div>
+                    <div class="palace-content">
+                        <div class="star-container">
+                            <div class="major-star">太陽 (Taiyang)</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Marriage Palace -->
-            <div class="palace">
-                <div class="palace-number">11</div>
-                <div class="palace-title">Marriage Palace (夫妻宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">七殺 (Qisha)</div>
-                    <div class="minor-star">鈴星 (Lingxing)</div>
+                
+                <!-- Marriage Palace -->
+                <div class="palace">
+                    <span class="palace-zodiac">戌 (Dog)</span>
+                    <div class="palace-number">11</div>
+                    <div class="palace-title">Marriage Palace (夫妻宮)</div>
+                    <div class="palace-content">
+                        <div class="star-container">
+                            <div class="major-star">七殺 (Qisha)</div>
+                            <div class="minor-star">鈴星 (Lingxing)</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Siblings Palace -->
-            <div class="palace">
-                <div class="palace-number">12</div>
-                <div class="palace-title">Siblings Palace (兄弟宮)</div>
-                <div class="palace-content">
-                    <div class="major-star">天梁 (Tianliang)</div>
+                
+                <!-- Siblings Palace -->
+                <div class="palace">
+                    <span class="palace-zodiac">亥 (Pig)</span>
+                    <div class="palace-number">12</div>
+                    <div class="palace-title">Siblings Palace (兄弟宮)</div>
+                    <div class="palace-content">
+                        <div class="star-container">
+                            <div class="major-star">天梁 (Tianliang)</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -324,13 +399,13 @@
                 <table>
                     <tr>
                         <th>Gender</th>
-                        <td>Male</td>
+                        <td id="gender-cell">Male</td>
                         <th>Birth Date</th>
-                        <td>February 26, 2025</td>
+                        <td id="birth-date-cell">February 26, 2025</td>
                     </tr>
                     <tr>
                         <th>Birth Hour</th>
-                        <td>Horse Hour (11:00-13:00)</td>
+                        <td id="birth-hour-cell">Horse Hour (11:00-13:00)</td>
                         <th>Life Master</th>
                         <td><span class="main-star-name">紫微星 (Ziwei Star)</span></td>
                     </tr>
@@ -345,31 +420,111 @@
             
             <div class="info-section">
                 <div class="info-title">Chart Analysis</div>
-                <p>This chart is based on traditional Ziwei Doushu calculations as per your birth information. The positions of stars have been determined according to classical methods.</p>
-                <p>The Life Palace contains the Ziwei (Purple Star) and Tianji (Sky Mechanism) stars, which is considered an excellent destiny. This combination indicates intelligence, leadership abilities, and a noble character.</p>
-                <p>The presence of Zuofu (Left Assistant) and Wenchang (Literary Prosperity) in the Life Palace suggests scholarly talents and support from benefactors throughout life.</p>
-                <p>The star Taiyang (Sun) in the Children Palace indicates bright and talented children who will bring honor to the family.</p>
-                <p>For a complete analysis, please consult with a professional astrologer who specializes in Ziwei Doushu.</p>
+                <p>This chart follows the traditional palace order in Ziwei Doushu: Life, Parents, Happiness, Property, Career, Friends, Travel, Health, Wealth, Children, Marriage, and Siblings.</p>
+                
+                <p>The Life Palace contains the Ziwei (Purple Star) and Tianji (Sky Mechanism) stars, which is considered an excellent destiny configuration. The Ziwei star represents nobility and leadership potential, while Tianji indicates intelligence and analytical abilities. Together, they suggest someone with exceptional intelligence and strong leadership capabilities.</p>
+                
+                <p>The presence of Zuofu (Left Assistant) and Wenchang (Literary Prosperity) in the Life Palace further enhances these qualities. These stars suggest scholarly talents, literary abilities, and indicate that the person will receive help from benefactors throughout life.</p>
+                
+                <p>The Taiyang (Sun) star in the Children Palace indicates that the person will have bright and talented children who will bring honor to the family.</p>
+                
+                <p>In the Marriage Palace, the presence of Qisha (Seven Killings) and Lingxing (Bell Star) suggests that relationships may face challenges requiring careful communication and understanding.</p>
+                
+                <p>For a complete analysis, it is recommended to consult with a professional astrologer who specializes in Ziwei Doushu, as the interactions between all stars and palaces in the chart require detailed interpretation.</p>
             </div>
         </div>
         
-        <a href="index.html" class="back-button">← Return to Calculator</a>
+        <div class="footer">
+            <p>© 2025 Ziwei Doushu Astrology | For educational purposes only</p>
+            <a href="index.html" class="back-button">← Return to Calculator</a>
+        </div>
     </div>
     
     <script>
-        // A minimal script to update from URL parameters if they exist
+        // Simple script to update from URL parameters if they exist
         document.addEventListener('DOMContentLoaded', function() {
-            // Simple function to get URL parameters
-            function getUrlParam(name) {
+            try {
+                // Get URL parameters
                 const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(name);
-            }
-            
-            // Update basic info if parameters exist
-            const name = getUrlParam('name');
-            if (name) {
-                document.title = name + "'s Ziwei Doushu Birth Chart";
-                document.querySelector('.header h1').textContent = name + "'s Ziwei Doushu Birth Chart";
+                
+                // Check if we have any parameters
+                if (urlParams.has('name')) {
+                    const name = decodeURIComponent(urlParams.get('name') || '');
+                    const gender = urlParams.get('gender') || 'Male';
+                    const birthDate = urlParams.get('birthDate') || '2025-02-26';
+                    const birthHour = urlParams.get('birthHour') || '12';
+                    const birthMinute = urlParams.get('birthMinute') || '0';
+                    const chineseHour = urlParams.get('chineseHour') || '7';
+                    const timezone = decodeURIComponent(urlParams.get('timezone') || '');
+                    const birthLocation = decodeURIComponent(urlParams.get('birthLocation') || '');
+                    
+                    // Format the date nicely
+                    let formattedDate = birthDate;
+                    try {
+                        const dateParts = birthDate.split('-');
+                        if (dateParts.length === 3) {
+                            const year = dateParts[0];
+                            const month = parseInt(dateParts[1]);
+                            const day = parseInt(dateParts[2]);
+                            
+                            const months = [
+                                'January', 'February', 'March', 'April', 'May', 'June',
+                                'July', 'August', 'September', 'October', 'November', 'December'
+                            ];
+                            
+                            formattedDate = `${months[month-1]} ${day}, ${year}`;
+                        }
+                    } catch (e) {
+                        console.log('Error formatting date:', e);
+                    }
+                    
+                    // Format time
+                    const formattedHour = String(birthHour).padStart(2, '0');
+                    const formattedMinute = String(birthMinute).padStart(2, '0');
+                    const timeDisplay = `${formattedHour}:${formattedMinute}`;
+                    
+                    // Get Chinese hour name
+                    const hourNames = [
+                        '', 'Rat Hour (23:00-01:00)', 'Ox Hour (01:00-03:00)', 
+                        'Tiger Hour (03:00-05:00)', 'Rabbit Hour (05:00-07:00)', 
+                        'Dragon Hour (07:00-09:00)', 'Snake Hour (09:00-11:00)', 
+                        'Horse Hour (11:00-13:00)', 'Goat Hour (13:00-15:00)', 
+                        'Monkey Hour (15:00-17:00)', 'Rooster Hour (17:00-19:00)', 
+                        'Dog Hour (19:00-21:00)', 'Pig Hour (21:00-23:00)'
+                    ];
+                    const hourName = hourNames[parseInt(chineseHour)] || 'Unknown Hour';
+                    
+                    // Update title and header if name provided
+                    if (name && name !== 'User') {
+                        document.title = `${name}'s Ziwei Doushu Birth Chart`;
+                        document.querySelector('.header h1').textContent = `${name}'s Ziwei Doushu Birth Chart`;
+                    }
+                    
+                    // Update birth info
+                    document.getElementById('birth-info').textContent = 
+                        `Gender: ${gender} | Date of Birth: ${formattedDate} | Time: ${timeDisplay} (${hourName})`;
+                    
+                    // Update birth year in center cell
+                    const centerContent = document.querySelector('.center-content');
+                    const yearElement = centerContent.querySelector('p:nth-child(3)');
+                    if (yearElement) {
+                        const birthYear = parseInt(birthDate.split('-')[0]);
+                        yearElement.textContent = `Birth Year: ${birthYear} (乙巳)`;
+                    }
+                    
+                    // Update gender in center cell
+                    const genderElement = centerContent.querySelector('p:nth-child(4)');
+                    if (genderElement) {
+                        genderElement.textContent = `Gender: ${gender}`;
+                    }
+                    
+                    // Update table cells
+                    document.getElementById('gender-cell').textContent = gender;
+                    document.getElementById('birth-date-cell').textContent = formattedDate;
+                    document.getElementById('birth-hour-cell').textContent = hourName;
+                }
+            } catch (e) {
+                console.error('Error updating chart from parameters:', e);
             }
         });
     </script>
