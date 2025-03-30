@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ziwei Doushu Astrology Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .calculator-section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #444;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-field {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        input[type="date"] {
+            font-family: Arial, sans-serif;
+        }
+        
+        .time-selection {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .time-selection select {
+            flex: 1;
+        }
+        
+        .gender-select {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+        
+        .gender-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .gender-option input {
+            width: auto;
+            margin-right: 5px;
+        }
+        
+        .button {
+            background-color: #4a2882;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+        
+        .button:hover {
+            background-color: #3a1f6e;
+        }
+        
+        .info-box {
+            background-color: #f9f9f9;
+            border-left: 4px solid #4a2882;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .charts-section {
+            margin-top: 40px;
+        }
+        
+        .chart-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        
+        .chart-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .chart-icon {
+            flex: 0 0 50px;
+            height: 50px;
+            background-color: #4a2882;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .chart-details {
+            flex: 1;
+        }
+        
+        .chart-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .chinese-calendar-option {
+            margin-top: 10px;
+        }
+        
+        .chinese-calendar-option label {
+            font-weight: normal;
+        }
+        
+        /* Traditional Chinese style elements */
+        .chinese-decoration {
+            background-color: #ff6347;
+            height: 10px;
+            width: 100%;
+        }
+        
+        .chinese-heading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .chinese-heading::before,
+        .chinese-heading::after {
+            content: "❖";
+            color: #d85c4b;
+            font-size: 24px;
+            margin: 0 15px;
+        }
+        
+        .traditional-note {
+            font-style: italic;
+            color: #777;
+        }
+        
+        /* Timezone selector styling */
+        .timezone-container {
+            position: relative;
+        }
+        
+        .timezone-search {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .timezone-display {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        
+        .common-timezones {
+            margin-top: 10px;
+        }
+        
+        .common-timezone-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            display: inline-block;
+        }
+        
+        .common-timezone-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .tab-container {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tabs {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+            background-color: #f5f5f5;
+        }
+        
+        .tab.active {
+            border-color: #ddd;
+            background-color: white;
+            position: relative;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: white;
+        }
+        
+        .tab-content {
+            padding-top: 20px;
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .time-zone-notice {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-field {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Ziwei Doushu Astrology Calculator</h1>
+            <div class="subtitle">Traditional Purple Star Astrology</div>
+        </div>
+        <div class="chinese-decoration"></div>
+    </header>
+    
+    <main class="container">
+        <div class="calculator-section">
+            <div class="chinese-heading">
+                <h2>Generate Your Birth Chart</h2>
+            </div>
+            
+            <form id="chart-form">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="name">Your Name (Optional)</label>
+                        <input type="text" id="name" placeholder="Enter your name">
+                    </div>
+                    
+                    <div class="form-field">
+                        <label>Gender</label>
+                        <div class="gender-select">
+                            <label class="gender-option">
+                                <input type="radio" name="gender" value="male" checked> Male
+                            </label>
+                            <label class="gender-option">
+                                <input type="radio" name="gender" value="female"> Female
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="calendar-type">Calendar System</label>
+                    <select id="calendar-type">
+                        <option value="western">Western (Gregorian) Calendar</option>
+                        <option value="chinese">Chinese Lunar Calendar</option>
+                    </select>
+                    <div class="chinese-calendar-option">
+                        <label>
+                            <input type="checkbox" id="convert-calendar"> Automatically convert Western date to Chinese Lunar date
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="tab-container">
+                    <ul class="tabs">
+                        <li class="tab active" data-tab="tab-standard">Standard Time Entry</li>
+                        <li class="tab" data-tab="tab-chinese">Chinese Hour System</li>
+                    </ul>
+                </div>
+                
+                <div id="tab-standard" class="tab-content active">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="birth-date">Birth Date</label>
+                            <input type="date" id="birth-date" required>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="birth-time">Birth Time</label>
+                            <div class="time-selection">
+                                <select id="birth-hour" required>
+                                    <option value="" disabled selected>Hour</option>
+                                    <option value="0">00 (12 AM)</option>
+                                    <option value="1">01 (1 AM)</option>
+                                    <option value="2">02 (2 AM)</option>
+                                    <option value="3">03 (3 AM)</option>
+                                    <option value="4">04 (4 AM)</option>
+                                    <option value="5">05 (5 AM)</option>
+                                    <option value="6">06 (6 AM)</option>
+                                    <option value="7">07 (7 AM)</option>
+                                    <option value="8">08 (8 AM)</option>
+                                    <option value="9">09 (9 AM)</option>
+                                    <option value="10">10 (10 AM)</option>
+                                    <option value="11">11 (11 AM)</option>
+                                    <option value="12">12 (12 PM)</option>
+                                    <option value="13">13 (1 PM)</option>
+                                    <option value="14">14 (2 PM)</option>
+                                    <option value="15">15 (3 PM)</option>
+                                    <option value="16">16 (4 PM)</option>
+                                    <option value="17">17 (5 PM)</option>
+                                    <option value="18">18 (6 PM)</option>
+                                    <option value="19">19 (7 PM)</option>
+                                    <option value="20">20 (8 PM)</option>
+                                    <option value="21">21 (9 PM)</option>
+                                    <option value="22">22 (10 PM)</option>
+                                    <option value="23">23 (11 PM)</option>
+                                </select>
+                                
+                                <select id="birth-minute" required>
+                                    <option value="" disabled selected>Minute</option>
+                                    <option value="0">00</option>
+                                    <option value="5">05</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="25">25</option>
+                                    <option value="30">30</option>
+                                    <option value="35">35</option>
+                                    <option value="40">40</option>
+                                    <option value="45">45</option>
+                                    <option value="50">50</option>
+                                    <option value="55">55</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="tab-chinese" class="tab-content">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="birth-date-chinese">Birth Date</label>
+                            <input type="date" id="birth-date-chinese" required>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="chinese-hour">Chinese Hour</label>
+                            <select id="chinese-hour" required>
+                                <option value="" disabled selected>Select Chinese Hour</option>
+                                <option value="1">子时 Zi (23:00-01:00) Rat Hour</option>
+                                <option value="2">丑时 Chou (01:00-03:00) Ox Hour</option>
+                                <option value="3">寅时 Yin (03:00-05:00) Tiger Hour</option>
+                                <option value="4">卯时 Mao (05:00-07:00) Rabbit Hour</option>
+                                <option value="5">辰时 Chen (07:00-09:00) Dragon Hour</option>
+                                <option value="6">巳时 Si (09:00-11:00) Snake Hour</option>
+                                <option value="7">午时 Wu (11:00-13:00) Horse Hour</option>
+                                <option value="8">未时 Wei (13:00-15:00) Goat Hour</option>
+                                <option value="9">申时 Shen (15:00-17:00) Monkey Hour</option>
+                                <option value="10">酉时 You (17:00-19:00) Rooster Hour</option>
+                                <option value="11">戌时 Xu (19:00-21:00) Dog Hour</option>
+                                <option value="12">亥时 Hai (21:00-23:00) Pig Hour</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="birth-location">Birth Location</label>
+                        <input type="text" id="birth-location" placeholder="City, Country">
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="timezone">Time Zone</label>
+                        <select id="timezone" required>
+                            <option value="" disabled selected>Select Time Zone</option>
+                            <optgroup label="Common Time Zones">
+                                <option value="UTC-12:00">UTC-12:00 (Baker Island)</option>
+                                <option value="UTC-11:00">UTC-11:00 (American Samoa)</option>
+                                <option value="UTC-10:00">UTC-10:00 (Hawaii)</option>
+                                <option value="UTC-09:00">UTC-09:00 (Alaska)</option>
+                                <option value="UTC-08:00">UTC-08:00 (Pacific Time - US & Canada)</option>
+                                <option value="UTC-07:00">UTC-07:00 (Mountain Time - US & Canada)</option>
+                                <option value="UTC-06:00">UTC-06:00 (Central Time - US & Canada)</option>
+                                <option value="UTC-05:00">UTC-05:00 (Eastern Time - US & Canada)</option>
+                                <option value="UTC-04:00">UTC-04:00 (Atlantic Time - Canada)</option>
+                                <option value="UTC-03:00">UTC-03:00 (Buenos Aires, Brasilia)</option>
+                                <option value="UTC-02:00">UTC-02:00 (Mid-Atlantic)</option>
+                                <option value="UTC-01:00">UTC-01:00 (Azores)</option>
+                                <option value="UTC+00:00">UTC+00:00 (London, Lisbon)</option>
+                                <option value="UTC+01:00">UTC+01:00 (Berlin, Paris, Rome)</option>
+                                <option value="UTC+02:00">UTC+02:00 (Cairo, Athens)</option>
+                                <option value="UTC+03:00">UTC+03:00 (Moscow, Istanbul)</option>
+                                <option value="UTC+04:00">UTC+04:00 (Dubai, Baku)</option>
+                                <option value="UTC+05:00">UTC+05:00 (Karachi, Islamabad)</option>
+                                <option value="UTC+05:30">UTC+05:30 (New Delhi, Mumbai)</option>
+                                <option value="UTC+06:00">UTC+06:00 (Dhaka)</option>
+                                <option value="UTC+07:00">UTC+07:00 (Bangkok, Hanoi)</option>
+                                <option value="UTC+08:00">UTC+08:00 (Beijing, Hong Kong, Singapore)</option>
+                                <option value="UTC+09:00">UTC+09:00 (Tokyo, Seoul)</option>
+                                <option value="UTC+10:00">UTC+10:00 (Sydney, Melbourne)</option>
+                                <option value="UTC+11:00">UTC+11:00 (Solomon Islands)</option>
+                                <option value="UTC+12:00">UTC+12:00 (Auckland, Fiji)</option>
+                            </optgroup>
+                        </select>
+                        <p class="time-zone-notice">Note: Time zone affects the conversion to Chinese lunar time</p>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <p><strong>Note:</strong> For the most accurate Ziwei Doushu chart, please enter your birth date and time according to the Chinese lunar calendar if possible. If you only know your Western (Gregorian) date, you can select the automatic conversion option.</p>
+                </div>
+                
+                <button type="submit" class="button">Generate My Ziwei Doushu Chart</button>
+            </form>
+        </div>
+        
+        <div class="charts-section">
+            <h2>Available Chart Types</h2>
+            
+            <div class="chart-option" onclick="window.location='chart.html'">
+                <div class="chart-icon">1</div>
+                <div class="chart-details">
+                    <div class="chart-title">Traditional 4x4 Ziwei Chart</div>
+                    <p>The classic 16-palace Ziwei Doushu chart with detailed star placements and interpretations</p>
+                </div>
+            </div>
+            
+            <div class="chart-option">
+                <div class="chart-icon">2</div>
+                <div class="chart-details">
+                    <div class="chart-title">Simplified 3x4 Ziwei Chart</div>
+                    <p>A more compact 12-palace chart focusing on the main stars and key life areas</p>
+                </div>
+            </div>
+            
+            <div class="chart-option">
+                <div class="chart-icon">3</div>
+                <div class="chart-details">
+                    <div class="chart-title">Annual Fortune Chart</div>
+                    <p>Shows your fortune trends for the current year with monthly breakdowns</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="calculator-section">
+            <h2>About Ziwei Doushu</h2>
+            
+            <p>Ziwei Doushu (Purple Star Astrology) is an ancient form of Chinese astrology dating back to the Song Dynasty (960-1279). Unlike Western astrology which focuses primarily on the zodiac sign, Ziwei Doushu creates a comprehensive chart based on your birth time that reveals insights about all aspects of your life.</p>
+            
+            <p>The system maps the positions of major and minor stars across 12-16 "palaces" or houses, each representing different areas of life such as career, relationships, wealth, and health. The interactions between these stars create a unique destiny blueprint that skilled astrologers can interpret to provide guidance.</p>
+            
+            <p class="traditional-note">Note: Traditional Ziwei Doushu calculations are extremely complex and involve many factors beyond birth date and time. This online calculator provides a simplified version for educational purposes.</p>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Ziwei Doushu Astrology. All rights reserved.</p>
+            <p>This website is for educational and entertainment purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab navigation
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab content
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                // Show the corresponding tab content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        document.getElementById('chart-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get the active tab
+            const activeTab = document.querySelector('.tab.active').getAttribute('data-tab');
+            
+            // Get form values based on active tab
+            const name = document.getElementById('name').value;
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const calendarType = document.getElementById('calendar-type').value;
+            const convertCalendar = document.getElementById('convert-calendar').checked;
+            const timezone = document.getElementById('timezone').value;
+            const birthLocation = document.getElementById('birth-location').value;
+            
+            let birthDate, birthHour, birthMinute, chineseHour;
+            
+            if (activeTab === 'tab-standard') {
+                birthDate = document.getElementById('birth-date').value;
+                birthHour = document.getElementById('birth-hour').value;
+                birthMinute = document.getElementById('birth-minute').value;
+                chineseHour = convertToChineseHour(birthHour);
+            } else {
+                birthDate = document.getElementById('birth-date-chinese').value;
+                chineseHour = document.getElementById('chinese-hour').value;
+                // Set approximate middle values for standard time based on Chinese hour
+                const timeRange = getTimeRangeFromChineseHour(chineseHour);
+                birthHour = timeRange.hour;
+                birthMinute = timeRange.minute;
+            }
+            
+            // Store the data in localStorage so the chart page can access it
+            localStorage.setItem('ziwei_user_name', name);
+            localStorage.setItem('ziwei_user_gender', gender);
+            localStorage.setItem('ziwei_calendar_type', calendarType);
+            localStorage.setItem('ziwei_birth_date', birthDate);
+            localStorage.setItem('ziwei_birth_hour', birthHour);
+            localStorage.setItem('ziwei_birth_minute', birthMinute);
+            localStorage.setItem('ziwei_chinese_hour', chineseHour);
+            localStorage.setItem('ziwei_timezone', timezone);
+            localStorage.setItem('ziwei_birth_location', birthLocation);
+            
+            // Redirect to the chart page
+            window.location.href = 'chart.html';
+        });
+        
+        // Convert standard hour to Chinese hour
+        function convertToChineseHour(hour) {
+            hour = parseInt(hour);
+            // Adjust for the fact that Chinese hours span 2 standard hours
+            if (hour === 23 || hour === 0) return 1; // Zi (Rat)
+            if (hour === 1 || hour === 2) return 2; // Chou (Ox)
+            if (hour === 3 || hour === 4) return 3; // Yin (Tiger)
+            if (hour === 5 || hour === 6) return 4; // Mao (Rabbit)
+            if (hour === 7 || hour === 8) return 5; // Chen (Dragon)
+            if (hour === 9 || hour === 10) return 6; // Si (Snake)
+            if (hour === 11 || hour === 12) return 7; // Wu (Horse)
+            if (hour === 13 || hour === 14) return 8; // Wei (Goat)
+            if (hour === 15 || hour === 16) return 9; // Shen (Monkey)
+            if (hour === 17 || hour === 18) return 10; // You (Rooster)
+            if (hour === 19 || hour === 20) return 11; // Xu (Dog)
+            if (hour === 21 || hour === 22) return 12; // Hai (Pig)
+            return 1; // Default to Zi (Rat) if invalid
+        }
+        
+        // Get approximate standard time range from Chinese hour
+        function getTimeRangeFromChineseHour(chineseHour) {
+            chineseHour = parseInt(chineseHour);
+            switch(chineseHour) {
+                case 1: return { hour: 0, minute: 0 }; // Zi (Rat) - use midnight
+                case 2: return { hour: 2, minute: 0 }; // Chou (Ox)
+                case 3: return { hour: 4, minute: 0 }; // Yin (Tiger)
+                case 4: return { hour: 6, minute: 0 }; // Mao (Rabbit)
+                case 5: return { hour: 8, minute: 0 }; // Chen (Dragon)
+                case 6: return { hour: 10, minute: 0 }; // Si (Snake)
+                case 7: return { hour: 12, minute: 0 }; // Wu (Horse)
+                case 8: return { hour: 14, minute: 0 }; // Wei (Goat)
+                case 9: return { hour: 16, minute: 0 }; // Shen (Monkey)
+                case 10: return { hour: 18, minute: 0 }; // You (Rooster)
+                case 11: return { hour: 20, minute: 0 }; // Xu (Dog)
+                case 12: return { hour: 22, minute: 0 }; // Hai (Pig)
+                default: return { hour: 12, minute: 0 }; // Default to noon
+            }
+        }
+        
+        // Show/hide the automatic conversion option based on calendar selection
+        document.getElementById('calendar-type').addEventListener('change', function() {
+            const convertOption = document.querySelector('.chinese-calendar-option');
+            if (this.value === 'western') {
+                convertOption.style.display = 'block';
+            } else {
+                convertOption.style.display = 'none';
+                document.getElementById('convert-calendar').checked = false;
+            }
+        });
+        
+        // Initialize the form with today's date
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            document.getElementById('birth-date').value = formattedDate;
+            document.getElementById('birth-date-chinese').value = formattedDate;
+            
+            // Set default time (noon)
+            document.getElementById('birth-hour').value = '12';
+            document.getElementById('birth-minute').value = '0';
+            document.getElementById('chinese-hour').value = '7'; // Wu (Horse) hour, which contains noon
+            
+            // Set default timezone based on browser's timezone if possible
+            try {
+                const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                // Convert timezone to UTC format
+                const offset = new Date().getTimezoneOffset();
+                const hours = Math.abs(Math.floor(offset / 60));
+                const minutes = Math.abs(offset % 60);
+                const sign = offset < 0 ? '+' : '-';
+                const formattedOffset = `UTC${sign}${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+                
+                // Try to select the matching option
+                const timezoneSelect = document.getElementById('timezone');
+                for (let i = 0; i < timezoneSelect.options.length; i++) {
+                    if (timezoneSelect.options[i].value === formattedOffset) {
+                        timezoneSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+                
+                // If no exact match, select closest option
+                if (timezoneSelect.selectedIndex === 0) {
+                    // Default to UTC+08:00 (Beijing time) if can't detect or match
+                    for (let i = 0; i < timezoneSelect.options.length; i++) {
+                        if (timezoneSelect.options[i].value === 'UTC+08:00') {
+                            timezoneSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Error setting timezone:", e);
+                // Default to UTC+08:00 (Beijing time) if error
+                const timezoneSelect = document.getElementById('timezone');
+                for (let i = 0; i < tim
