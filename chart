@@ -1,0 +1,28 @@
+// Add this script at the end of your chart.html file, just before the closing </body> tag
+<script>
+// Function to run when the chart page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Retrieve user data from localStorage
+    const name = localStorage.getItem('ziwei_user_name') || 'Example User';
+    const gender = localStorage.getItem('ziwei_user_gender') || 'Male';
+    const birthDate = localStorage.getItem('ziwei_birth_date') || '2025-02-26';
+    const birthHour = localStorage.getItem('ziwei_birth_hour') || '12';
+    const birthMinute = localStorage.getItem('ziwei_birth_minute') || '0';
+    const chineseHour = localStorage.getItem('ziwei_chinese_hour') || '7';
+    const timezone = localStorage.getItem('ziwei_timezone') || 'UTC+08:00';
+    const birthLocation = localStorage.getItem('ziwei_birth_location') || 'Beijing, China';
+    
+    // Format the time for display
+    const timeFormatted = `${birthHour.padStart(2, '0')}:${birthMinute.padStart(2, '0')}`;
+    
+    // Get Chinese hour name
+    const chineseHourName = getChineseHourName(chineseHour);
+    
+    // Update the header information
+    updateHeaderInfo(name, gender, birthDate, timeFormatted, chineseHourName);
+    
+    // Update chart info section if it exists
+    updateChartInfo(name, gender, birthDate, timeFormatted, chineseHourName, timezone, birthLocation);
+    
+    // Add a back button to return to the form
+    ad
