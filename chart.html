@@ -256,7 +256,7 @@
             <div class="destiny-pillars">
                 <div class="pillar">
                     <div class="pillar-label">Year</div>
-                    <div class="pillar-box">己</div>
+                    <div class="pillar-box">乙</div>
                     <div class="pillar-box">巳</div>
                 </div>
                 <div class="pillar">
@@ -309,9 +309,8 @@
             
             <div class="info-section" id="chart-analysis">
                 <div class="info-title">Chart Analysis</div>
-                <p>This chart is based on your birth information. The positions of stars in the chart represent different aspects of your life and personality.</p>
-                <p>The main stars (highlighted in red) are the primary influences in each palace, while the minor stars modify and add nuance to these influences.</p>
-                <p>For a complete and accurate reading, please consult with a professional Ziwei Doushu astrologer who can provide a detailed interpretation of all star interactions and their implications for your life.</p>
+                <p>This chart is based on traditional Ziwei Doushu calculations as per your birth information. The positions of stars have been determined according to classical methods described in Vietnamese Ziwei Doushu references.</p>
+                <p>For a complete analysis, please consult with a professional astrologer who specializes in Ziwei Doushu. They can provide detailed interpretations about how these star placements may influence different aspects of your life journey.</p>
             </div>
         </div>
         
@@ -319,55 +318,55 @@
             <h3>Palace Explanations</h3>
             <div class="explanation-row">
                 <div class="explanation-item">
-                    <strong>Life Palace</strong>: Represents personality, appearance, and talents
+                    <strong>Life Palace (Mệnh)</strong>: Personality, appearance, and talents
                 </div>
                 <div class="explanation-item">
-                    <strong>Siblings Palace</strong>: Represents siblings and friendship relationships
+                    <strong>Siblings Palace (Huynh Đệ)</strong>: Siblings and friendship relationships
                 </div>
                 <div class="explanation-item">
-                    <strong>Marriage Palace</strong>: Represents marriage, partnerships, and cooperation
+                    <strong>Marriage Palace (Phu Thê)</strong>: Marriage, partnerships, cooperation
                 </div>
                 <div class="explanation-item">
-                    <strong>Children Palace</strong>: Represents children, creativity, and joyful events
-                </div>
-            </div>
-            <div class="explanation-row">
-                <div class="explanation-item">
-                    <strong>Wealth Palace</strong>: Represents wealth, income, and resources
-                </div>
-                <div class="explanation-item">
-                    <strong>Health Palace</strong>: Represents health, difficulties, and challenges
-                </div>
-                <div class="explanation-item">
-                    <strong>Travel Palace</strong>: Represents travel, relocation, and change
-                </div>
-                <div class="explanation-item">
-                    <strong>Friends Palace</strong>: Represents friendships, social relationships, and networking
+                    <strong>Children Palace (Tử Tức)</strong>: Children, creativity, joyful events
                 </div>
             </div>
             <div class="explanation-row">
                 <div class="explanation-item">
-                    <strong>Career Palace</strong>: Represents career, achievements, and status
+                    <strong>Wealth Palace (Tài Bạch)</strong>: Wealth, income, resources
                 </div>
                 <div class="explanation-item">
-                    <strong>Property Palace</strong>: Represents real estate, residences, and land
+                    <strong>Health Palace (Bệnh Tật)</strong>: Health, difficulties, challenges
                 </div>
                 <div class="explanation-item">
-                    <strong>Happiness Palace</strong>: Represents mental well-being, blessings, and leisure
+                    <strong>Travel Palace (Di)</strong>: Travel, relocation, change
                 </div>
                 <div class="explanation-item">
-                    <strong>Parents Palace</strong>: Represents parents, elders, and authority figures
+                    <strong>Friends Palace (Bạn Bè)</strong>: Friendships, social connections
                 </div>
             </div>
             <div class="explanation-row">
                 <div class="explanation-item">
-                    <strong>Spirit Palace</strong>: Represents spirituality, intuition, and the subconscious
+                    <strong>Career Palace (Quan Lộc)</strong>: Career, achievements, status
                 </div>
                 <div class="explanation-item">
-                    <strong>Body Palace</strong>: Represents physical constitution and health conditions
+                    <strong>Property Palace (Điền Trạch)</strong>: Property, home, land
                 </div>
                 <div class="explanation-item">
-                    <strong>Karma Palace</strong>: Represents blessings, spiritual life, and karma
+                    <strong>Happiness Palace (Phúc Đức)</strong>: Mental well-being, blessings
+                </div>
+                <div class="explanation-item">
+                    <strong>Parents Palace (Phụ Mẫu)</strong>: Parents, elders, authority figures
+                </div>
+            </div>
+            <div class="explanation-row">
+                <div class="explanation-item">
+                    <strong>Spirit Palace (Âm Dương)</strong>: Spirituality, intuition, subconscious
+                </div>
+                <div class="explanation-item">
+                    <strong>Body Palace (Thân)</strong>: Physical constitution, health
+                </div>
+                <div class="explanation-item">
+                    <strong>Karma Palace (Phúc)</strong>: Blessings, spiritual life, karma
                 </div>
                 <div class="explanation-item">
                     <strong>Center</strong>: Core chart information
@@ -379,7 +378,7 @@
     </div>
 
     <script>
-        // Basic Ziwei Doushu star calculation
+        // Traditional Ziwei Doushu calculations
         document.addEventListener('DOMContentLoaded', function() {
             // Get URL parameters
             const urlParams = new URLSearchParams(window.location.search);
@@ -460,7 +459,7 @@
             }
             
             // Generate the Ziwei Doushu chart based on birth information
-            generateChart(birthDate, parseInt(chineseHour), gender);
+            generateTraditionalChart(birthDate, parseInt(chineseHour), gender);
         });
         
         // Helper function to get Chinese hour name
@@ -484,260 +483,41 @@
             return hours[parseInt(hourNumber)] || 'Unknown Hour';
         }
         
-        // Palace names in English
+        // Vietnamese names for the 12 zodiac animals (Chi)
+        const vietnameseZodiac = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
+        
+        // Palace names in English with Vietnamese equivalents
         const palaceNames = [
-            "Life Palace",
-            "Parents Palace",
-            "Fortune Palace", 
-            "Property Palace",
-            "Career Palace",
-            "Friends Palace", 
-            "Travel Palace", 
-            "Health Palace",
-            "Wealth Palace", 
-            "Children Palace", 
-            "Marriage Palace", 
-            "Siblings Palace",
-            "Happiness Palace",
-            "Spirit Palace",
-            "Body Palace",
-            "Karma Palace"
+            "Life Palace (Mệnh)", 
+            "Parents Palace (Phụ Mẫu)", 
+            "Fortune Palace (Tài Bạch)", 
+            "Property Palace (Điền Trạch)",
+            "Career Palace (Quan Lộc)", 
+            "Friends Palace (Nô Bộc)", 
+            "Travel Palace (Di)", 
+            "Health Palace (Tật Ách)",
+            "Wealth Palace (Tài Bạch)", 
+            "Children Palace (Tử Tức)", 
+            "Marriage Palace (Phu Thê)", 
+            "Siblings Palace (Huynh Đệ)",
+            "Happiness Palace (Phúc Đức)",
+            "Spirit Palace (Âm Dương)",
+            "Body Palace (Thân)",
+            "Karma Palace (Phúc)"
         ];
         
-        // Major stars with Chinese names and English translations
+        // Major stars with Chinese, Vietnamese and English names
         const majorStars = [
-            { name: "紫微 (Ziwei)", english: "Purple Star" },
-            { name: "天機 (Tianji)", english: "Sky Mechanism" },
-            { name: "太陽 (Taiyang)", english: "Sun" },
-            { name: "武曲 (Wuqu)", english: "Military Song" },
-            { name: "天同 (Tiantong)", english: "Sky Unity" },
-            { name: "廉貞 (Lianzhen)", english: "Chastity" },
-            { name: "天府 (Tianfu)", english: "Sky Treasury" },
-            { name: "太陰 (Taiyin)", english: "Moon" },
-            { name: "貪狼 (Tanlang)", english: "Greedy Wolf" },
-            { name: "巨門 (Jumen)", english: "Giant Gate" },
-            { name: "天相 (Tianxiang)", english: "Sky Minister" },
-            { name: "天梁 (Tianliang)", english: "Sky Bridge" },
-            { name: "七殺 (Qisha)", english: "Seven Killings" },
-            { name: "破軍 (Pojun)", english: "Broken Army" }
-        ];
-        
-        // Minor stars
-        const minorStars = [
-            { name: "左輔 (Zuofu)", english: "Left Assistant" },
-            { name: "右弼 (Youbi)", english: "Right Assistant" },
-            { name: "文曲 (Wenqu)", english: "Literary Song" },
-            { name: "文昌 (Wenchang)", english: "Literary Prosperity" },
-            { name: "地空 (Dikong)", english: "Earth Emptiness" },
-            { name: "地劫 (Dijie)", english: "Earth Disaster" },
-            { name: "祿存 (Lucun)", english: "Salary Storage" },
-            { name: "天馬 (Tianma)", english: "Sky Horse" },
-            { name: "火星 (Huoxing)", english: "Fire Star" },
-            { name: "鈴星 (Lingxing)", english: "Bell Star" },
-            { name: "天魁 (Tiankui)", english: "Sky Leader" },
-            { name: "天鉞 (Tianyue)", english: "Sky Halberd" },
-            { name: "陀羅 (Tuoluo)", english: "Grinding Star" },
-            { name: "天刑 (Tianxing)", english: "Sky Punishment" },
-            { name: "天姚 (Tianyao)", english: "Sky Beauty" },
-            { name: "台輔 (Taifu)", english: "Supporting Star" },
-            { name: "封誥 (Fenggao)", english: "Seal of Honor" }
-        ];
-        
-        // Function to generate a simplified Ziwei Doushu chart
-        function generateChart(birthDate, chineseHour, gender) {
-            const chartGrid = document.getElementById('chart-grid');
-            if (!chartGrid) return;
-            
-            // Clear existing chart
-            chartGrid.innerHTML = '';
-            
-            // Parse birth date
-            const dateParts = birthDate.split('-');
-            if (dateParts.length !== 3) return;
-            
-            const birthYear = parseInt(dateParts[0]);
-            const birthMonth = parseInt(dateParts[1]);
-            const birthDay = parseInt(dateParts[2]);
-            
-            // Determine life palace position based on month and hour
-            // This is a simplified calculation - real Ziwei Doushu uses lunar calendar
-            let lifePalacePosition = ((birthMonth - 1) * 2 + Math.floor(chineseHour / 7) + 1) % 12;
-            if (lifePalacePosition === 0) lifePalacePosition = 12;
-            
-            // Create the 16 palaces (12 main palaces + 4 additional)
-            for (let i = 0; i < 16; i++) {
-                // Skip center cell positions
-                if (i === 5 || i === 6 || i === 9 || i === 10) {
-                    const centerCell = document.createElement('div');
-                    
-                    // Only create the center content once
-                    if (i === 5) {
-                        centerCell.className = 'center-cell';
-                        centerCell.innerHTML = `
-                            <div class="center-title">Main Life Star</div>
-                            <div class="center-content">
-                                <p><span class="main-star-name">Ziwei Star</span></p>
-                                <p>Element: Water (Level 2)</p>
-                                <p id="birth-year">Year: ${birthYear}</p>
-                                <p id="gender-display">Gender: ${gender}</p>
-                            </div>
-                        `;
-                        chartGrid.appendChild(centerCell);
-                    }
-                    continue;
-                }
-                
-                // Create palace element
-                const palace = document.createElement('div');
-                palace.className = 'palace';
-                
-                // Adjust index for center cell offset
-                let palaceIndex = i;
-                if (i > 10) palaceIndex -= 4;
-                
-                // Calculate palace position relative to life palace
-                let palacePosition = (lifePalacePosition + palaceIndex) % 12;
-                if (palacePosition === 0) palacePosition = 12;
-                
-                // For additional palaces beyond the 12 main ones
-                if (i >= 12) {
-                    palacePosition = i - 11; // 13th-16th positions
-                }
-                
-                // Set palace number and title
-                palace.innerHTML = `
-                    <div class="palace-number">${i + 1}</div>
-                    <div class="palace-title">${palaceNames[i]}</div>
-                    <div class="palace-content" id="palace-${i + 1}"></div>
-                `;
-                
-                chartGrid.appendChild(palace);
-                
-                // Populate palace with stars based on position
-                populatePalace(i + 1, palacePosition, birthYear, birthMonth, birthDay, chineseHour);
-            }
-            
-            // Update life master and body master in the info section
-            document.getElementById('life-master-cell').innerHTML = '<span class="main-star-name">紫微 (Ziwei)</span>';
-            document.getElementById('body-master-cell').innerHTML = '<span class="main-star-name">天機 (Tianji)</span>';
-            
-            // Generate simplified interpretation text
-            generateInterpretation(lifePalacePosition, gender);
-        }
-        
-        // Function to populate a palace with stars
-        function populatePalace(palaceNumber, position, year, month, day, hour) {
-            const palaceContent = document.getElementById(`palace-${palaceNumber}`);
-            if (!palaceContent) return;
-            
-            // Clear existing content
-            palaceContent.innerHTML = '';
-            
-            // This is a very simplified star distribution
-            // In real Ziwei Doushu, star placements are calculated with complex formulas
-            
-            // Determine major stars for this palace based on position
-            // This is a simplified approximation
-            let majorStarsHere = [];
-            
-            // Life Palace (simplified - first palace always gets Ziwei and Tianji)
-            if (palaceNumber === 1) {
-                majorStarsHere.push(majorStars[0]); // Ziwei
-                majorStarsHere.push(majorStars[1]); // Tianji
-            }
-            // Fixed position stars based on palace position
-            else if (position === 1) majorStarsHere.push(majorStars[13]); // Pojun
-            else if (position === 2) majorStarsHere.push(majorStars[2]); // Taiyang
-            else if (position === 3) majorStarsHere.push(majorStars[3]); // Wuqu
-            else if (position === 4) majorStarsHere.push(majorStars[4]); // Tiantong
-            else if (position === 5) majorStarsHere.push(majorStars[5]); // Lianzhen
-            else if (position === 6) majorStarsHere.push(majorStars[6]); // Tianfu
-            else if (position === 7) majorStarsHere.push(majorStars[7]); // Taiyin
-            else if (position === 8) majorStarsHere.push(majorStars[8]); // Tanlang
-            else if (position === 9) majorStarsHere.push(majorStars[9]); // Jumen
-            else if (position === 10) majorStarsHere.push(majorStars[10]); // Tianxiang
-            else if (position === 11) majorStarsHere.push(majorStars[11]); // Tianliang
-            else if (position === 12) majorStarsHere.push(majorStars[12]); // Qisha
-            
-            // For additional palaces (13-16)
-            if (palaceNumber >= 13) {
-                // Additional palaces get fewer major stars
-                if (palaceNumber === 13) majorStarsHere.push(majorStars[10]); // Tianxiang for Happiness
-            }
-            
-            // Add minor stars based on palace number and birth day
-            // This is a simplified distribution
-            const minorStarsHere = [];
-            
-            // Add fixed minor stars to certain palaces
-            if (palaceNumber === 1) {
-                minorStarsHere.push(minorStars[0]); // Zuofu
-                minorStarsHere.push(minorStars[3]); // Wenchang
-            } else if (palaceNumber === 2) {
-                minorStarsHere.push(minorStars[8]); // Huoxing
-            } else if (palaceNumber === 3) {
-                minorStarsHere.push(minorStars[5]); // Dijie
-            } else if (palaceNumber === 4) {
-                minorStarsHere.push(minorStars[6]); // Lucun
-            } else if (palaceNumber === 5) {
-                minorStarsHere.push(minorStars[1]); // Youbi
-            } else if (palaceNumber === 6) {
-                minorStarsHere.push(minorStars[7]); // Tianma
-            } else if (palaceNumber === 7) {
-                minorStarsHere.push(minorStars[4]); // Dikong
-            } else if (palaceNumber === 9) {
-                minorStarsHere.push(minorStars[2]); // Wenqu
-            } else if (palaceNumber === 11) {
-                minorStarsHere.push(minorStars[9]); // Lingxing
-            } else if (palaceNumber === 13) {
-                minorStarsHere.push(minorStars[10]); // Tiankui
-            } else if (palaceNumber === 14) {
-                minorStarsHere.push(minorStars[11]); // Tianyue
-                minorStarsHere.push(minorStars[12]); // Tuoluo
-            } else if (palaceNumber === 15) {
-                minorStarsHere.push(minorStars[13]); // Tianxing
-                minorStarsHere.push(minorStars[14]); // Tianyao
-            } else if (palaceNumber === 16) {
-                minorStarsHere.push(minorStars[15]); // Taifu
-                minorStarsHere.push(minorStars[16]); // Fenggao
-            }
-            
-            // Add major stars to palace
-            majorStarsHere.forEach(star => {
-                const starElement = document.createElement('div');
-                starElement.className = 'major-star';
-                starElement.textContent = star.name;
-                palaceContent.appendChild(starElement);
-            });
-            
-            // Add minor stars to palace
-            minorStarsHere.forEach(star => {
-                const starElement = document.createElement('div');
-                starElement.className = 'minor-star';
-                starElement.textContent = star.name;
-                palaceContent.appendChild(starElement);
-            });
-            
-            // If no stars were added, add a message
-            if (majorStarsHere.length === 0 && minorStarsHere.length === 0) {
-                palaceContent.innerHTML = '<div class="minor-star">No significant stars</div>';
-            }
-        }
-        
-        // Function to generate a simplified interpretation
-        function generateInterpretation(lifePalacePosition, gender) {
-            const analysisSection = document.getElementById('chart-analysis');
-            if (!analysisSection) return;
-            
-            let interpretation = '<div class="info-title">Chart Analysis</div>';
-            
-            // Start with basic life palace analysis
-            interpretation += `<p>Your Life Palace contains the <span class="main-star-name">Ziwei (Purple Star)</span> and 
-                <span class="main-star-name">Tianji (Sky Mechanism)</span>, which is considered an excellent destiny. 
-                Ziwei represents nobility and leadership, while Tianji represents intelligence and analytical ability. 
-                The combination of these two major stars indicates exceptional intelligence, strong leadership abilities, 
-                and potential for success.</p>`;
-            
-            // Add analysis based on the birth hour
-            interpretation += `<p>The presence of Zuofu and Wenchang in your Life Palace enhances your scholarly talents 
-                and literary
+            { name: "紫微 (Tử Vi)", english: "Purple Star" },
+            { name: "天機 (Thiên Cơ)", english: "Sky Mechanism" },
+            { name: "太陽 (Thái Dương)", english: "Sun" },
+            { name: "武曲 (Vũ Khúc)", english: "Military Song" },
+            { name: "天同 (Thiên Đồng)", english: "Sky Unity" },
+            { name: "廉貞 (Liêm Trinh)", english: "Chastity" },
+            { name: "天府 (Thiên Phủ)", english: "Sky Treasury" },
+            { name: "太陰 (Thái Âm)", english: "Moon" },
+            { name: "貪狼 (Tham Lang)", english: "Greedy Wolf" },
+            { name: "巨門 (Cự Môn)", english: "Giant Gate" },
+            { name: "天相 (Thiên Tướng)", english: "Sky Minister" },
+            { name: "天梁 (Thiên Lương)", english: "Sky Bridge" },
+            { name:
