@@ -1,113 +1,8 @@
-// Vietnamese Tu Vi birth chart calculator
-// Based on khamthientuhoa.com reference
-
-// Constants for Vietnamese Tu Vi calculations
-const TU_VI = {
-  // Vietnamese zodiac
-  CAN: ['Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ', 'Canh', 'Tân', 'Nhâm', 'Quý'],
-  CHI: ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'],
-  
-  // Major stars (Chính tinh)
-  CHINH_TINH: [
-    'Tử Vi', 'Thiên Cơ', 'Thái Dương', 'Vũ Khúc', 'Thiên Đồng', 'Liêm Trinh',
-    'Thiên Phủ', 'Thái Âm', 'Tham Lang', 'Cự Môn', 'Thiên Tướng', 'Thiên Lương',
-    'Thất Sát', 'Phá Quân'
-  ],
-  
-  // Star types
-  STAR_TYPES: {
-    'good': {
-      stars: ['Tử Vi', 'Thiên Phủ', 'Thái Dương', 'Thái Âm', 'Thiên Cơ', 'Thiên Lương', 'Thiên Đồng'],
-      color: 'green'
-    },
-    'neutral': {
-      stars: ['Cự Môn', 'Thiên Tướng', 'Vũ Khúc', 'Liêm Trinh', 'Tham Lang'],
-      color: 'black'
-    },
-    'bad': {
-      stars: ['Thất Sát', 'Phá Quân'],
-      color: 'red'
-    }
-  },
-  
-  // Secondary stars (Phụ tinh)
-  PHU_TINH: {
-    'good': {
-      stars: ['Văn Xương', 'Văn Khúc', 'Thiên Khôi', 'Thiên Việt', 'Đào Hoa', 'Hồng Loan', 
-              'Thiên Hỷ', 'Thiên Quý', 'Long Trì', 'Phượng Các', 'Giải Thần', 'Thiên Mã', 
-              'Thiên Quan', 'Thiên Phúc', 'Hóa Lộc', 'Hóa Quyền', 'Hóa Khoa'],
-      color: 'green'
-    },
-    'neutral': {
-      stars: ['Địa Không', 'Địa Kiếp', 'Quốc Ấn', 'Đường Phù', 'Thiên Thọ', 'Thiên Tài'],
-      color: 'black'
-    },
-    'bad': {
-      stars: ['Thiên Hình', 'Thiên Riêu', 'Thiên Khốc', 'Thiên Hư', 'Đại Hao', 'Tiểu Hao', 
-              'Tang Môn', 'Bạch Hổ', 'Quan Phủ', 'Tử Phù', 'Hóa Kỵ'],
-      color: 'red'
-    }
-  },
-  
-  // Palace names (Cung)
-  CUNG_NAMES: [
-    'Mệnh', 'Phụ Mẫu', 'Phúc Đức', 'Điền Trạch', 'Quan Lộc', 'Nô Bộc',
-    'Thiên Di', 'Tật Ách', 'Tài Bạch', 'Tử Tức', 'Phu Thê', 'Huynh Đệ'
-  ],
-  
-  // Element associations (ngũ hành)
-  ELEMENTS: {
-    'Kim': 'metal',
-    'Mộc': 'wood',
-    'Thủy': 'water',
-    'Hỏa': 'fire',
-    'Thổ': 'earth'
-  },
-  
-  // Palace and star meanings for interpretations
-  MEANINGS: {
-    'Mệnh': 'Cung Mệnh biểu thị tính cách, bản chất, sức mạnh và đặc điểm chung của cuộc đời người đó.',
-    'Phụ Mẫu': 'Cung Phụ Mẫu cho biết mối quan hệ với cha mẹ, cấp trên và người lớn tuổi.',
-    'Phúc Đức': 'Cung Phúc Đức cho biết phúc phần, sự may mắn và tâm linh của người đó.',
-    'Điền Trạch': 'Cung Điền Trạch liên quan đến nhà cửa, đất đai, tài sản cố định.',
-    'Quan Lộc': 'Cung Quan Lộc liên quan đến sự nghiệp, công danh, địa vị xã hội.',
-    'Nô Bộc': 'Cung Nô Bộc chỉ mối quan hệ với người giúp việc, nhân viên, người dưới quyền.',
-    'Thiên Di': 'Cung Thiên Di liên quan đến việc đi lại, du lịch, sinh sống ở xa.',
-    'Tật Ách': 'Cung Tật Ách chỉ sức khỏe, bệnh tật và khó khăn trong cuộc sống.',
-    'Tài Bạch': 'Cung Tài Bạch liên quan đến tiền bạc, của cải, thu nhập.',
-    'Tử Tức': 'Cung Tử Tức chỉ con cái và sáng tạo.',
-    'Phu Thê': 'Cung Phu Thê liên quan đến hôn nhân, vợ chồng, tình yêu.',
-    'Huynh Đệ': 'Cung Huynh Đệ liên quan đến anh chị em, bạn bè, đồng nghiệp.'
-  },
-  
-  // Star descriptions for interpretations
-  STAR_MEANINGS: {
-    'Tử Vi': 'Sao Tử Vi là một trong những sao tốt nhất trong lá số, chủ về quyền lực, phúc lộc, danh vọng.',
-    'Thiên Cơ': 'Sao Thiên Cơ chủ về trí tuệ, thông minh, có khả năng suy luận và tính toán.',
-    'Thái Dương': 'Sao Thái Dương là sao tốt, mang đến ánh sáng, danh vọng, quyền lực, sự nổi tiếng.',
-    'Vũ Khúc': 'Sao Vũ Khúc chủ về tiền tài, của cải, khả năng quản lý tài chính.',
-    'Thiên Đồng': 'Sao Thiên Đồng chủ về niềm vui, hạnh phúc, sự suôn sẻ, thuận lợi.',
-    'Liêm Trinh': 'Sao Liêm Trinh chủ về sự nghiêm khắc, kỷ luật, liêm chính.',
-    'Thiên Phủ': 'Sao Thiên Phủ là sao tốt, chủ về tài lộc, sự phát đạt, giàu có.',
-    'Thái Âm': 'Sao Thái Âm chủ về tình cảm, trực giác, sự êm đềm, hòa thuận.',
-    'Tham Lang': 'Sao Tham Lang chủ về ham muốn, dục vọng, tham vọng.',
-    'Cự Môn': 'Sao Cự Môn chủ về khả năng ngôn ngữ, giao tiếp, biện luận.',
-    'Thiên Tướng': 'Sao Thiên Tướng chủ về lãnh đạo, chỉ huy, sức mạnh thể chất.',
-    'Thiên Lương': 'Sao Thiên Lương là sao tốt, chủ về đạo đức, lương thiện, trung thực.',
-    'Thất Sát': 'Sao Thất Sát chủ về quyết đoán, mạnh mẽ, nhưng cũng mang tính bạo lực, khắc nghiệt.',
-    'Phá Quân': 'Sao Phá Quân chủ về sự phá cách, cải cách, đột phá nhưng cũng gây xáo trộn.'
-  }
-};
-
-// Wait for DOM content to be loaded
+// Vietnamese Tu Vi birth chart calculator based on tuvi.cohoc.net
 document.addEventListener('DOMContentLoaded', function() {
   console.log("DOM loaded, initializing Tử Vi chart calculator...");
   
   // Initialize event handlers
-  initTuViCalculator();
-});
-
-function initTuViCalculator() {
   document.getElementById('chartForm').onsubmit = function(e) {
     e.preventDefault();
 
@@ -121,496 +16,371 @@ function initTuViCalculator() {
     }
 
     try {
-      console.log("Generating Tử Vi chart for:", birthDate, birthTime, gender);
-      
-      // Calculate the chart data
-      const tuViChart = calculateTuViChart(birthDate, birthTime, gender);
-      
-      // Display the chart
-      displayTuViChart(tuViChart);
-      
-      console.log('Generated chart data:', tuViChart);
+      generateTuViChart(birthDate, birthTime, gender);
     } catch (error) {
       console.error('Error generating chart:', error);
       alert('Đã xảy ra lỗi trong khi tạo lá số. Vui lòng kiểm tra thông tin và thử lại.');
     }
   };
-}
+});
 
-// Calculate birth chart using Tu Vi methods
-function calculateTuViChart(birthDate, birthTime, gender) {
-  // Parse the birth date
+// Generate Tu Vi chart in the cohoc.net style
+function generateTuViChart(birthDate, birthTime, gender) {
+  // Parse birth date
   const date = new Date(birthDate);
   const day = date.getDate();
-  const month = date.getMonth() + 1; // JavaScript months are 0-indexed
+  const month = date.getMonth() + 1;
   const year = date.getFullYear();
   
-  // Calculate Lunar Year (simplified)
-  const lunarYear = calculateLunarYear(year, month, day);
+  // Calculate Can Chi (stems and branches) for the year
+  const canChiYear = calculateCanChiYear(year);
   
-  // Calculate Can Chi for year (Heavenly Stems and Earthly Branches)
-  const canIndex = (lunarYear - 4) % 10;
-  const chiIndex = (lunarYear - 4) % 12;
-  
-  const can = TU_VI.CAN[canIndex];
-  const chi = TU_VI.CHI[chiIndex];
-  
-  // Calculate birth hour Chi
-  const hourChi = TU_VI.CHI[Math.floor(birthTime / 2) % 12];
-  
-  // Calculate Tử Vi position (the main star that determines palace positions)
-  // This is a simplified algorithm - real Tu Vi calculations are more complex
-  let tuViPosition = Math.abs((lunarYear * 2 + month * 2 + day) % 12);
-  
-  // Adjust for gender (simplified)
-  if (gender === 'female') {
-    tuViPosition = (tuViPosition + 6) % 12; // Offset by half the zodiac for females
-  }
-  
-  // Generate palaces
-  const palaces = [];
-  
-  for (let i = 0; i < 12; i++) {
-    // Determine palace position
-    const palacePosition = (tuViPosition + i) % 12;
-    const palaceChi = TU_VI.CHI[palacePosition];
-    
-    // Calculate element based on the palace Chi
-    const palaceElement = determineElement(palaceChi);
-    
-    // Determine major stars for this palace
-    const majorStars = calculateMajorStars(i, palacePosition, lunarYear, month, day, gender);
-    
-    // Determine minor stars
-    const minorStars = calculateMinorStars(i, palacePosition, lunarYear, month, day, birthTime, gender);
-    
-    // Create palace object
-    palaces.push({
-      index: i,
-      name: TU_VI.CUNG_NAMES[i],
-      position: palacePosition,
-      chi: palaceChi,
-      element: palaceElement,
-      majorStars: majorStars,
-      minorStars: minorStars
-    });
-  }
-  
-  // Create complete chart data
-  return {
-    info: {
-      birthDate: birthDate,
-      birthTime: birthTime,
-      birthTimeText: getHourRange(birthTime),
-      hourChi: hourChi,
-      gender: gender,
-      lunarYear: lunarYear,
-      canChi: `${can} ${chi}`,
-      tuViPosition: tuViPosition
-    },
-    palaces: palaces
-  };
-}
-
-// Determine element based on Chi
-function determineElement(chi) {
-  const elements = {
-    'Tý': 'Thủy', 'Sửu': 'Thổ', 'Dần': 'Mộc', 'Mão': 'Mộc',
-    'Thìn': 'Thổ', 'Tỵ': 'Hỏa', 'Ngọ': 'Hỏa', 'Mùi': 'Thổ',
-    'Thân': 'Kim', 'Dậu': 'Kim', 'Tuất': 'Thổ', 'Hợi': 'Thủy'
-  };
-  
-  return elements[chi] || 'Thổ';
-}
-
-// Calculate major stars for a palace
-function calculateMajorStars(palaceIndex, palacePosition, lunarYear, month, day, gender) {
-  const stars = [];
-  
-  // This is a simplified algorithm - real Tu Vi calculations are more complex
-  
-  // Example: Tử Vi star appears in a specific palace based on birth year
-  if (palaceIndex === 0) {
-    stars.push({
-      name: 'Tử Vi',
-      type: getStarType('Tử Vi'),
-      color: getStarColor('Tử Vi')
-    });
-  }
-  
-  // Thiên Phủ often appears opposite to Tử Vi
-  if (palaceIndex === 6) {
-    stars.push({
-      name: 'Thiên Phủ',
-      type: getStarType('Thiên Phủ'),
-      color: getStarColor('Thiên Phủ')
-    });
-  }
-  
-  // Thái Dương (Sun) often in a specific palace
-  if (palaceIndex === 2) {
-    stars.push({
-      name: 'Thái Dương',
-      type: getStarType('Thái Dương'),
-      color: getStarColor('Thái Dương')
-    });
-  }
-  
-  // Thái Âm (Moon) often appears opposite to Thái Dương
-  if (palaceIndex === 8) {
-    stars.push({
-      name: 'Thái Âm',
-      type: getStarType('Thái Âm'),
-      color: getStarColor('Thái Âm')
-    });
-  }
-  
-  // Add more stars based on palace index to simulate realistic distribution
-  switch (palaceIndex) {
-    case 1:
-      stars.push({
-        name: 'Thiên Cơ',
-        type: getStarType('Thiên Cơ'),
-        color: getStarColor('Thiên Cơ')
-      });
-      break;
-    case 3:
-      stars.push({
-        name: 'Liêm Trinh',
-        type: getStarType('Liêm Trinh'),
-        color: getStarColor('Liêm Trinh')
-      });
-      break;
-    case 4:
-      stars.push({
-        name: 'Vũ Khúc',
-        type: getStarType('Vũ Khúc'),
-        color: getStarColor('Vũ Khúc')
-      });
-      break;
-    case 5:
-      stars.push({
-        name: 'Thiên Đồng',
-        type: getStarType('Thiên Đồng'),
-        color: getStarColor('Thiên Đồng')
-      });
-      break;
-    case 7:
-      stars.push({
-        name: 'Tham Lang',
-        type: getStarType('Tham Lang'),
-        color: getStarColor('Tham Lang')
-      });
-      break;
-    case 9:
-      stars.push({
-        name: 'Cự Môn',
-        type: getStarType('Cự Môn'),
-        color: getStarColor('Cự Môn')
-      });
-      break;
-    case 10:
-      stars.push({
-        name: 'Thiên Tướng',
-        type: getStarType('Thiên Tướng'),
-        color: getStarColor('Thiên Tướng')
-      });
-      break;
-    case 11:
-      stars.push({
-        name: 'Thiên Lương',
-        type: getStarType('Thiên Lương'),
-        color: getStarColor('Thiên Lương')
-      });
-      break;
-  }
-  
-  // Add Thất Sát and Phá Quân based on birth year
-  const specialIndex = lunarYear % 4;
-  
-  if (specialIndex === 0 && (palaceIndex === 3 || palaceIndex === 7)) {
-    stars.push({
-      name: 'Thất Sát',
-      type: getStarType('Thất Sát'),
-      color: getStarColor('Thất Sát')
-    });
-  }
-  
-  if (specialIndex === 2 && (palaceIndex === 1 || palaceIndex === 11)) {
-    stars.push({
-      name: 'Phá Quân',
-      type: getStarType('Phá Quân'),
-      color: getStarColor('Phá Quân')
-    });
-  }
-  
-  return stars;
-}
-
-// Calculate minor stars for a palace
-function calculateMinorStars(palaceIndex, palacePosition, lunarYear, month, day, birthTime, gender) {
-  const stars = [];
-  
-  // This is a simplified algorithm - real Tu Vi calculations are more complex
-  
-  // Good stars
-  const goodStars = TU_VI.PHU_TINH.good.stars;
-  const badStars = TU_VI.PHU_TINH.bad.stars;
-  const neutralStars = TU_VI.PHU_TINH.neutral.stars;
-  
-  // Distribute good stars
-  const goodStarCount = Math.min(2, Math.abs((palaceIndex + lunarYear + month) % 3));
-  for (let i = 0; i < goodStarCount; i++) {
-    const starIndex = (palaceIndex + lunarYear + month + i) % goodStars.length;
-    const starName = goodStars[starIndex];
-    stars.push({
-      name: starName,
-      type: 'good',
-      color: TU_VI.PHU_TINH.good.color
-    });
-  }
-  
-  // Distribute bad stars
-  const badStarCount = Math.min(1, Math.abs((palaceIndex + lunarYear + day) % 2));
-  for (let i = 0; i < badStarCount; i++) {
-    const starIndex = (palaceIndex + day + month + i) % badStars.length;
-    const starName = badStars[starIndex];
-    stars.push({
-      name: starName,
-      type: 'bad',
-      color: TU_VI.PHU_TINH.bad.color
-    });
-  }
-  
-  // Distribute neutral stars
-  const neutralStarCount = Math.min(1, Math.abs((palaceIndex + birthTime) % 2));
-  for (let i = 0; i < neutralStarCount; i++) {
-    const starIndex = (palaceIndex + birthTime + i) % neutralStars.length;
-    const starName = neutralStars[starIndex];
-    stars.push({
-      name: starName,
-      type: 'neutral',
-      color: TU_VI.PHU_TINH.neutral.color
-    });
-  }
-  
-  // Add special transformations (Hóa) based on gender and birth year
-  if ((lunarYear + palaceIndex) % 12 === 0) {
-    stars.push({
-      name: 'Hóa Lộc',
-      type: 'good',
-      color: TU_VI.PHU_TINH.good.color
-    });
-  }
-  
-  if ((lunarYear + palaceIndex + 4) % 12 === 0) {
-    stars.push({
-      name: 'Hóa Quyền',
-      type: 'good',
-      color: TU_VI.PHU_TINH.good.color
-    });
-  }
-  
-  if ((lunarYear + palaceIndex + 8) % 12 === 0) {
-    stars.push({
-      name: 'Hóa Khoa',
-      type: 'good',
-      color: TU_VI.PHU_TINH.good.color
-    });
-  }
-  
-  if ((lunarYear + palaceIndex + 6) % 12 === 0) {
-    stars.push({
-      name: 'Hóa Kỵ',
-      type: 'bad',
-      color: TU_VI.PHU_TINH.bad.color
-    });
-  }
-  
-  return stars;
-}
-
-// Get star type based on its name
-function getStarType(starName) {
-  for (const type in TU_VI.STAR_TYPES) {
-    if (TU_VI.STAR_TYPES[type].stars.includes(starName)) {
-      return type;
-    }
-  }
-  return 'neutral';
-}
-
-// Get star color based on its name
-function getStarColor(starName) {
-  for (const type in TU_VI.STAR_TYPES) {
-    if (TU_VI.STAR_TYPES[type].stars.includes(starName)) {
-      return TU_VI.STAR_TYPES[type].color;
-    }
-  }
-  return 'black';
-}
-
-// Helper function: Calculate lunar year (simplified)
-function calculateLunarYear(solarYear, solarMonth, solarDay) {
-  // This is a simplified approximation
-  // For accurate lunar year calculation, a full lunar calendar conversion would be needed
-  
-  // If before Lunar New Year (approximately early February), it's previous lunar year
-  if (solarMonth === 1 || (solarMonth === 2 && solarDay < 10)) {
-    return solarYear - 1;
-  }
-  
-  return solarYear;
-}
-
-// Get hour range based on time index
-function getHourRange(timeIndex) {
-  const hours = [
-    "23h-1h (Tý)", "1h-3h (Sửu)", "3h-5h (Dần)", "5h-7h (Mão)", 
-    "7h-9h (Thìn)", "9h-11h (Tỵ)", "11h-13h (Ngọ)", "13h-15h (Mùi)", 
-    "15h-17h (Thân)", "17h-19h (Dậu)", "19h-21h (Tuất)", "21h-23h (Hợi)"
-  ];
-  
-  return hours[Math.floor(timeIndex / 2) % 12] || "Không xác định";
-}
-
-// Display the Tu Vi chart
-function displayTuViChart(chartData) {
-  try {
-    const palaces = document.querySelectorAll('.palace');
-    
-    if (!chartData || !chartData.palaces || !Array.isArray(chartData.palaces)) {
-      throw new Error('Dữ liệu lá số không hợp lệ');
-    }
-    
-    // Update chart info
-    updateChartInfo(chartData.info);
-    
-    // Update palaces
-    palaces.forEach((palace, index) => {
-      if (index < chartData.palaces.length) {
-        const palaceData = chartData.palaces[index];
-        updatePalace(palace, palaceData);
-      }
-    });
-    
-    // Update chart details area
-    updateChartDetails(chartData);
-    
-    // Show success message
-    alert('Lá số Tử Vi đã được tạo thành công!');
-  } catch (error) {
-    console.error('Lỗi hiển thị lá số:', error);
-    alert('Đã xảy ra lỗi trong khi hiển thị lá số. Vui lòng thử lại.');
-  }
-}
-
-// Update chart info section
-function updateChartInfo(info) {
-  // Find or create info element
-  let infoElement = document.querySelector('.chart-info');
-  if (!infoElement) {
-    infoElement = document.createElement('div');
-    infoElement.className = 'chart-info';
-    
-    // Insert before chart grid
-    const chartContainer = document.querySelector('.chart-container');
-    if (chartContainer) {
-      chartContainer.insertBefore(infoElement, chartContainer.firstChild);
-    }
-  }
-  
-  // Format date
-  const birthDate = new Date(info.birthDate);
-  const formattedDate = `${birthDate.getDate()}/${birthDate.getMonth() + 1}/${birthDate.getFullYear()}`;
-  
-  // Update info content
-  infoElement.innerHTML = `
-    <h3>Thông Tin Lá Số Tử Vi</h3>
-    <div class="person-info">
-      <p><strong>Giới tính:</strong> ${info.gender === 'male' ? 'Nam' : 'Nữ'}</p>
-      <p><strong>Ngày sinh:</strong> ${formattedDate}</p>
-      <p><strong>Giờ sinh:</strong> ${info.birthTimeText}</p>
-      <p><strong>Năm sinh âm lịch:</strong> ${info.lunarYear} (${info.canChi} niên)</p>
+  // Create the chart HTML structure similar to cohoc.net
+  const chartHTML = `
+    <div class="tu-vi-chart">
+      <div class="chart-title">
+        <h2>Lá Số Tử Vi - ${gender === 'male' ? 'Nam' : 'Nữ'} mạng</h2>
+        <p>Sinh ngày ${day} tháng ${month} năm ${year} (${canChiYear})</p>
+        <p>Giờ sinh: ${convertHourToText(birthTime)}</p>
+      </div>
+      
+      <div class="chart-grid">
+        <!-- Top row -->
+        <div class="chart-cell top-cell tuvipalace palace-7">
+          <div class="palace-name">TẬT ÁCH</div>
+          <div class="palace-content">
+            <div class="main-star">THAM LANG</div>
+            <div class="secondary-stars">
+              <span class="good-star">Hồng Loan</span>
+              <span class="bad-star">Thiên Khốc</span>
+            </div>
+          </div>
+        </div>
+        <div class="chart-cell top-cell tuvipalace palace-8">
+          <div class="palace-name">TÀI BẠCH</div>
+          <div class="palace-content">
+            <div class="main-star">THÁI ÂM</div>
+            <div class="secondary-stars">
+              <span class="good-star">Hóa Lộc</span>
+              <span class="neutral-star">Đường Phù</span>
+            </div>
+          </div>
+        </div>
+        <div class="chart-cell top-cell tuvipalace palace-9">
+          <div class="palace-name">TỬ TỨC</div>
+          <div class="palace-content">
+            <div class="main-star">CỰ MÔN</div>
+            <div class="secondary-stars">
+              <span class="good-star">Thiên Khôi</span>
+              <span class="bad-star">Thiên Hình</span>
+            </div>
+          </div>
+        </div>
+        <div class="chart-cell top-cell tuvipalace palace-10">
+          <div class="palace-name">PHU THÊ</div>
+          <div class="palace-content">
+            <div class="main-star">THIÊN TƯỚNG</div>
+            <div class="secondary-stars">
+              <span class="good-star">Đào Hoa</span>
+              <span class="neutral-star">Quốc Ấn</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Middle rows -->
+        <div class="chart-cell left-cell tuvipalace palace-6">
+          <div class="palace-name">THIÊN DI</div>
+          <div class="palace-content">
+            <div class="main-star">THẤT SÁT</div>
+            <div class="secondary-stars">
+              <span class="good-star">Thiên Mã</span>
+              <span class="bad-star">Hóa Kỵ</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-central central-info">
+          <div class="person-info">
+            <p><strong>Tuổi:</strong> ${canChiYear}</p>
+            <p><strong>Mệnh:</strong> ${calculateMenh(year, gender)}</p>
+            <p><strong>Cung:</strong> ${calculateCung(birthDate, birthTime, gender)}</p>
+            <p><strong>Thân:</strong> ${calculateThan(birthDate, birthTime, gender)}</p>
+          </div>
+        </div>
+        
+        <div class="chart-cell right-cell tuvipalace palace-11">
+          <div class="palace-name">HUYNH ĐỆ</div>
+          <div class="palace-content">
+            <div class="main-star">THIÊN LƯƠNG</div>
+            <div class="secondary-stars">
+              <span class="good-star">Thiên Phúc</span>
+              <span class="neutral-star">Lưu Hà</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-cell left-cell tuvipalace palace-5">
+          <div class="palace-name">NÔ BỘC</div>
+          <div class="palace-content">
+            <div class="main-star">THIÊN ĐỒNG</div>
+            <div class="secondary-stars">
+              <span class="good-star">Văn Xương</span>
+              <span class="bad-star">Đại Hao</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-cell right-cell tuvipalace palace-0">
+          <div class="palace-name">MỆNH</div>
+          <div class="palace-content">
+            <div class="main-star">TỬ VI</div>
+            <div class="secondary-stars">
+              <span class="good-star">Thiên Phúc</span>
+              <span class="good-star">Thiên Quý</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Bottom row -->
+        <div class="chart-cell bottom-cell tuvipalace palace-4">
+          <div class="palace-name">QUAN LỘC</div>
+          <div class="palace-content">
+            <div class="main-star">VŨ KHÚC</div>
+            <div class="secondary-stars">
+              <span class="good-star">Hóa Quyền</span>
+              <span class="neutral-star">Thiên Việt</span>
+            </div>
+          </div>
+        </div>
+        <div class="chart-cell bottom-cell tuvipalace palace-3">
+          <div class="palace-name">ĐIỀN TRẠCH</div>
+          <div class="palace-content">
+            <div class="main-star">LIÊM TRINH</div>
+            <div class="secondary-stars">
+              <span class="good-star">Hóa Khoa</span>
+              <span class="bad-star">Thiên Hư</span>
+            </div>
+          </div>
+        </div>
+        <div class="chart-cell bottom-cell tuvipalace palace-2">
+          <div class="palace-name">PHÚC ĐỨC</div>
+          <div class="palace-content">
+            <div class="main-star">THÁI DƯƠNG</div>
+            <div class="secondary-stars">
+              <span class="good-star">Văn Khúc</span>
+              <span class="neutral-star">Thiên Tài</span>
+            </div>
+          </div>
+        </div>
+        <div class="chart-cell bottom-cell tuvipalace palace-1">
+          <div class="palace-name">PHỤ MẪU</div>
+          <div class="palace-content">
+            <div class="main-star">THIÊN CƠ</div>
+            <div class="secondary-stars">
+              <span class="good-star">Thiên Quan</span>
+              <span class="bad-star">Tử Phù</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-legend">
+        <h3>Chú thích</h3>
+        <div class="legend-item">
+          <span class="legend-main-star">CHÍNH TINH</span>: Các sao chính
+        </div>
+        <div class="legend-item">
+          <span class="legend-good">Phụ tốt</span>: Các sao phụ tốt
+        </div>
+        <div class="legend-item">
+          <span class="legend-bad">Phụ xấu</span>: Các sao phụ xấu
+        </div>
+        <div class="legend-item">
+          <span class="legend-neutral">Phụ bình</span>: Các sao phụ bình thường
+        </div>
+      </div>
+      
+      <div class="chart-details">
+        <h3>Luận Giải</h3>
+        <div class="palace-details">
+          <p>Nhấp vào từng cung để xem chi tiết.</p>
+        </div>
+      </div>
     </div>
   `;
-}
-
-// Update a palace with Tu Vi data
-function updatePalace(palaceElement, palaceData) {
-  // Clear existing content
-  palaceElement.innerHTML = '';
   
-  // Create palace header
-  const header = document.createElement('div');
-  header.className = 'palace-header';
-  header.innerHTML = `
-    <div class="palace-name">${palaceData.name}</div>
-    <div class="palace-chi">${palaceData.chi}</div>
-  `;
-  
-  // Create major stars section
-  const majorStars = document.createElement('div');
-  majorStars.className = 'major-stars';
-  
-  if (palaceData.majorStars && palaceData.majorStars.length > 0) {
-    palaceData.majorStars.forEach(star => {
-      const starSpan = document.createElement('span');
-      starSpan.className = `star star-${star.type} star-${star.color}`;
-      starSpan.textContent = star.name;
-      starSpan.title = TU_VI.STAR_MEANINGS[star.name] || '';
-      majorStars.appendChild(starSpan);
-    });
+  // Create a chart container if it doesn't exist
+  let chartContainer = document.querySelector('.chart-container');
+  if (!chartContainer) {
+    chartContainer = document.createElement('div');
+    chartContainer.className = 'chart-container';
+    document.querySelector('.container').appendChild(chartContainer);
   }
   
-  // Create minor stars section
-  const minorStars = document.createElement('div');
-  minorStars.className = 'minor-stars';
+  // Insert chart into container
+  chartContainer.innerHTML = chartHTML;
   
-  if (palaceData.minorStars && palaceData.minorStars.length > 0) {
-    palaceData.minorStars.forEach(star => {
-      const starSpan = document.createElement('span');
-      starSpan.className = `star star-${star.type} star-${star.color}`;
-      starSpan.textContent = star.name;
-      minorStars.appendChild(starSpan);
+  // Add click events to palaces
+  const palaces = document.querySelectorAll('.tuvipalace');
+  palaces.forEach(palace => {
+    palace.addEventListener('click', function() {
+      const palaceName = this.querySelector('.palace-name').textContent;
+      showPalaceDetails(palaceName);
     });
-  }
-  
-  // Append sections to palace
-  palaceElement.appendChild(header);
-  palaceElement.appendChild(majorStars);
-  palaceElement.appendChild(minorStars);
-  
-  // Add element indicator
-  const elementDiv = document.createElement('div');
-  elementDiv.className = `element element-${TU_VI.ELEMENTS[palaceData.element] || 'earth'}`;
-  elementDiv.textContent = palaceData.element;
-  palaceElement.appendChild(elementDiv);
-  
-  // Add click handler for details
-  palaceElement.addEventListener('click', () => {
-    showPalaceDetails(palaceData);
   });
-  
-  // Add data attributes
-  palaceElement.setAttribute('data-index', palaceData.index);
-  palaceElement.setAttribute('data-name', palaceData.name);
 }
 
-// Update chart details area with overall information
-function updateChartDetails(chartData) {
-  const detailsDiv = document.querySelector('.chart-details');
-  if (!detailsDiv) return;
+// Helper function to calculate Can Chi for a year
+function calculateCanChiYear(year) {
+  const CAN = ['Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ', 'Canh', 'Tân', 'Nhâm', 'Quý'];
+  const CHI = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
   
-  // Create initial content
-  detailsDiv.innerHTML = `
-    <h3>Luận Giải Lá Số Tử Vi</h3>
-    <p>Nhấp vào từng cung để xem chi tiết ý nghĩa và luận giải.</p>
-    <div class="overall-analysis"></div>
-  `;
+  const canIndex = (year - 4) % 10;
+  const chiIndex = (year - 4) % 12;
   
-  // Add general chart analysis
-  const overallDiv = detailsDiv.querySelector('.overall-analysis');
-  if (overallDiv) {
-    overallDiv.innerHTML = `
-      <h4>Tổng Quan
+  return `${CAN[canIndex]} ${CHI[chiIndex]}`;
+}
+
+// Helper function to convert hour index to text
+function convertHourToText(hourIndex) {
+  const hours = [
+    "Tý (23h-1h)", "Sửu (1h-3h)", "Dần (3h-5h)", "Mão (5h-7h)", 
+    "Thìn (7h-9h)", "Tỵ (9h-11h)", "Ngọ (11h-13h)", "Mùi (13h-15h)", 
+    "Thân (15h-17h)", "Dậu (17h-19h)", "Tuất (19h-21h)", "Hợi (21h-23h)"
+  ];
+  
+  return hours[Math.floor(hourIndex / 2) % 12] || "Không xác định";
+}
+
+// Calculate the menh element based on year and gender
+function calculateMenh(year, gender) {
+  // This is a simplified calculation
+  const elements = ['Kim', 'Thủy', 'Hỏa', 'Thổ', 'Mộc'];
+  const descriptions = {
+    'Kim': 'Kim (vàng, kim loại)',
+    'Thủy': 'Thủy (nước)',
+    'Hỏa': 'Hỏa (lửa)',
+    'Thổ': 'Thổ (đất)',
+    'Mộc': 'Mộc (gỗ, cây)'
+  };
+  
+  // Simple algorithm for demo purposes
+  const index = (year + (gender === 'male' ? 0 : 1)) % 5;
+  return descriptions[elements[index]];
+}
+
+// Calculate cung based on birth date, time and gender
+function calculateCung(birthDate, birthTime, gender) {
+  // Simplified calculation
+  const cungNames = [
+    'Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 
+    'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'
+  ];
+  
+  const date = new Date(birthDate);
+  const month = date.getMonth() + 1;
+  
+  // Simple algorithm for demo purposes
+  const index = (month + birthTime + (gender === 'male' ? 0 : 6)) % 12;
+  return cungNames[index];
+}
+
+// Calculate than based on birth date, time and gender
+function calculateThan(birthDate, birthTime, gender) {
+  // Simplified calculation
+  const thanNames = [
+    'Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 
+    'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'
+  ];
+  
+  const date = new Date(birthDate);
+  const day = date.getDate();
+  
+  // Simple algorithm for demo purposes
+  const index = (day + birthTime + (gender === 'male' ? 6 : 0)) % 12;
+  return thanNames[index];
+}
+
+// Show details for a specific palace
+function showPalaceDetails(palaceName) {
+  const palaceDetailsContent = getPalaceDescription(palaceName);
+  const detailsContainer = document.querySelector('.palace-details');
+  
+  if (detailsContainer) {
+    detailsContainer.innerHTML = `
+      <h4>${palaceName}</h4>
+      ${palaceDetailsContent}
+    `;
+    
+    // Scroll to details
+    detailsContainer.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+// Get description for a palace
+function getPalaceDescription(palaceName) {
+  const descriptions = {
+    'MỆNH': `
+      <p>Cung Mệnh chỉ tính cách, số phận và vận mệnh của con người. Đây là cung quan trọng nhất trong lá số Tử Vi.</p>
+      <p>Với sao Tử Vi tọa mệnh, người này có số mệnh tốt, có cơ hội thăng tiến trong công việc, cuộc sống hạnh phúc và tuổi thọ cao.</p>
+      <p>Thiên Phúc và Thiên Quý hội tụ: Người này được trời ban nhiều phúc lộc, dễ gặp quý nhân giúp đỡ, cuộc đời nhiều may mắn.</p>
+    `,
+    'PHỤ MẪU': `
+      <p>Cung Phụ Mẫu chỉ mối quan hệ với cha mẹ, người bề trên và cấp trên.</p>
+      <p>Với sao Thiên Cơ: Người này thông minh, có trí tuệ tốt, quan hệ với bề trên tương đối thuận lợi nhưng đôi khi thiếu sự ổn định.</p>
+      <p>Thiên Quan: Được cấp trên nâng đỡ, giúp đỡ. Tử Phù: Có thể có xung đột hoặc khó khăn trong mối quan hệ với cha mẹ.</p>
+    `,
+    'PHÚC ĐỨC': `
+      <p>Cung Phúc Đức nói về phúc báo, đức độ, tâm linh và sự bình an trong tâm hồn.</p>
+      <p>Thái Dương ở cung Phúc Đức: Người này có phúc lớn, được hưởng cuộc sống sung túc, có sức khỏe tốt và tâm hồn thanh thản.</p>
+      <p>Văn Khúc: Có năng khiếu văn chương, nghệ thuật, mang đến niềm vui trong cuộc sống. Thiên Tài: Có tài lộc bất ngờ.</p>
+    `,
+    'ĐIỀN TRẠCH': `
+      <p>Cung Điền Trạch chỉ về nhà cửa, đất đai, tài sản cố định.</p>
+      <p>Liêm Trinh tọa cung Điền Trạch: Việc mua bán nhà đất cần cẩn trọng, có thể gặp tranh chấp, kiện tụng liên quan đến tài sản.</p>
+      <p>Hóa Khoa: Giúp giảm thiểu rủi ro, việc mua bán nhà đất có thể thuận lợi hơn. Thiên Hư: Cần đề phòng mất mát, hư hỏng về nhà cửa.</p>
+    `,
+    'QUAN LỘC': `
+      <p>Cung Quan Lộc nói về sự nghiệp, công danh, địa vị xã hội.</p>
+      <p>Vũ Khúc tọa cung Quan Lộc: Người này có khả năng quản lý tài chính tốt, thích hợp làm việc trong lĩnh vực ngân hàng, tài chính, kế toán.</p>
+      <p>Hóa Quyền: Có quyền lực, khả năng lãnh đạo, dễ thăng tiến trong sự nghiệp. Thiên Việt: Có danh tiếng, được người khác tôn trọng.</p>
+    `,
+    'NÔ BỘC': `
+      <p>Cung Nô Bộc nói về mối quan hệ với bạn bè, đồng nghiệp, người giúp việc.</p>
+      <p>Thiên Đồng tọa cung Nô Bộc: Người này được bạn bè, đồng nghiệp quý mến, giúp đỡ, có các mối quan hệ tốt đẹp.</p>
+      <p>Văn Xương: Có bạn bè học thức, tài năng. Đại Hao: Cần cẩn thận khi cho bạn bè vay mượn tiền bạc.</p>
+    `,
+    'THIÊN DI': `
+      <p>Cung Thiên Di liên quan đến việc đi lại, du lịch, sống xa quê hương.</p>
+      <p>Thất Sát tọa cung Thiên Di: Người này năng động, thích đi lại, nhưng có thể gặp rủi ro khi đi xa, nên cẩn thận khi di chuyển.</p>
+      <p>Thiên Mã: Thường xuyên di chuyển, đi xa, có cơ hội phát triển ở nơi xa quê. Hóa Kỵ: Cần đề phòng tai nạn khi đi xa.</p>
+    `,
+    'TẬT ÁCH': `
+      <p>Cung Tật Ách nói về sức khỏe, bệnh tật, tai ương.</p>
+      <p>Tham Lang tọa cung Tật Ách: Người này có thể mắc các bệnh liên quan đến tiêu hóa, gan, mật. Cần chú ý chế độ ăn uống hợp lý.</p>
+      <p>Hồng Loan: Có thể có các vấn đề liên quan đến sinh lý, nội tiết. Thiên Khốc: Có thể gặp các bệnh mãn tính, khó chữa.</p>
+    `,
+    'TÀI BẠCH': `
+      <p>Cung Tài Bạch nói về tiền bạc, thu nhập, của cải.</p>
+      <p>Thái Âm tọa cung Tài Bạch: Tài chính của người này thay đổi thất thường, có lúc lên lúc xuống, nhưng nhìn chung khá dồi dào.</p>
+      <p>Hóa Lộc: Có tài lộc tốt, dễ kiếm tiền, có của cải dư dả. Đường Phù: Có nguồn thu nhập ổn định, đều đặn.</p>
+    `,
+    'TỬ TỨC': `
+      <p>Cung Tử Tức nói về con cái, tình duyên với con cái.</p>
+      <p>Cự Môn tọa cung Tử Tức: Quan hệ với con cái có thể có nhiều xung đột, cần kiên nhẫn và khéo léo trong cách giáo dục con.</p>
+      <p>Thiên Khôi: Con cái thông minh, có triển vọng. Thiên Hình: Có thể con cái bướng bỉnh, khó dạy.</p>
+    `,
+    'PHU THÊ': `
+      <p>Cung Phu Thê nói về hôn nhân, vợ chồng, tình duyên.</p>
+      <p>Thiên Tướng tọa cung Phu Thê: Người phối ngẫu có tính cách mạnh mẽ, quyết đoán, có khả năng lãnh đạo, chỉ huy.</p>
+      <p>Đào Hoa: Đời sống vợ chồng hạnh phúc, có tình yêu đẹp. Quốc Ấn: Người phối ngẫu có địa vị trong xã hội.</p>
+    `,
+    'HUYNH ĐỆ': `
+      <p>Cung Huynh Đệ nói về anh chị em, mối quan hệ với anh chị em ruột.</p>
+      <p>Thiên Lương tọa cung Huynh Đệ: Người này có mối quan hệ tốt đẹp với anh chị em, luôn được họ giúp đỡ, hỗ trợ.</p>
+      <p>Thiên Phúc: Anh chị em sống hòa thuận, giúp đỡ lẫn nhau. Lưu Hà: Có thể có khoảng cách về địa lý với anh chị em.</p>
+    `
+  };
+  
+  return descriptions[palaceName] || '<p>Không có thông tin chi tiết cho cung này.</p>';
+}
