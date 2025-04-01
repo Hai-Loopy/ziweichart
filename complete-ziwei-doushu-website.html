@@ -23,6 +23,463 @@
             background-color: var(--background-color);
             margin: 0;
             padding: 20px;
+// Add this script section at the end of the HTML file, just before the closing </body> tag
+
+<script>
+    // Function to navigate between pages
+    function navigateTo(page) {
+        if (page === 'simple') {
+            document.getElementById('simple-calculator').style.display = 'block';
+            document.getElementById('traditional-calculator').style.display = 'none';
+            document.getElementById('nav-simple').classList.add('active');
+            document.getElementById('nav-traditional').classList.remove('active');
+        } else if (page === 'traditional') {
+            document.getElementById('simple-calculator').style.display = 'none';
+            document.getElementById('traditional-calculator').style.display = 'block';
+            document.getElementById('nav-simple').classList.remove('active');
+            document.getElementById('nav-traditional').classList.add('active');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Simple Chart Variables
+        const birthForm = document.getElementById('birthForm');
+        const loading = document.getElementById('loading');
+        const chartContainer = document.getElementById('chartContainer');
+        const interpretation = document.getElementById('interpretation');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        // Traditional Chart Variables
+        const traditionalForm = document.getElementById('traditionalForm');
+        const tradLoading = document.getElementById('tradLoading');
+        const tradChartContainer = document.getElementById('tradChartContainer');
+        const tradInterpretation = document.getElementById('tradInterpretation');
+        const tradErrorMessage = document.getElementById('tradErrorMessage');
+        
+        // Heavenly Stems and Earthly Branches
+        const heavenlyStems = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+        const earthlyBranches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+        const branchNames = ['Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake', 
+                            'Horse', 'Goat', 'Monkey', 'Rooster', 'Dog', 'Pig'];
+        
+        // Main stars
+        const mainStars = [
+            "紫微星 (Emperor Star)",
+            "天機星 (Advisor Star)",
+            "太陽星 (Sun Star)",
+            "武曲星 (General Star)",
+            "天同星 (Harmony Star)",
+            "廉貞星 (Integrity Star)",
+            "天府星 (Wealth Star)",
+            "太陰星 (Moon Star)",
+            "貪狼星 (Greedy Wolf Star)",
+            "巨門星 (Giant Gate Star)",
+            "天相星 (Minister Star)",
+            "天梁星 (Bridge Star)",
+            "七殺星 (Seven Killings Star)",
+            "破軍星 (Destroyer Star)"
+        ];
+        
+        // Vietnamese Traditional Star Names
+        const vietnameseMainStars = [
+            "紫微 (Tử Vi)", // Emperor Star
+            "天機 (Thiên Cơ)", // Advisor Star
+            "太陽 (Thái Dương)", // Sun Star
+            "武曲 (Vũ Khúc)", // General Star
+            "天同 (Thiên Đồng)", // Harmony Star
+            "廉貞 (Liêm Trinh)", // Integrity Star
+            "天府 (Thiên Phủ)", // Wealth Star
+            "太陰 (Thái Âm)", // Moon Star
+            "貪狼 (Tham Lang)", // Greedy Wolf Star
+            "巨門 (Cự Môn)", // Giant Gate Star
+            "天相 (Thiên Tướng)", // Minister Star
+            "天梁 (Thiên Lương)", // Bridge Star
+            "七殺 (Thất Sát)", // Seven Killings Star
+            "破軍 (Phá Quân)"  // Destroyer Star
+        ];
+
+        const vietnameseMinorStars = [
+            "左輔 (Tả Phụ)", // Left Assistant
+            "右弼 (Hữu Bật)", // Right Assistant
+            "文曲 (Văn Khúc)", // Literary Star
+            "文昌 (Văn Xương)", // Literary Brilliance
+            "天魁 (Thiên Khôi)", // Leader Star
+            "天鉞 (Thiên Việt)", // Authority Star
+            "擎羊 (Kình Dương)", // Ram Star
+            "陀羅 (Đà La)", // Heavy Star
+            "火星 (Hỏa Tinh)", // Fire Star
+            "鈴星 (Linh Tinh)", // Spiritual Star
+            "天空 (Thiên Không)", // Empty Space Star
+            "地劫 (Địa Kiếp)"  // Earth Calamity Star
+        ];
+        
+        const vietnameseAuxiliaryStars = [
+            "化祿 (Hóa Lộc)", // Wealth Transformation
+            "化權 (Hóa Quyền)", // Power Transformation
+            "化科 (Hóa Khoa)", // Scholarly Transformation
+            "化忌 (Hóa Kỵ)", // Taboo Transformation
+            "天馬 (Thiên Mã)", // Heavenly Horse
+            "红鸾 (Hồng Loan)", // Red Phoenix
+            "天喜 (Thiên Hỉ)", // Heavenly Joy
+            "孤辰 (Cô Thần)", // Lonely Star
+            "寡宿 (Quả Tú)"  // Widow Star
+        ];
+        
+        // Simplified calculation of Ming Palace (Life Palace)
+        function calculateMingPalace(month, day, hour) {
+            // This is a simplified calculation
+            let mingPosition = (month * 2 + day / 3 + hour / 2) % 12;
+            return Math.floor(mingPosition) || 1; // Default to 1 if calculation gives 0
+        }
+        
+        // Calculate Chinese zodiac sign based on birth year
+        function calculateChineseZodiac(year) {
+            const startYear = 1900; // Year of the Rat
+            const offset = (year - startYear) % 12;
+            return branchNames[offset];
+        }
+        
+        // Calculate the Heavenly Stem and Earthly Branch for a year
+        function calculateStemBranch(year) {
+            const stemIndex = (year - 4) % 10;
+            const branchIndex = (year - 4) % 12;
+            
+            return {
+                stem: heavenlyStems[stemIndex],
+                branch: earthlyBranches[branchIndex],
+                branchName: branchNames[branchIndex]
+            };
+        }
+        
+        // Distribute main stars to palaces (simplified)
+        function distributeMainStars(mingPalace) {
+            const palaceStars = {};
+            
+            // Initialize all palaces with empty arrays
+            for (let i = 1; i <= 12; i++) {
+                palaceStars[i] = [];
+            }
+            
+            // Simplified distribution based on Ming Palace
+            palaceStars[mingPalace].push(mainStars[0]); // Emperor Star in Ming Palace
+            palaceStars[(mingPalace + 4) % 12 || 12].push(mainStars[1]); // Advisor Star
+            palaceStars[(mingPalace + 7) % 12 || 12].push(mainStars[2]); // Sun Star
+            palaceStars[(mingPalace + 8) % 12 || 12].push(mainStars[7]); // Moon Star
+            palaceStars[(mingPalace + 2) % 12 || 12].push(mainStars[8]); // Greedy Wolf Star
+            palaceStars[(mingPalace + 6) % 12 || 12].push(mainStars[13]); // Destroyer Star
+            
+            return palaceStars;
+        }
+        
+        // Distribute traditional stars to palaces (Vietnamese style)
+        function distributeTraditionalStars(mingPalace) {
+            const tradPalaceStars = {
+                main: {},
+                minor: {},
+                auxiliary: {}
+            };
+            
+            // Initialize all palaces with empty arrays
+            for (let i = 1; i <= 12; i++) {
+                tradPalaceStars.main[i] = [];
+                tradPalaceStars.minor[i] = [];
+                tradPalaceStars.auxiliary[i] = [];
+            }
+            
+            // Main stars distribution (simplified for demonstration)
+            tradPalaceStars.main[mingPalace].push(vietnameseMainStars[0]); // Emperor Star in Ming Palace
+            tradPalaceStars.main[(mingPalace + 4) % 12 || 12].push(vietnameseMainStars[1]); // Advisor Star
+            tradPalaceStars.main[(mingPalace + 7) % 12 || 12].push(vietnameseMainStars[2]); // Sun Star
+            tradPalaceStars.main[(mingPalace + 8) % 12 || 12].push(vietnameseMainStars[7]); // Moon Star
+            tradPalaceStars.main[(mingPalace + 2) % 12 || 12].push(vietnameseMainStars[8]); // Greedy Wolf Star
+            tradPalaceStars.main[(mingPalace + 6) % 12 || 12].push(vietnameseMainStars[13]); // Destroyer Star
+            
+            // Minor stars distribution (simplified)
+            tradPalaceStars.minor[mingPalace].push(vietnameseMinorStars[0]); // Left Assistant
+            tradPalaceStars.minor[(mingPalace + 6) % 12 || 12].push(vietnameseMinorStars[1]); // Right Assistant
+            tradPalaceStars.minor[(mingPalace + 3) % 12 || 12].push(vietnameseMinorStars[2]); // Literary Star
+            tradPalaceStars.minor[(mingPalace + 9) % 12 || 12].push(vietnameseMinorStars[3]); // Literary Brilliance
+            
+            // Auxiliary stars distribution (simplified)
+            tradPalaceStars.auxiliary[mingPalace].push(vietnameseAuxiliaryStars[0]); // Wealth Transformation
+            tradPalaceStars.auxiliary[(mingPalace + 1) % 12 || 12].push(vietnameseAuxiliaryStars[1]); // Power Transformation
+            tradPalaceStars.auxiliary[(mingPalace + 2) % 12 || 12].push(vietnameseAuxiliaryStars[2]); // Scholarly Transformation
+            
+            return tradPalaceStars;
+        }
+        
+        // Generate basic interpretation based on chart
+        function generateInterpretation(birthInfo, palaceStars) {
+            let interpretation = `<p><strong>Birth Year:</strong> ${birthInfo.year} - Year of the ${birthInfo.zodiac}</p>`;
+            interpretation += `<p><strong>Heavenly Stem and Earthly Branch:</strong> ${birthInfo.stemBranch.stem}${birthInfo.stemBranch.branch} (${birthInfo.stemBranch.branchName} Year)</p>`;
+            interpretation += `<p><strong>Life Palace Position:</strong> ${birthInfo.mingPalace}</p>`;
+            
+            interpretation += `<h3>Key Palace Interpretations:</h3>`;
+            
+            // Life Palace
+            interpretation += `<h4>Life Palace (命宮)</h4>`;
+            interpretation += `<p>The Life Palace represents your overall personality, appearance, and general destiny. `;
+            if (palaceStars[birthInfo.mingPalace].includes(mainStars[0])) {
+                interpretation += `With the Emperor Star in your Life Palace, you may have a noble presence and leadership qualities. You tend to be respected by others and have good self-discipline.`;
+            } else {
+                interpretation += `Your Life Palace contains ${palaceStars[birthInfo.mingPalace].length > 0 ? palaceStars[birthInfo.mingPalace].join(", ") : "no major stars"}, suggesting ${palaceStars[birthInfo.mingPalace].length > 0 ? "influences related to these energies" : "a more balanced and moderate personality"}.`;
+            }
+            interpretation += `</p>`;
+            
+            // Career Palace
+            const careerPalace = 4;
+            interpretation += `<h4>Career Palace (事業宮)</h4>`;
+            interpretation += `<p>The Career Palace indicates your professional life, achievements, and social status. `;
+            if (palaceStars[careerPalace].length > 0) {
+                interpretation += `Your Career Palace contains ${palaceStars[careerPalace].join(", ")}, suggesting potential for ${palaceStars[careerPalace].includes(mainStars[0]) ? "leadership roles and high achievement" : "varied career experiences with both challenges and opportunities"}.`;
+            } else {
+                interpretation += `Your Career Palace contains no major stars, suggesting a stable but potentially unremarkable career path that may require extra effort to achieve significant success.`;
+            }
+            interpretation += `</p>`;
+            
+            // Fortune Palace
+            const fortunePalace = 3;
+            interpretation += `<h4>Fortune Palace (財帛宮)</h4>`;
+            interpretation += `<p>The Fortune Palace relates to wealth, financial prospects, and material possessions. `;
+            if (palaceStars[fortunePalace].includes(mainStars[6])) {
+                interpretation += `With the Wealth Star in your Fortune Palace, you may have good opportunities for financial abundance and steady wealth accumulation.`;
+            } else if (palaceStars[fortunePalace].length > 0) {
+                interpretation += `Your Fortune Palace contains ${palaceStars[fortunePalace].join(", ")}, suggesting ${palaceStars[fortunePalace].includes(mainStars[13]) ? "potential financial volatility with both gains and losses" : "moderate financial prospects with effort-based rewards"}.`;
+            } else {
+                interpretation += `Your Fortune Palace contains no major stars, suggesting that wealth accumulation may require consistent effort and prudent management.`;
+            }
+            interpretation += `</p>`;
+            
+            // Disclaimer
+            interpretation += `<p><em>Note: This is a simplified interpretation based on a basic calculation. A complete Ziwei Doushu reading would involve many more stars, palace relationships, and personal factors.</em></p>`;
+            
+            return interpretation;
+        }
+        
+        // Simple chart form submission
+        birthForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const year = parseInt(document.getElementById('birthYear').value);
+            const month = parseInt(document.getElementById('birthMonth').value);
+            const day = parseInt(document.getElementById('birthDay').value);
+            const hour = parseInt(document.getElementById('birthHour').value);
+            const minute = parseInt(document.getElementById('birthMinute').value);
+            const gender = document.getElementById('gender').value;
+            
+            // Validate inputs
+            if (year < 1900 || year > 2100) {
+                errorMessage.textContent = "Please enter a year between 1900 and 2100";
+                return;
+            }
+            
+            if (day < 1 || day > 31) {
+                errorMessage.textContent = "Please enter a valid day of the month";
+                return;
+            }
+            
+            // Clear previous error
+            errorMessage.textContent = "";
+            
+            // Show loading
+            loading.style.display = 'block';
+            
+            // Simulate calculation delay
+            setTimeout(function() {
+                try {
+                    // Calculate Ming Palace (simplified)
+                    const mingPalace = calculateMingPalace(month, day, hour);
+                    
+                    // Calculate Chinese zodiac
+                    const zodiac = calculateChineseZodiac(year);
+                    
+                    // Calculate Heavenly Stem and Earthly Branch
+                    const stemBranch = calculateStemBranch(year);
+                    
+                    // Birth information to display in the center
+                    const birthInfo = {
+                        year,
+                        month,
+                        day,
+                        hour,
+                        minute,
+                        gender,
+                        zodiac,
+                        stemBranch,
+                        mingPalace
+                    };
+                    
+                    // Distribute main stars (simplified)
+                    const palaceStars = distributeMainStars(mingPalace);
+                    
+                    // Display birth information in the center
+                    document.getElementById('birthInfo').innerHTML = `
+                        <p><strong>Date:</strong> ${month}/${day}/${year}</p>
+                        <p><strong>Time:</strong> ${hour}:${minute < 10 ? '0' + minute : minute}</p>
+                        <p><strong>Gender:</strong> ${gender.charAt(0).toUpperCase() + gender.slice(1)}</p>
+                        <p><strong>Zodiac:</strong> ${zodiac}</p>
+                    `;
+                    
+                    // Display stars in palaces
+                    for (let i = 1; i <= 12; i++) {
+                        const palaceContent = document.getElementById(`palace${i}-content`);
+                        if (palaceContent) {
+                            if (palaceStars[i] && palaceStars[i].length > 0) {
+                                palaceContent.innerHTML = palaceStars[i].join('<br>');
+                            } else {
+                                palaceContent.innerHTML = "<em>No major stars</em>";
+                            }
+                            
+                            // Highlight Ming Palace
+                            if (i === mingPalace) {
+                                document.getElementById(`palace${i}`).style.backgroundColor = "#e1bee7";
+                                document.getElementById(`palace${i}`).style.borderColor = "#9c27b0";
+                                palaceContent.innerHTML = "<strong>Ming Palace</strong><br>" + palaceContent.innerHTML;
+                            } else {
+                                document.getElementById(`palace${i}`).style.backgroundColor = "";
+                                document.getElementById(`palace${i}`).style.borderColor = "";
+                            }
+                        }
+                    }
+                    
+                    // Generate and display interpretation
+                    const interpretationText = generateInterpretation(birthInfo, palaceStars);
+                    document.getElementById('interpretationContent').innerHTML = interpretationText;
+                    
+                    // Show chart and interpretation
+                    chartContainer.style.display = 'block';
+                    interpretation.style.display = 'block';
+                    
+                    // Scroll to chart
+                    chartContainer.scrollIntoView({ behavior: 'smooth' });
+                } catch (err) {
+                    errorMessage.textContent = "An error occurred while calculating. Please check your inputs and try again.";
+                    console.error(err);
+                } finally {
+                    // Hide loading
+                    loading.style.display = 'none';
+                }
+            }, 1500); // Simulated delay for calculation
+        });
+        
+        // Traditional chart form submission
+        traditionalForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const year = parseInt(document.getElementById('tradBirthYear').value);
+            const month = parseInt(document.getElementById('tradBirthMonth').value);
+            const day = parseInt(document.getElementById('tradBirthDay').value);
+            const hour = parseInt(document.getElementById('tradBirthHour').value);
+            const minute = parseInt(document.getElementById('tradBirthMinute').value);
+            const gender = document.getElementById('tradGender').value;
+            
+            // Validate inputs
+            if (year < 1900 || year > 2100) {
+                tradErrorMessage.textContent = "Please enter a year between 1900 and 2100";
+                return;
+            }
+            
+            if (day < 1 || day > 31) {
+                tradErrorMessage.textContent = "Please enter a valid day of the month";
+                return;
+            }
+            
+            // Clear previous error
+            tradErrorMessage.textContent = "";
+            
+            // Show loading
+            tradLoading.style.display = 'block';
+            
+            // Simulate calculation delay
+            setTimeout(function() {
+                try {
+                    // Calculate Ming Palace (simplified)
+                    const mingPalace = calculateMingPalace(month, day, hour);
+                    
+                    // Calculate Chinese zodiac
+                    const zodiac = calculateChineseZodiac(year);
+                    
+                    // Calculate Heavenly Stem and Earthly Branch
+                    const stemBranch = calculateStemBranch(year);
+                    
+                    // Birth information for the traditional chart
+                    document.getElementById('trad-year').textContent = `${stemBranch.stem}${stemBranch.branch}`;
+                    document.getElementById('trad-month').textContent = `${month}月`;
+                    document.getElementById('trad-day').textContent = `${day}日`;
+                    document.getElementById('trad-hour').textContent = `${earthlyBranches[hour % 12]}時`;
+                    document.getElementById('trad-gender-info').textContent = `${gender === 'male' ? 'Male (陽造)' : 'Female (陰造)'}`;
+                    
+                    // Distribute traditional stars
+                    const tradPalaceStars = distributeTraditionalStars(mingPalace);
+                    
+                    // Display stars in traditional palaces
+                    for (let i = 1; i <= 12; i++) {
+                        // Set the earthly branch for each palace
+                        const branchElement = document.getElementById(`branch${i}`);
+                        if (branchElement) {
+                            branchElement.textContent = earthlyBranches[(i - 1) % 12];
+                        }
+                        
+                        // Main stars
+                        const mainStarsElement = document.getElementById(`main-stars${i}`);
+                        if (mainStarsElement) {
+                            if (tradPalaceStars.main[i] && tradPalaceStars.main[i].length > 0) {
+                                mainStarsElement.innerHTML = tradPalaceStars.main[i].join('<br>');
+                            } else {
+                                mainStarsElement.innerHTML = "";
+                            }
+                        }
+                        
+                        // Minor stars
+                        const minorStarsElement = document.getElementById(`minor-stars${i}`);
+                        if (minorStarsElement) {
+                            if (tradPalaceStars.minor[i] && tradPalaceStars.minor[i].length > 0) {
+                                minorStarsElement.innerHTML = tradPalaceStars.minor[i].join('<br>');
+                            } else {
+                                minorStarsElement.innerHTML = "";
+                            }
+                        }
+                        
+                        // Auxiliary stars
+                        const auxStarsElement = document.getElementById(`aux-stars${i}`);
+                        if (auxStarsElement) {
+                            if (tradPalaceStars.auxiliary[i] && tradPalaceStars.auxiliary[i].length > 0) {
+                                auxStarsElement.innerHTML = tradPalaceStars.auxiliary[i].join('<br>');
+                            } else {
+                                auxStarsElement.innerHTML = "";
+                            }
+                        }
+                        
+                        // Highlight Ming Palace in the traditional chart
+                        if (i === mingPalace) {
+                            document.getElementById(`trad-palace${i}`).style.backgroundColor = "#f3e5f5";
+                            // Add Ming Palace indicator
+                            if (mainStarsElement) {
+                                mainStarsElement.innerHTML = "<strong>命宮 (Ming Palace)</strong><br>" + mainStarsElement.innerHTML;
+                            }
+                        } else {
+                            document.getElementById(`trad-palace${i}`).style.backgroundColor = "";
+                        }
+                    }
+                    
+                    // Show chart
+                    tradChartContainer.style.display = 'block';
+                    
+                    // Scroll to chart
+                    tradChartContainer.scrollIntoView({ behavior: 'smooth' });
+                } catch (err) {
+                    tradErrorMessage.textContent = "An error occurred while calculating. Please check your inputs and try again.";
+                    console.error(err);
+                } finally {
+                    // Hide loading
+                    tradLoading.style.display = 'none';
+                }
+            }, 1500); // Simulated delay for calculation
+        });
+    });
+</script>
         }
         
         .container {
@@ -389,14 +846,14 @@
                 <form id="birthForm">
                     <div class="form-group">
                         <label for="birthYear">Birth Year (Gregorian Calendar):</label>
-                        <input type="number" id="birthYear" min="1900" max="2100" required>
+                        <input type="number" id="birthYear" min="1900" max="2100" value="1984" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="birthMonth">Birth Month:</label>
                         <select id="birthMonth" required>
                             <option value="">Select Month</option>
-                            <option value="1">January</option>
+                            <option value="1" selected>January</option>
                             <option value="2">February</option>
                             <option value="3">March</option>
                             <option value="4">April</option>
@@ -413,24 +870,24 @@
                     
                     <div class="form-group">
                         <label for="birthDay">Birth Day:</label>
-                        <input type="number" id="birthDay" min="1" max="31" required>
+                        <input type="number" id="birthDay" min="1" max="31" value="1" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="birthHour">Birth Hour (24-hour format):</label>
-                        <input type="number" id="birthHour" min="0" max="23" required>
+                        <input type="number" id="birthHour" min="0" max="23" value="0" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="birthMinute">Birth Minute:</label>
-                        <input type="number" id="birthMinute" min="0" max="59" required>
+                        <input type="number" id="birthMinute" min="0" max="59" value="0" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="gender">Gender:</label>
                         <select id="gender" required>
                             <option value="">Select Gender</option>
-                            <option value="male">Male</option>
+                            <option value="male" selected>Male</option>
                             <option value="female">Female</option>
                         </select>
                     </div>
@@ -540,14 +997,14 @@
                 <form id="traditionalForm">
                     <div class="form-group">
                         <label for="tradBirthYear">Birth Year (Gregorian Calendar):</label>
-                        <input type="number" id="tradBirthYear" min="1900" max="2100" required>
+                        <input type="number" id="tradBirthYear" min="1900" max="2100" value="1984" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="tradBirthMonth">Birth Month:</label>
                         <select id="tradBirthMonth" required>
                             <option value="">Select Month</option>
-                            <option value="1">January</option>
+                            <option value="1" selected>January</option>
                             <option value="2">February</option>
                             <option value="3">March</option>
                             <option value="4">April</option>
@@ -564,24 +1021,24 @@
                     
                     <div class="form-group">
                         <label for="tradBirthDay">Birth Day:</label>
-                        <input type="number" id="tradBirthDay" min="1" max="31" required>
+                        <input type="number" id="tradBirthDay" min="1" max="31" value="1" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="tradBirthHour">Birth Hour (24-hour format):</label>
-                        <input type="number" id="tradBirthHour" min="0" max="23" required>
+                        <input type="number" id="tradBirthHour" min="0" max="23" value="0" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="tradBirthMinute">Birth Minute:</label>
-                        <input type="number" id="tradBirthMinute" min="0" max="59" required>
+                        <input type="number" id="tradBirthMinute" min="0" max="59" value="0" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="tradGender">Gender:</label>
                         <select id="tradGender" required>
                             <option value="">Select Gender</option>
-                            <option value="male">Male</option>
+                            <option value="male" selected>Male</option>
                             <option value="female">Female</option>
                         </select>
                     </div>
@@ -787,5 +1244,4 @@
                             <span class="palace-branch" id="branch6">巳</span>
                         </div>
                         <div class="palace-stars">
-                            <div class="main-stars" id="main-stars6"></div>
-                            <div
+                            <div class="main-stars" id="main-stars
