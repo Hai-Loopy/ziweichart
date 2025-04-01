@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zi Wei Dou Shu Chart</title>
+    <title>Zi Wei Dou Shu Chart Calculator</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -53,6 +53,7 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            width: 100%;
         }
         
         button:hover {
@@ -121,7 +122,7 @@
             min-width: 200px;
         }
         
-        /* Palace positions in the grid */
+        /* Palace positions in the grid using Vietnamese style layout */
         .palace-1 { grid-area: 2 / 2 / 3 / 3; }
         .palace-2 { grid-area: 1 / 2 / 2 / 3; }
         .palace-3 { grid-area: 1 / 3 / 2 / 4; }
@@ -135,17 +136,18 @@
         .palace-11 { grid-area: 1 / 1 / 2 / 2; }
         .palace-12 { grid-area: 3 / 2 / 4 / 3; }
         
-        .calculation-info {
+        .info-box {
             margin-top: 20px;
             padding: 15px;
             background-color: #f0f0f0;
             border-radius: 5px;
         }
-
+        
         .legend {
             display: flex;
             justify-content: center;
-            margin-top: 20px;
+            flex-wrap: wrap;
+            margin-top: 15px;
             gap: 20px;
         }
         
@@ -178,21 +180,11 @@
             background-color: #e6f7ff;
             border: 1px solid #ccc;
         }
-
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-        
-        .nav-buttons button {
-            width: 48%;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Zi Wei Dou Shu Chart</h1>
+        <h1>Zi Wei Dou Shu Chart Calculator</h1>
         
         <div class="fields">
             <div class="form-group">
@@ -271,27 +263,94 @@
             </div>
         </div>
         
-        <div id="calculation-info" class="calculation-info">
+        <div id="info-box" class="info-box">
             <h3>Birth Information</h3>
             <div id="birth-info"></div>
             
-            <h3>Calculation Details</h3>
-            <div id="calculation-details"></div>
+            <h3>Chart Details</h3>
+            <div id="chart-details"></div>
         </div>
         
         <h2>Zi Wei Dou Shu Chart</h2>
-        <div id="chart-container">
-            <!-- Palace elements will be generated here -->
-        </div>
-        
-        <div class="nav-buttons">
-            <button id="birth-chart-btn">Go to Birth Chart Generator</button>
-            <button id="reset-btn">Reset Chart</button>
-        </div>
+        <div id="chart-container"></div>
     </div>
 
     <script>
-        // ===== CALCULATION FUNCTIONS =====
+        // Star and palace name mappings in Vietnamese style
+        const STAR_NAMES = {
+            // Main stars (14 major stars)
+            ziwei: '紫微 (Tử Vi)',
+            tianji: '天機 (Thiên Cơ)',
+            taiyang: '太陽 (Thái Dương)',
+            wuqu: '武曲 (Vũ Khúc)',
+            tianfu: '天府 (Thiên Phủ)',
+            tianxiang: '天相 (Thiên Tướng)',
+            lianzhen: '廉貞 (Liêm Trinh)',
+            tiantong: '天同 (Thiên Đồng)',
+            taiyin: '太陰 (Thái Âm)',
+            tanlang: '貪狼 (Tham Lang)',
+            jumen: '巨門 (Cự Môn)',
+            tianliang: '天梁 (Thiên Lương)',
+            qisha: '七殺 (Thất Sát)',
+            pojun: '破軍 (Phá Quân)',
+            
+            // Minor stars
+            zuofu: '左輔 (Tả Phụ)',
+            youbi: '右弼 (Hữu Bật)',
+            wenchang: '文昌 (Văn Xương)',
+            wenqu: '文曲 (Văn Khúc)',
+            tiankui: '天魁 (Thiên Khôi)',
+            tianyue: '天鉞 (Thiên Việt)',
+            huagai: '華蓋 (Hoa Cái)',
+            tianyao: '天鑰 (Thiên Khốc)',
+            longchi: '龍池 (Long Trì)',
+            fengge: '鳳閣 (Phượng Các)',
+            
+            // Additional stars commonly used in Vietnamese charts
+            hongluan: '紅鸞 (Hồng Loan)',
+            tianxing: '天刑 (Thiên Hình)',
+            tianrui: '天喜 (Thiên Hỷ)',
+            tianying: '天姚 (Thiên Riêu)',
+            tianma: '天馬 (Thiên Mã)',
+            guanji: '官符 (Quan Phù)',
+            guchen: '孤辰 (Cô Thần)',
+            guasu: '寡宿 (Quả Tú)',
+            diakong: '地空 (Địa Không)',
+            diajie: '地劫 (Địa Kiếp)',
+            lucun: '祿存 (Lộc Tồn)'
+        };
+
+        // Palace names in Vietnamese format
+        const PALACE_NAMES = [
+            '命宮 (Mệnh)', 
+            '兄弟宮 (Huynh Đệ)', 
+            '夫妻宮 (Phu Thê)', 
+            '子女宮 (Tử Nữ)',
+            '財帛宮 (Tài Bạch)', 
+            '疾厄宮 (Tật Ách)', 
+            '遷移宮 (Thiên Di)', 
+            '交友宮 (Giao Hữu)',
+            '官祿宮 (Quan Lộc)', 
+            '田宅宮 (Điền Trạch)', 
+            '福德宮 (Phúc Đức)', 
+            '父母宮 (Phụ Mẫu)'
+        ];
+        
+        // Vietnamese zodiac names
+        const ZODIAC_NAMES = [
+            '子 (Tý - Rat)', 
+            '丑 (Sửu - Ox)', 
+            '寅 (Dần - Tiger)', 
+            '卯 (Mão - Rabbit)',
+            '辰 (Thìn - Dragon)', 
+            '巳 (Tỵ - Snake)', 
+            '午 (Ngọ - Horse)', 
+            '未 (Mùi - Goat)',
+            '申 (Thân - Monkey)', 
+            '酉 (Dậu - Rooster)', 
+            '戌 (Tuất - Dog)', 
+            '亥 (Hợi - Pig)'
+        ];
 
         /**
          * Calculate the Chinese year data (Heavenly Stems and Earthly Branches)
@@ -302,26 +361,28 @@
             const stemIndex = (year - 4) % 10;
             const branchIndex = (year - 4) % 12;
             
-            const stems = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
-            const branches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+            const stems = ['甲 (Giáp)', '乙 (Ất)', '丙 (Bính)', '丁 (Đinh)', '戊 (Mậu)', 
+                          '己 (Kỷ)', '庚 (Canh)', '辛 (Tân)', '壬 (Nhâm)', '癸 (Quý)'];
+            
+            const branches = ZODIAC_NAMES;
             
             return {
                 stem: stems[stemIndex],
                 branch: branches[branchIndex],
                 stemIndex: stemIndex,
                 branchIndex: branchIndex,
-                yearCycle: `${stems[stemIndex]}${branches[branchIndex]}`
+                yearCycle: `${stems[stemIndex]} ${branches[branchIndex]}`
             };
         }
 
         /**
-         * Calculate Birth Palace (命宫) Position
+         * Calculate Birth Palace (命宫) Position according to Vietnamese method
          * @param {number} month - Month (1-12)
          * @param {number} hour - Chinese double-hour (1-12)
          * @returns {number} Birth Palace position (1-12)
          */
         function calculateBirthPalace(month, hour) {
-            // Birth Palace = (Month + Hour - 2) % 12
+            // In Vietnamese method: Birth Palace = (Month + Hour - 2) % 12
             let position = (month + hour - 2) % 12;
             if (position <= 0) position += 12;
             
@@ -339,23 +400,25 @@
 
         /**
          * Calculate Zi Wei Star Position based on Birth Day and Year Stem
+         * Following Vietnamese calculation method
          * @param {number} day - Day of birth (1-30)
          * @param {number} stemIndex - Heavenly Stem index (0-9)
          * @returns {number} Zi Wei position (1-12)
          */
         function calculateZiWeiPosition(day, stemIndex) {
             // These are the lookup tables for Zi Wei position based on the day and year stem
+            // Following the Vietnamese method
             const ziWeiPositionTables = {
-                0: [11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4],
-                1: [9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2],
-                2: [7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                3: [5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                4: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8],
-                5: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6],
-                6: [11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4],
-                7: [9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2],
-                8: [7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                9: [5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                0: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7],   // Giáp
+                1: [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5],  // Ất
+                2: [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3], // Bính
+                3: [8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1], // Đinh
+                4: [6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],  // Mậu
+                5: [4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9],    // Kỷ
+                6: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7],    // Canh
+                7: [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5],   // Tân
+                8: [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3], // Nhâm
+                9: [8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1]  // Quý
             };
             
             // If day is out of bounds, default to day 1
@@ -367,6 +430,7 @@
 
         /**
          * Calculate positions of all main stars based on Zi Wei position
+         * Following Vietnamese method
          * @param {number} ziWeiPosition - Zi Wei star position
          * @param {number} stemIndex - Heavenly Stem index
          * @param {number} branchIndex - Earthly Branch index
@@ -375,32 +439,33 @@
         function calculateMainStars(ziWeiPosition, stemIndex, branchIndex) {
             const stars = {};
             
-            // Emperor Group stars (紫微垣)
+            // Emperor Group stars (紫微垣) - Vietnamese method
             stars.ziwei = ziWeiPosition;
-            stars.tianji = ((ziWeiPosition + 0) % 12) + 1;
-            stars.taiyang = ((ziWeiPosition + 2) % 12) + 1;
-            stars.wuqu = ((ziWeiPosition + 3) % 12) + 1;
-            stars.tiantong = ((ziWeiPosition + 4) % 12) + 1;
-            stars.lianzhen = ((ziWeiPosition + 6) % 12) + 1;
-            stars.tianxiang = ((ziWeiPosition + 8) % 12) + 1;
+            stars.tianji = ((ziWeiPosition + 0) % 12) + 1;  // Same palace as Zi Wei
+            stars.taiyang = ((ziWeiPosition + 2) % 12) + 1; // 2 palaces after Zi Wei
+            stars.wuqu = ((ziWeiPosition + 3) % 12) + 1;    // 3 palaces after Zi Wei
+            stars.tiantong = ((ziWeiPosition + 4) % 12) + 1; // 4 palaces after Zi Wei
+            stars.lianzhen = ((ziWeiPosition + 6) % 12) + 1; // 6 palaces after Zi Wei
             
-            // Calculate Tian Fu position (opposite to Zi Wei, with adjustment)
+            // Calculate Tian Fu position (Vietnamese method)
             const tianFuPosition = ((ziWeiPosition + 4) % 12) + 1;
             stars.tianfu = tianFuPosition;
             
-            // Empress Group stars (天府垣)
-            stars.taiyin = ((tianFuPosition + 0) % 12) + 1;
-            stars.tanlang = ((tianFuPosition + 1) % 12) + 1;
-            stars.jumen = ((tianFuPosition + 2) % 12) + 1;
-            stars.tianliang = ((tianFuPosition + 4) % 12) + 1;
-            stars.qisha = ((tianFuPosition + 5) % 12) + 1;
-            stars.pojun = ((tianFuPosition + 9) % 12) + 1;
+            // Empress Group stars (天府垣) - Vietnamese method
+            stars.taiyin = ((tianFuPosition + 0) % 12) + 1;  // Same palace as Tian Fu
+            stars.tanlang = ((tianFuPosition + 1) % 12) + 1; // 1 palace after Tian Fu
+            stars.jumen = ((tianFuPosition + 2) % 12) + 1;   // 2 palaces after Tian Fu
+            stars.tianxiang = ((tianFuPosition + 3) % 12) + 1; // 3 palaces after Tian Fu (Vietnamese method)
+            stars.tianliang = ((tianFuPosition + 4) % 12) + 1; // 4 palaces after Tian Fu
+            stars.qisha = ((tianFuPosition + 5) % 12) + 1;    // 5 palaces after Tian Fu
+            stars.pojun = ((tianFuPosition + 9) % 12) + 1;    // 9 palaces after Tian Fu
             
             return stars;
         }
 
         /**
          * Calculate positions of important minor stars
+         * Based on Vietnamese Zi Wei Dou Shu method
          * @param {number} birthPalace - Birth Palace position
          * @param {number} stemIndex - Heavenly Stem index
          * @param {number} branchIndex - Earthly Branch index
@@ -410,15 +475,15 @@
         function calculateMinorStars(birthPalace, stemIndex, branchIndex, gender) {
             const stars = {};
             
-            // Left Assistant and Right Assistant
+            // Left Assistant and Right Assistant - Vietnamese method
             stars.zuofu = ((birthPalace + stemIndex - 1) % 12) + 1;
             stars.youbi = ((birthPalace - stemIndex + 11) % 12) + 1;
             
-            // Literary stars
+            // Literary stars - Vietnamese method
             stars.wenchang = ((birthPalace + 12 - branchIndex) % 12) + 1;
             stars.wenqu = ((birthPalace + branchIndex - 1) % 12) + 1;
             
-            // Gender-specific calculations
+            // Gender-specific calculations - Vietnamese method
             if (gender === 'female') {
                 // For female charts
                 stars.tiankui = [1, 3, 5, 7, 9][stemIndex % 5];
@@ -429,17 +494,25 @@
                 stars.tianyue = [12, 10, 8, 6, 4][stemIndex % 5];
             }
             
-            // Additional minor stars
+            // Additional minor stars - Vietnamese method
             stars.huagai = ((birthPalace + 11 - branchIndex) % 12) + 1;
             stars.tianyao = ((birthPalace + branchIndex - 1) % 12) + 1;
             stars.longchi = (((birthPalace + 4) % 12) + 1);
             stars.fengge = (((birthPalace + 8) % 12) + 1);
+            
+            // Additional stars commonly used in Vietnamese charts
+            stars.hongluan = ((7 + branchIndex - 1) % 12) + 1;
+            stars.tianxing = ((3 + branchIndex - 1) % 12) + 1;
+            stars.tianrui = ((3 + branchIndex - 1) % 12) + 1;
+            stars.tianying = ((stemIndex * 2) % 10 + 1);
+            stars.tianma = [2, 5, 8, 11][branchIndex % 4];
             
             return stars;
         }
 
         /**
          * Generate a complete Zi Wei Dou Shu chart
+         * Based on Vietnamese calculation method
          * @param {Object} birthData - Object containing birth information
          * @returns {Object} Complete chart data
          */
@@ -500,229 +573,63 @@
             };
         }
 
-        // ===== MAIN APPLICATION =====
-
-        // Star and palace name mappings (full Chinese characters)
-        const STAR_NAMES = {
-            // Main stars (14 major stars)
-            ziwei: '紫微',
-            tianji: '天機',
-            taiyang: '太陽',
-            wuqu: '武曲',
-            tianfu: '天府',
-            tianxiang: '天相',
-            lianzhen: '廉貞',
-            tiantong: '天同',
-            taiyin: '太陰',
-            tanlang: '貪狼',
-            jumen: '巨門',
-            tianliang: '天梁',
-            qisha: '七殺',
-            pojun: '破軍',
+        /**
+         * Render the chart to HTML
+         * @param {Object} chartData - The complete chart data
+         */
+        function renderChart(chartData) {
+            const container = document.getElementById('chart-container');
+            container.innerHTML = '';
             
-            // Minor stars
-            zuofu: '左輔',
-            youbi: '右弼',
-            wenchang: '文昌',
-            wenqu: '文曲',
-            tiankui: '天魁',
-            tianyue: '天鉞',
-            huagai: '華蓋',
-            tianyao: '天鑰',
-            longchi: '龍池',
-            fengge: '鳳閣'
-        };
-
-        // Palace names in correct order
-        const PALACE_NAMES = [
-            '命宮', '兄弟宮', '夫妻宮', '子女宮',
-            '財帛宮', '疾厄宮', '遷移宮', '交友宮',
-            '官祿宮', '田宅宮', '福德宮', '父母宮'
-        ];
-
-        class ZiWeiChart {
-            constructor() {
-                this.birthData = {
-                    year: 2025,  // Default values matching example
-                    month: 2,
-                    day: 11,
-                    hour: 6,    // 9:00-10:59 (Snake hour)
-                    gender: 'male'
-                };
+            // Create palace elements
+            for (let i = 1; i <= 12; i++) {
+                const palace = chartData.palaces[i];
+                const palaceElement = document.createElement('div');
+                palaceElement.className = `palace palace-${i}`;
+                if (palace.isBirthPalace) palaceElement.classList.add('birth-palace');
+                if (palace.isBodyPalace) palaceElement.classList.add('body-palace');
                 
-                this.chartData = null;
-                this.initialize();
-            }
-            
-            /**
-             * Initialize the chart and UI
-             */
-            initialize() {
-                // Add event listeners to form inputs
-                document.getElementById('generate-btn').addEventListener('click', () => this.generateFromForm());
-                document.getElementById('reset-btn').addEventListener('click', () => this.resetForm());
-                document.getElementById('birth-chart-btn').addEventListener('click', () => {
-                    window.location.href = 'birth-chart.html';
-                });
+                // Palace header
+                const palaceHeader = document.createElement('div');
+                palaceHeader.className = 'palace-header';
+                palaceHeader.textContent = PALACE_NAMES[i-1];
                 
-                // Initial chart generation
-                this.generate();
-                this.renderToHTML('chart-container');
-                this.displayCalculationDetails();
-            }
-            
-            /**
-             * Generate chart from form data
-             */
-            generateFromForm() {
-                const year = parseInt(document.getElementById('year').value || 2025);
-                const month = parseInt(document.getElementById('month').value || 2);
-                const day = parseInt(document.getElementById('day').value || 11);
-                const hour = parseInt(document.getElementById('hour').value || 6);
-                const gender = document.getElementById('gender').value || 'male';
-                
-                this.setBirthData({ year, month, day, hour, gender });
-            }
-            
-            /**
-             * Reset the form to default values
-             */
-            resetForm() {
-                document.getElementById('year').value = 2025;
-                document.getElementById('month').value = 2;
-                document.getElementById('day').value = 11;
-                document.getElementById('hour').value = 6;
-                document.getElementById('gender').value = 'male';
-                
-                this.generateFromForm();
-            }
-            
-            /**
-             * Set birth data and generate chart
-             * @param {Object} birthData - Object containing birth information
-             */
-            setBirthData(birthData) {
-                this.birthData = {
-                    ...this.birthData,
-                    ...birthData
-                };
-                
-                this.generate();
-                this.renderToHTML('chart-container');
-                this.displayCalculationDetails();
-            }
-            
-            /**
-             * Generate the Zi Wei Dou Shu chart
-             */
-            generate() {
-                this.chartData = generateZiWeiChart(this.birthData);
-                return this.chartData;
-            }
-            
-            /**
-             * Get star name by key
-             * @param {string} key - Star key
-             * @returns {string} Star name
-             */
-            getStarName(key) {
-                return STAR_NAMES[key] || key;
-            }
-            
-            /**
-             * Get palace name by position
-             * @param {number} position - Palace position (1-12)
-             * @returns {string} Palace name
-             */
-            getPalaceName(position) {
-                return PALACE_NAMES[(position - 1) % 12];
-            }
-            
-            /**
-             * Render the chart to HTML
-             * @param {string} containerId - Container element ID
-             */
-            renderToHTML(containerId) {
-                if (!this.chartData) this.generate();
-                
-                const container = document.getElementById(containerId);
-                if (!container) return;
-                
-                // Clear the container
-                container.innerHTML = '';
-                
-                // Create palace elements
-                for (let i = 1; i <= 12; i++) {
-                    const palace = this.chartData.palaces[i];
-                    const palaceElement = document.createElement('div');
-                    palaceElement.className = `palace palace-${i}`;
-                    if (palace.isBirthPalace) palaceElement.classList.add('birth-palace');
-                    if (palace.isBodyPalace) palaceElement.classList.add('body-palace');
+                // Add special markers
+                if (palace.isBirthPalace || palace.isBodyPalace) {
+                    let specialText = '';
+                    if (palace.isBirthPalace) specialText += '命宮 ';
+                    if (palace.isBodyPalace) specialText += '身宮';
                     
-                    // Palace header
-                    const palaceHeader = document.createElement('div');
-                    palaceHeader.className = 'palace-header';
-                    palaceHeader.textContent = this.getPalaceName(i);
-                    
-                    // Add special markers for birth and body palaces
-                    if (palace.isBirthPalace || palace.isBodyPalace) {
-                        let specialText = '';
-                        if (palace.isBirthPalace) specialText += '命宮 ';
-                        if (palace.isBodyPalace) specialText += '身宮';
-                        
-                        const specialMarker = document.createElement('span');
-                        specialMarker.className = 'special-marker';
-                        specialMarker.textContent = specialText;
-                        palaceHeader.appendChild(specialMarker);
-                    }
-                    
-                    palaceElement.appendChild(palaceHeader);
-                    
-                    // Main stars
-                    if (palace.stars.main.length > 0) {
-                        const mainStarsContainer = document.createElement('div');
-                        mainStarsContainer.className = 'main-stars';
-                        
-                        palace.stars.main.forEach(starKey => {
-                            const starElement = document.createElement('div');
-                            starElement.className = 'star main-star';
-                            starElement.textContent = this.getStarName(starKey);
-                            mainStarsContainer.appendChild(starElement);
-                        });
-                        
-                        palaceElement.appendChild(mainStarsContainer);
-                    }
-                    
-                    // Minor stars
-                    if (palace.stars.minor.length > 0) {
-                        const minorStarsContainer = document.createElement('div');
-                        minorStarsContainer.className = 'minor-stars';
-                        
-                        palace.stars.minor.forEach(starKey => {
-                            const starElement = document.createElement('div');
-                            starElement.className = 'star minor-star';
-                            starElement.textContent = this.getStarName(starKey);
-                            minorStarsContainer.appendChild(starElement);
-                        });
-                        
-                        palaceElement.appendChild(minorStarsContainer);
-                    }
-                    
-                    container.appendChild(palaceElement);
+                    const specialMarker = document.createElement('span');
+                    specialMarker.className = 'special-marker';
+                    specialMarker.textContent = specialText;
+                    palaceHeader.appendChild(specialMarker);
                 }
-            }
-            
-            /**
-             * Display calculation details in the info section
-             */
-            displayCalculationDetails() {
-                if (!this.chartData) return;
                 
-                const birthInfoElement = document.getElementById('birth-info');
-                const calculationElement = document.getElementById('calculation-details');
+                palaceElement.appendChild(palaceHeader);
                 
-                if (!birthInfoElement || !calculationElement) return;
+                // Main stars
+                if (palace.stars.main.length > 0) {
+                    const mainStarsContainer = document.createElement('div');
+                    mainStarsContainer.className = 'main-stars';
+                    
+                    palace.stars.main.forEach(starKey => {
+                        const starElement = document.createElement('div');
+                        starElement.className = 'star main-star';
+                        starElement.textContent = STAR_NAMES[starKey] || starKey;
+                        mainStarsContainer.appendChild(starElement);
+                    });
+                    
+                    palaceElement.appendChild(mainStarsContainer);
+                }
                 
-                // Display birth information
-                const hourOptions = document.getElementById('hour').options;
-                const hourText = hourOptions ? hourOptions[this.
+                // Minor stars
+                if (palace.stars.minor.length > 0) {
+                    const minorStarsContainer = document.createElement('div');
+                    minorStarsContainer.className = 'minor-stars';
+                    
+                    palace.stars.minor.forEach(starKey => {
+                        const starElement = document.createElement('div');
+                        starElement.className = 'star minor-star';
+                        starElement.textContent = STAR_NAMES[starKey] || starKey;
+                        min
