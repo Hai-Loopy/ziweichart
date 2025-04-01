@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ziwei Doushu Calculator</title>
+    <title>Vietnamese Ziwei Doushu Calculator</title>
     <style>
         :root {
-            --primary-color: #673ab7;
-            --secondary-color: #9c27b0;
-            --accent-color: #e1bee7;
-            --background-color: #f5f5f5;
-            --chart-border: #d1c4e9;
+            --primary-color: #9c27b0;
+            --primary-dark: #7b1fa2;
+            --primary-light: #e1bee7;
+            --accent-color: #ff4081;
+            --bg-color: #f5f5f5;
             --text-color: #333;
-            --nav-active: #673ab7;
-            --nav-inactive: #9e9e9e;
+            --border-color: #ddd;
+            --main-star-color: #d32f2f;     /* Red for main stars */
+            --minor-star-color: #1976d2;    /* Blue for minor stars */
+            --auxiliary-star-color: #388e3c; /* Green for auxiliary stars */
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
-            background-color: var(--background-color);
+            background-color: var(--bg-color);
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
         
         .container {
@@ -33,137 +35,124 @@
         
         header {
             text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        h1 {
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        
-        h2 {
-            color: var(--secondary-color);
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-        }
-        
-        .description {
+            padding: 30px 0;
+            background: linear-gradient(to right, var(--primary-dark), var(--primary-color));
+            color: white;
             margin-bottom: 30px;
-            text-align: center;
+            border-radius: 5px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        header p {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
         
         .form-container {
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            padding: 25px;
             margin-bottom: 30px;
         }
         
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         label {
             display: block;
-            margin-bottom: 5px;
             font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-dark);
         }
         
         input, select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
+            padding: 12px;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+        
+        .calendar-toggle {
+            display: flex;
+            margin-bottom: 20px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .calendar-toggle label {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0;
+            color: var(--text-color);
+        }
+        
+        .calendar-toggle input[type="radio"] {
+            display: none;
+        }
+        
+        .calendar-toggle input[type="radio"]:checked + label {
+            background-color: var(--primary-color);
+            color: white;
         }
         
         button {
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 14px 24px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
             transition: background-color 0.3s;
             display: block;
-            margin: 20px auto;
-            width: 200px;
+            margin: 30px auto 10px;
+            min-width: 200px;
         }
         
         button:hover {
-            background-color: var(--secondary-color);
+            background-color: var(--primary-dark);
         }
         
-        .chart-container {
-            display: none;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-top: 30px;
-        }
-        
-        .chart {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 3px;
-            margin: 20px auto;
-            max-width: 900px;
-        }
-        
-        .palace {
-            border: 2px solid var(--chart-border);
-            padding: 15px;
+        .error {
+            color: #d32f2f;
+            background-color: #ffebee;
+            padding: 10px;
             border-radius: 4px;
-            min-height: 150px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-        }
-        
-        .palace-name {
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-        
-        .palace-content {
-            font-size: 14px;
-        }
-        
-        .center-info {
-            grid-column: 2 / span 2;
-            grid-row: 2;
-            background-color: var(--accent-color);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-        }
-        
-        .center-name {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-        
-        .interpretation {
-            margin-top: 30px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            margin: 10px 0;
             display: none;
         }
         
@@ -180,7 +169,7 @@
             width: 30px;
             height: 30px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin: 0 auto 10px;
         }
         
         @keyframes spin {
@@ -188,181 +177,231 @@
             100% { transform: rotate(360deg); }
         }
         
-        .error {
-            color: red;
+        /* Chart Styles */
+        .chart-container {
+            display: none;
+            margin-top: 40px;
+        }
+        
+        .chart-header {
             text-align: center;
-            margin: 10px 0;
-            font-weight: bold;
+            margin-bottom: 20px;
         }
         
-        .navigation {
+        .chart-header h2 {
+            display: inline-block;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        
+        .birth-info {
             display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
+            justify-content: space-between;
+            flex-wrap: wrap;
             background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
         
-        .nav-item {
-            padding: 15px 30px;
-            cursor: pointer;
+        .info-item {
+            margin: 5px 20px;
+        }
+        
+        .info-label {
             font-weight: 600;
-            transition: all 0.3s;
+            color: var(--primary-dark);
+        }
+        
+        /* Traditional Vietnamese Chart */
+        .chart-tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .chart-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            opacity: 0.7;
             border-bottom: 3px solid transparent;
-            color: var(--nav-inactive);
+            transition: all 0.3s;
         }
         
-        .nav-item.active {
-            color: var(--nav-active);
-            border-bottom: 3px solid var(--nav-active);
+        .chart-tab.active {
+            opacity: 1;
+            border-bottom-color: var(--primary-color);
+            font-weight: 600;
         }
         
-        .nav-item:hover {
-            background-color: rgba(0,0,0,0.03);
+        .chart-view {
+            display: none;
         }
         
-        /* Traditional Chart Styles */
-        .traditional-chart {
+        .chart-view.active {
+            display: block;
+        }
+        
+        .vietnamese-chart {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(3, 1fr);
             gap: 1px;
-            border: 2px solid #888;
             background-color: #888;
-            margin: 20px auto;
-            max-width: 900px;
+            border: 2px solid #888;
+            max-width: 1000px;
+            margin: 0 auto;
         }
         
-        .traditional-palace {
+        .palace {
             background-color: white;
-            padding: 10px;
-            min-height: 160px;
+            padding: 12px;
+            min-height: 180px;
             position: relative;
             display: flex;
             flex-direction: column;
         }
         
         .palace-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
-            margin-bottom: 5px;
-            font-weight: bold;
+            align-items: center;
         }
         
         .palace-number {
-            color: #888;
+            font-size: 12px;
+            opacity: 0.7;
         }
         
-        .palace-name-trad {
+        .palace-name {
+            font-weight: bold;
             color: var(--primary-color);
         }
         
         .palace-branch {
-            color: #d32f2f;
+            font-weight: bold;
+            color: var(--main-star-color);
         }
         
-        .palace-stars {
+        .stars-container {
             flex: 1;
             display: flex;
             flex-direction: column;
             font-size: 13px;
+            overflow-y: auto;
         }
         
         .main-stars {
-            color: #d32f2f;
-            margin-bottom: 5px;
+            color: var(--main-star-color);
+            margin-bottom: 8px;
         }
         
         .minor-stars {
-            color: #1976d2;
+            color: var(--minor-star-color);
+            margin-bottom: 8px;
         }
         
         .auxiliary-stars {
-            color: #388e3c;
-            margin-top: 5px;
+            color: var(--auxiliary-star-color);
         }
         
-        .traditional-center {
+        .center-cell {
             grid-column: 2 / span 2;
             grid-row: 2;
-            background-color: #f5f5f5;
+            background-color: #f9f9f9;
+            text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 15px;
-            text-align: center;
         }
         
         .center-title {
             font-weight: bold;
             color: var(--primary-color);
-            font-size: 18px;
             margin-bottom: 10px;
+            font-size: 16px;
         }
         
-        .birth-details {
+        .center-info {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 15px;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
         }
         
-        .detail-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .center-item {
+            margin-bottom: 8px;
         }
         
-        .detail-label {
+        .center-label {
             font-size: 12px;
             color: #666;
+            margin-bottom: 3px;
         }
         
-        .detail-value {
-            font-weight: bold;
-            color: #333;
+        .center-value {
+            font-weight: 600;
         }
         
-        footer {
-            margin-top: 50px;
+        .chart-footer {
             text-align: center;
-            color: #777;
+            margin-top: 30px;
+            color: #666;
             font-size: 14px;
         }
         
+        .interpretation-container {
+            margin-top: 40px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            display: none;
+        }
+        
+        .interpretation-section {
+            margin-bottom: 25px;
+        }
+        
+        .interpretation-section h3 {
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--primary-light);
+            padding-bottom: 8px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+        }
+        
         @media (max-width: 768px) {
-            .chart {
+            .vietnamese-chart {
                 grid-template-columns: repeat(2, 1fr);
                 grid-template-rows: repeat(6, 1fr);
             }
             
-            .center-info {
+            .center-cell {
                 grid-column: 1 / span 2;
                 grid-row: 3 / span 2;
             }
             
             .palace {
-                min-height: 120px;
+                min-height: 150px;
             }
             
-            .nav-item {
-                padding: 10px 15px;
-                font-size: 14px;
-            }
-            
-            .traditional-chart {
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: repeat(6, 1fr);
-            }
-            
-            .traditional-center {
-                grid-column: 1 / span 2;
-                grid-row: 3 / span 2;
+            .form-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -371,897 +410,344 @@
     <div class="container">
         <header>
             <h1>Ziwei Doushu Calculator</h1>
-            <h2>Purple Star Astrology</h2>
+            <p>Vietnamese Purple Star Astrology (Tử Vi Đẩu Số)</p>
         </header>
         
-        <div class="navigation">
-            <div id="nav-simple" class="nav-item active" onclick="navigateTo('simple')">Simple Chart</div>
-            <div id="nav-traditional" class="nav-item" onclick="navigateTo('traditional')">Traditional Chart</div>
-        </div>
-        
-        <!-- Simple Chart Section -->
-        <div id="simple-calculator">
-            <div class="description">
-                <p>Ziwei Doushu (紫微斗數) is an ancient Chinese astrological system that creates a personalized chart based on your birth date and time. Input your information below to generate your basic chart.</p>
+        <div class="form-container">
+            <h2>Birth Information</h2>
+            
+            <div class="calendar-toggle">
+                <input type="radio" id="solar-calendar" name="calendar-type" value="solar" checked>
+                <label for="solar-calendar">Solar Calendar (Dương Lịch)</label>
+                
+                <input type="radio" id="lunar-calendar" name="calendar-type" value="lunar">
+                <label for="lunar-calendar">Lunar Calendar (Âm Lịch)</label>
             </div>
             
-            <div class="form-container">
-                <form id="birthForm">
+            <form id="birthForm">
+                <div class="form-grid">
                     <div class="form-group">
-                        <label for="birthYear">Birth Year (Gregorian Calendar):</label>
+                        <label for="birthYear">Year:</label>
                         <input type="number" id="birthYear" min="1900" max="2100" value="1984" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="birthMonth">Birth Month:</label>
+                        <label for="birthMonth">Month:</label>
                         <select id="birthMonth" required>
-                            <option value="">Select Month</option>
-                            <option value="1" selected>January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="birthDay">Birth Day:</label>
+                        <label for="birthDay">Day:</label>
                         <input type="number" id="birthDay" min="1" max="31" value="1" required>
                     </div>
-                    
+                </div>
+                
+                <div class="form-grid">
                     <div class="form-group">
-                        <label for="birthHour">Birth Hour (24-hour format):</label>
+                        <label for="birthHour">Hour (0-23):</label>
                         <input type="number" id="birthHour" min="0" max="23" value="0" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="birthMinute">Birth Minute:</label>
+                        <label for="birthMinute">Minute:</label>
                         <input type="number" id="birthMinute" min="0" max="59" value="0" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="gender">Gender:</label>
                         <select id="gender" required>
-                            <option value="">Select Gender</option>
-                            <option value="male" selected>Male</option>
-                            <option value="female">Female</option>
+                            <option value="male" selected>Male (Nam)</option>
+                            <option value="female">Female (Nữ)</option>
                         </select>
                     </div>
-                    
-                    <button type="submit" id="calculateBtn">Calculate Chart</button>
-                </form>
+                </div>
                 
                 <div class="error" id="errorMessage"></div>
                 
-                <div class="loading" id="loading">
-                    <div class="spinner"></div>
-                    <p>Calculating your chart...</p>
-                </div>
-            </div>
+                <button type="submit" id="calculateBtn">Generate Chart</button>
+            </form>
             
-            <div class="chart-container" id="chartContainer">
-                <h2>Your Ziwei Doushu Chart</h2>
-                
-                <div class="chart">
-                    <!-- Life (Ming) Palace -->
-                    <div class="palace" id="palace1">
-                        <div class="palace-name">Life Palace (命宮)</div>
-                        <div class="palace-content" id="palace1-content"></div>
-                    </div>
-                    
-                    <!-- Parents Palace -->
-                    <div class="palace" id="palace2">
-                        <div class="palace-name">Parents Palace (父母宮)</div>
-                        <div class="palace-content" id="palace2-content"></div>
-                    </div>
-                    
-                    <!-- Fortune Palace -->
-                    <div class="palace" id="palace3">
-                        <div class="palace-name">Fortune Palace (財帛宮)</div>
-                        <div class="palace-content" id="palace3-content"></div>
-                    </div>
-                    
-                    <!-- Career Palace -->
-                    <div class="palace" id="palace4">
-                        <div class="palace-name">Career Palace (事業宮)</div>
-                        <div class="palace-content" id="palace4-content"></div>
-                    </div>
-                    
-                    <!-- Marriage Palace -->
-                    <div class="palace" id="palace12">
-                        <div class="palace-name">Marriage Palace (夫妻宮)</div>
-                        <div class="palace-content" id="palace12-content"></div>
-                    </div>
-                    
-                    <!-- Center Info -->
-                    <div class="center-info" id="centerInfo">
-                        <div class="center-name">Birth Info</div>
-                        <div id="birthInfo"></div>
-                    </div>
-                    
-                    <!-- Children Palace -->
-                    <div class="palace" id="palace5">
-                        <div class="palace-name">Children Palace (子女宮)</div>
-                        <div class="palace-content" id="palace5-content"></div>
-                    </div>
-                    
-                    <!-- Health Palace -->
-                    <div class="palace" id="palace11">
-                        <div class="palace-name">Health Palace (疾厄宮)</div>
-                        <div class="palace-content" id="palace11-content"></div>
-                    </div>
-                    
-                    <!-- Travel Palace -->
-                    <div class="palace" id="palace10">
-                        <div class="palace-name">Travel Palace (遷移宮)</div>
-                        <div class="palace-content" id="palace10-content"></div>
-                    </div>
-                    
-                    <!-- Friends Palace -->
-                    <div class="palace" id="palace9">
-                        <div class="palace-name">Friends Palace (朋友宮)</div>
-                        <div class="palace-content" id="palace9-content"></div>
-                    </div>
-                    
-                    <!-- Property Palace -->
-                    <div class="palace" id="palace8">
-                        <div class="palace-name">Property Palace (田宅宮)</div>
-                        <div class="palace-content" id="palace8-content"></div>
-                    </div>
-                    
-                    <!-- Mental Palace -->
-                    <div class="palace" id="palace7">
-                        <div class="palace-name">Mental Palace (官祿宮)</div>
-                        <div class="palace-content" id="palace7-content"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="interpretation" id="interpretation">
-                <h2>Basic Interpretation</h2>
-                <div id="interpretationContent"></div>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Calculating your Ziwei Doushu chart...</p>
             </div>
         </div>
         
-        <!-- Traditional Chart Section -->
-        <div id="traditional-calculator" style="display: none;">
-            <div class="description">
-                <p>This traditional Ziwei Doushu chart follows the Vietnamese format, displaying main stars (red), minor stars (blue), and auxiliary stars (green) in each palace. Enter your birth information to generate a detailed traditional chart.</p>
+        <div class="chart-container" id="chartContainer">
+            <div class="chart-header">
+                <h2>Your Ziwei Doushu Chart</h2>
             </div>
             
-            <div class="form-container">
-                <form id="traditionalForm">
-                    <div class="form-group">
-                        <label for="tradBirthYear">Birth Year (Gregorian Calendar):</label>
-                        <input type="number" id="tradBirthYear" min="1900" max="2100" value="1984" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="tradBirthMonth">Birth Month:</label>
-                        <select id="tradBirthMonth" required>
-                            <option value="">Select Month</option>
-                            <option value="1" selected>January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="tradBirthDay">Birth Day:</label>
-                        <input type="number" id="tradBirthDay" min="1" max="31" value="1" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="tradBirthHour">Birth Hour (24-hour format):</label>
-                        <input type="number" id="tradBirthHour" min="0" max="23" value="0" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="tradBirthMinute">Birth Minute:</label>
-                        <input type="number" id="tradBirthMinute" min="0" max="59" value="0" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="tradGender">Gender:</label>
-                        <select id="tradGender" required>
-                            <option value="">Select Gender</option>
-                            <option value="male" selected>Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                    </div>
-                    
-                    <button type="submit" id="tradCalculateBtn">Calculate Traditional Chart</button>
-                </form>
-                
-                <div class="error" id="tradErrorMessage"></div>
-                
-                <div class="loading" id="tradLoading">
-                    <div class="spinner"></div>
-                    <p>Calculating your traditional chart...</p>
-                </div>
+            <div class="birth-info" id="birthInfoSummary">
+                <!-- Birth information will be inserted here -->
             </div>
             
-            <div class="chart-container" id="tradChartContainer">
-                <h2>Traditional Ziwei Doushu Chart</h2>
-                
-                <div class="traditional-chart">
-                    <!-- Palace 1 - Life Palace -->
-                    <div class="traditional-palace" id="trad-palace1">
+            <div class="chart-tabs">
+                <div class="chart-tab active" data-tab="vietnamese">Vietnamese Chart</div>
+                <div class="chart-tab" data-tab="interpretation">Interpretation</div>
+            </div>
+            
+            <div class="chart-view active" id="vietnameseChart">
+                <div class="vietnamese-chart">
+                    <!-- Palace 1 - Mệnh (Life) -->
+                    <div class="palace" id="palace1">
                         <div class="palace-header">
                             <span class="palace-number">1</span>
-                            <span class="palace-name-trad">命宮</span>
-                            <span class="palace-branch" id="branch1">子</span>
+                            <span class="palace-name">Mệnh</span>
+                            <span class="palace-branch" id="branch1">Tý</span>
                         </div>
-                        <div class="palace-stars">
+                        <div class="stars-container">
                             <div class="main-stars" id="main-stars1"></div>
                             <div class="minor-stars" id="minor-stars1"></div>
                             <div class="auxiliary-stars" id="aux-stars1"></div>
                         </div>
                     </div>
                     
-                    <!-- Palace 2 - Siblings Palace -->
-                    <div class="traditional-palace" id="trad-palace2">
+                    <!-- Palace 2 - Phụ Mẫu (Parents) -->
+                    <div class="palace" id="palace2">
                         <div class="palace-header">
                             <span class="palace-number">2</span>
-                            <span class="palace-name-trad">兄弟宮</span>
-                            <span class="palace-branch" id="branch2">丑</span>
+                            <span class="palace-name">Phụ Mẫu</span>
+                            <span class="palace-branch" id="branch2">Sửu</span>
                         </div>
-                        <div class="palace-stars">
+                        <div class="stars-container">
                             <div class="main-stars" id="main-stars2"></div>
                             <div class="minor-stars" id="minor-stars2"></div>
                             <div class="auxiliary-stars" id="aux-stars2"></div>
                         </div>
                     </div>
                     
-                    <!-- Palace 3 - Spouse Palace -->
-                    <div class="traditional-palace" id="trad-palace3">
+                    <!-- Palace 3 - Phúc Đức (Happiness) -->
+                    <div class="palace" id="palace3">
                         <div class="palace-header">
                             <span class="palace-number">3</span>
-                            <span class="palace-name-trad">夫妻宮</span>
-                            <span class="palace-branch" id="branch3">寅</span>
+                            <span class="palace-name">Phúc Đức</span>
+                            <span class="palace-branch" id="branch3">Dần</span>
                         </div>
-                        <div class="palace-stars">
+                        <div class="stars-container">
                             <div class="main-stars" id="main-stars3"></div>
                             <div class="minor-stars" id="minor-stars3"></div>
                             <div class="auxiliary-stars" id="aux-stars3"></div>
                         </div>
                     </div>
                     
-                    <!-- Palace 4 - Children Palace -->
-                    <div class="traditional-palace" id="trad-palace4">
+                    <!-- Palace 4 - Điền Trạch (Property) -->
+                    <div class="palace" id="palace4">
                         <div class="palace-header">
                             <span class="palace-number">4</span>
-                            <span class="palace-name-trad">子女宮</span>
-                            <span class="palace-branch" id="branch4">卯</span>
+                            <span class="palace-name">Điền Trạch</span>
+                            <span class="palace-branch" id="branch4">Mão</span>
                         </div>
-                        <div class="palace-stars">
+                        <div class="stars-container">
                             <div class="main-stars" id="main-stars4"></div>
                             <div class="minor-stars" id="minor-stars4"></div>
                             <div class="auxiliary-stars" id="aux-stars4"></div>
                         </div>
                     </div>
                     
-                    <!-- Palace 12 - Wealth Palace -->
-                    <div class="traditional-palace" id="trad-palace12">
+                    <!-- Palace 12 - Tài Bạch (Wealth) -->
+                    <div class="palace" id="palace12">
                         <div class="palace-header">
                             <span class="palace-number">12</span>
-                            <span class="palace-name-trad">財帛宮</span>
-                            <span class="palace-branch" id="branch12">亥</span>
+                            <span class="palace-name">Tài Bạch</span>
+                            <span class="palace-branch" id="branch12">Hợi</span>
                         </div>
-                        <div class="palace-stars">
+                        <div class="stars-container">
                             <div class="main-stars" id="main-stars12"></div>
                             <div class="minor-stars" id="minor-stars12"></div>
                             <div class="auxiliary-stars" id="aux-stars12"></div>
                         </div>
                     </div>
                     
-                    <!-- Center Information -->
-                    <div class="traditional-center" id="tradCenterInfo">
-                        <div class="center-title">Birth Information</div>
-                        <div class="birth-details">
-                            <div class="detail-item">
-                                <span class="detail-label">Year</span>
-                                <span class="detail-value" id="trad-year">甲子</span>
+                    <!-- Center Cell -->
+                    <div class="center-cell">
+                        <div class="center-title">Thông Tin Lá Số</div>
+                        <div class="center-info">
+                            <div class="center-item">
+                                <div class="center-label">Năm</div>
+                                <div class="center-value" id="centerYear">Giáp Tý</div>
                             </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Month</span>
-                                <span class="detail-value" id="trad-month">正月</span>
+                            <div class="center-item">
+                                <div class="center-label">Tháng</div>
+                                <div class="center-value" id="centerMonth">Giêng</div>
                             </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Day</span>
-                                <span class="detail-value" id="trad-day">初一</span>
+                            <div class="center-item">
+                                <div class="center-label">Ngày</div>
+                                <div class="center-value" id="centerDay">Mồng 1</div>
                             </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Hour</span>
-                                <span class="detail-value" id="trad-hour">子時</span>
+                            <div class="center-item">
+                                <div class="center-label">Giờ</div>
+                                <div class="center-value" id="centerHour">Tý</div>
                             </div>
                         </div>
-                        <div id="trad-gender-info">Male (陽造)</div>
+                        <div id="genderInfo">Nam mạng</div>
                     </div>
                     
-                    <!-- Palace 5 - Wealth Palace -->
-                    <div class="traditional-palace" id="trad-palace5">
+                    <!-- Palace 5 - Quan Lộc (Career) -->
+                    <div class="palace" id="palace5">
                         <div class="palace-header">
                             <span class="palace-number">5</span>
-                            <span class="palace-name-trad">財帛宮</span>
-                            <span class="palace-branch" id="branch5">辰</span>
+                            <span class="palace-name">Quan Lộc</span>
+                            <span class="palace-branch" id="branch5">Thìn</span>
                         </div>
-                        <div class="palace-stars">
+                        <div class="stars-container">
                             <div class="main-stars" id="main-stars5"></div>
                             <div class="minor-stars" id="minor-stars5"></div>
                             <div class="auxiliary-stars" id="aux-stars5"></div>
                         </div>
                     </div>
                     
-                    <!-- Palace 11 - Illness Palace -->
-                    <div class="traditional-palace" id="trad-palace11">
+                    <!-- Palace 11 - Nô Bộc (Servants) -->
+                    <div class="palace" id="palace11">
                         <div class="palace-header">
                             <span class="palace-number">11</span>
-                            <span class="palace-name-trad">疾厄宮</span>
-                            <span class="palace-branch" id="branch11">戌</span>
+                            <span class="palace-name">Nô Bộc</span>
+                            <span class="palace-branch" id="branch11">Tuất</span>
                         </div>
-                        <div class="palace-stars">
+                        <div class="stars-container">
                             <div class="main-stars" id="main-stars11"></div>
                             <div class="minor-stars" id="minor-stars11"></div>
                             <div class="auxiliary-stars" id="aux-stars11"></div>
                         </div>
                     </div>
                     
-                    <!-- Palace 10 - Career Palace -->
-                    <div class="traditional-palace" id="trad-palace10">
+                    <!-- Palace 10 - Thiên Di (Travel) -->
+                    <div class="palace" id="palace10">
                         <div class="palace-header">
                             <span class="palace-number">10</span>
-                            <span class="palace-name-trad">官祿宮</span>
-                            <span class="palace-branch" id="branch10">酉</span>
+                            <span class="palace-name">Thiên Di</span>
+                            <span class="palace-branch" id="branch10">Dậu</span>
                         </div>
-                        <div class="palace-stars">
+                        <div class="stars-container">
                             <div class="main-stars" id="main-stars10"></div>
                             <div class="minor-stars" id="minor-stars10"></div>
                             <div class="auxiliary-stars" id="aux-stars10"></div>
                         </div>
                     </div>
                     
-                    <!-- Palace 9 - Travel Palace -->
-                    <div class="traditional-palace" id="trad-palace9">
+                    <!-- Palace 9 - Tật Ách (Illness) -->
+                    <div class="palace" id="palace9">
                         <div class="palace-header">
                             <span class="palace-number">9</span>
-                            <span class="palace-name-trad">遷移宮</span>
-                            <span class="palace-branch" id="branch9">申</span>
+                            <span class="palace-name">Tật Ách</span>
+                            <span class="palace-branch" id="branch9">Thân</span>
                         </div>
-                        <div class="palace-stars">
+                        <div class="stars-container">
                             <div class="main-stars" id="main-stars9"></div>
                             <div class="minor-stars" id="minor-stars9"></div>
                             <div class="auxiliary-stars" id="aux-stars9"></div>
                         </div>
                     </div>
                     
-                    <!-- Palace 8 - Friends Palace -->
-                    <div class="traditional-palace" id="trad-palace8">
+                    <!-- Palace 8 - Tử Tức (Children) -->
+                    <div class="palace" id="palace8">
                         <div class="palace-header">
                             <span class="palace-number">8</span>
-                            <span class="palace-name-trad">朋友宮</span>
-                            <span class="palace-branch" id="branch8">未</span>
+                            <span class="palace-name">Tử Tức</span>
+                            <span class="palace-branch" id="branch8">Mùi</span>
                         </div>
-                        <div class="palace-stars">
+                        <div class="stars-container">
                             <div class="main-stars" id="main-stars8"></div>
                             <div class="minor-stars" id="minor-stars8"></div>
                             <div class="auxiliary-stars" id="aux-stars8"></div>
                         </div>
                     </div>
                     
-                    <!-- Palace 7 - Property Palace -->
-                    <div class="traditional-palace" id="trad-palace7">
+                    <!-- Palace 7 - Phu Thê (Marriage) -->
+                    <div class="palace" id="palace7">
                         <div class="palace-header">
                             <span class="palace-number">7</span>
-                            <span class="palace-name-trad">田宅宮</span>
-                            <span class="palace-branch" id="branch7">午</span>
+                            <span class="palace-name">Phu Thê</span>
+                            <span class="palace-branch" id="branch7">Ngọ</span>
                         </div>
-                        <div class="palace-stars">
+                        <div class="stars-container">
                             <div class="main-stars" id="main-stars7"></div>
                             <div class="minor-stars" id="minor-stars7"></div>
                             <div class="auxiliary-stars" id="aux-stars7"></div>
                         </div>
                     </div>
                     
-                    <!-- Palace 6 - Happiness Palace -->
-                    <div class="traditional-palace" id="trad-palace6">
+                    <!-- Palace 6 - Huynh Đệ (Siblings) -->
+                    <div class="palace" id="palace6">
                         <div class="palace-header">
                             <span class="palace-number">6</span>
-                            <span class="palace-name-trad">福德宮</span>
-                            <span class="palace-branch" id="branch6">巳</span>
+                            <span class="palace-name">Huynh Đệ</span>
+                            <span class="palace-branch" id="branch6">Tỵ</span>
                         </div>
-                        <div class="palace-stars">
-<div class="palace-stars">
+                        <div class="stars-container">
                             <div class="main-stars" id="main-stars6"></div>
                             <div class="minor-stars" id="minor-stars6"></div>
                             <div class="auxiliary-stars" id="aux-stars6"></div>
                         </div>
                     </div>
                 </div>
+                
+                <div class="chart-footer">
+                    <p>Based on Vietnamese Ziwei Doushu tradition</p>
+                </div>
             </div>
             
-            <div class="interpretation" id="tradInterpretation" style="display: none;">
-                <h2>Traditional Chart Interpretation</h2>
-                <div id="tradInterpretationContent"></div>
+            <div class="chart-view" id="interpretationView">
+                <div class="interpretation-container" id="interpretation">
+                    <!-- Interpretation content will be inserted here -->
+                </div>
             </div>
         </div>
         
         <footer>
-            <p>Note: This is a simplified version of Ziwei Doushu calculation for educational purposes only. For a complete and accurate reading, please consult a professional astrologer.</p>
-            <p>&copy; 2025 Ziwei Doushu Calculator</p>
+            <p>Ziwei Doushu (Purple Star Astrology) is a traditional Chinese/Vietnamese divination system. This calculator is for educational purposes only.</p>
+            <p>&copy; 2025 Vietnamese Ziwei Doushu Calculator</p>
         </footer>
     </div>
 
     <script>
-        // Function to navigate between pages
-        function navigateTo(page) {
-            if (page === 'simple') {
-                document.getElementById('simple-calculator').style.display = 'block';
-                document.getElementById('traditional-calculator').style.display = 'none';
-                document.getElementById('nav-simple').classList.add('active');
-                document.getElementById('nav-traditional').classList.remove('active');
-            } else if (page === 'traditional') {
-                document.getElementById('simple-calculator').style.display = 'none';
-                document.getElementById('traditional-calculator').style.display = 'block';
-                document.getElementById('nav-simple').classList.remove('active');
-                document.getElementById('nav-traditional').classList.add('active');
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-            // Simple Chart Variables
+            // DOM Elements
             const birthForm = document.getElementById('birthForm');
             const loading = document.getElementById('loading');
             const chartContainer = document.getElementById('chartContainer');
-            const interpretation = document.getElementById('interpretation');
             const errorMessage = document.getElementById('errorMessage');
+            const chartTabs = document.querySelectorAll('.chart-tab');
+            const chartViews = document.querySelectorAll('.chart-view');
             
-            // Traditional Chart Variables
-            const traditionalForm = document.getElementById('traditionalForm');
-            const tradLoading = document.getElementById('tradLoading');
-            const tradChartContainer = document.getElementById('tradChartContainer');
-            const tradInterpretation = document.getElementById('tradInterpretation');
-            const tradErrorMessage = document.getElementById('tradErrorMessage');
+            // Vietnamese Constants
+            const vnBranches = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
+            const vnStems = ['Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ', 'Canh', 'Tân', 'Nhâm', 'Quý'];
+            const vnMonths = ['Giêng', 'Hai', 'Ba', 'Tư', 'Năm', 'Sáu', 'Bảy', 'Tám', 'Chín', 'Mười', 'Một', 'Chạp'];
+            const vnHours = ['Tý (23-1h)', 'Sửu (1-3h)', 'Dần (3-5h)', 'Mão (5-7h)', 'Thìn (7-9h)', 'Tỵ (9-11h)', 
+                           'Ngọ (11-13h)', 'Mùi (13-15h)', 'Thân (15-17h)', 'Dậu (17-19h)', 'Tuất (19-21h)', 'Hợi (21-23h)'];
             
-            // Heavenly Stems and Earthly Branches
-            const heavenlyStems = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
-            const earthlyBranches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-            const branchNames = ['Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake', 
-                                'Horse', 'Goat', 'Monkey', 'Rooster', 'Dog', 'Pig'];
-            
-            // Main stars
+            // Star Lists
             const mainStars = [
-                "紫微星 (Emperor Star)",
-                "天機星 (Advisor Star)",
-                "太陽星 (Sun Star)",
-                "武曲星 (General Star)",
-                "天同星 (Harmony Star)",
-                "廉貞星 (Integrity Star)",
-                "天府星 (Wealth Star)",
-                "太陰星 (Moon Star)",
-                "貪狼星 (Greedy Wolf Star)",
-                "巨門星 (Giant Gate Star)",
-                "天相星 (Minister Star)",
-                "天梁星 (Bridge Star)",
-                "七殺星 (Seven Killings Star)",
-                "破軍星 (Destroyer Star)"
+                { vi: "Tử Vi", en: "Emperor Star", element: "wood" },
+                { vi: "Thiên Cơ", en: "Advisor Star", element: "wood" },
+                { vi: "Thái Dương", en: "Sun Star", element: "fire" },
+                { vi: "Vũ Khúc", en: "General Star", element: "metal" },
+                { vi: "Thiên Đồng", en: "Harmony Star", element: "water" },
+                { vi: "Liêm Trinh", en: "Integrity Star", element: "fire" },
+                { vi: "Thiên Phủ", en: "Wealth Star", element: "water" },
+                { vi: "Thái Âm", en: "Moon Star", element: "water" },
+                { vi: "Tham Lang", en: "Greedy Wolf Star", element: "water" },
+                { vi: "Cự Môn", en: "Giant Gate Star", element: "water" },
+                { vi: "Thiên Tướng", en: "Minister Star", element: "earth" },
+                { vi: "Thiên Lương", en: "Bridge Star", element: "earth" },
+                { vi: "Thất Sát", en: "Seven Killings Star", element: "metal" },
+                { vi: "Phá Quân", en: "Destroyer Star", element: "metal" }
             ];
             
-            // Vietnamese Traditional Star Names
-            const vietnameseMainStars = [
-                "紫微 (Tử Vi)", // Emperor Star
-                "天機 (Thiên Cơ)", // Advisor Star
-                "太陽 (Thái Dương)", // Sun Star
-                "武曲 (Vũ Khúc)", // General Star
-                "天同 (Thiên Đồng)", // Harmony Star
-                "廉貞 (Liêm Trinh)", // Integrity Star
-                "天府 (Thiên Phủ)", // Wealth Star
-                "太陰 (Thái Âm)", // Moon Star
-                "貪狼 (Tham Lang)", // Greedy Wolf Star
-                "巨門 (Cự Môn)", // Giant Gate Star
-                "天相 (Thiên Tướng)", // Minister Star
-                "天梁 (Thiên Lương)", // Bridge Star
-                "七殺 (Thất Sát)", // Seven Killings Star
-                "破軍 (Phá Quân)"  // Destroyer Star
-            ];
-
-            const vietnameseMinorStars = [
-                "左輔 (Tả Phụ)", // Left Assistant
-                "右弼 (Hữu Bật)", // Right Assistant
-                "文曲 (Văn Khúc)", // Literary Star
-                "文昌 (Văn Xương)", // Literary Brilliance
-                "天魁 (Thiên Khôi)", // Leader Star
-                "天鉞 (Thiên Việt)", // Authority Star
-                "擎羊 (Kình Dương)", // Ram Star
-                "陀羅 (Đà La)", // Heavy Star
-                "火星 (Hỏa Tinh)", // Fire Star
-                "鈴星 (Linh Tinh)", // Spiritual Star
-                "天空 (Thiên Không)", // Empty Space Star
-                "地劫 (Địa Kiếp)"  // Earth Calamity Star
-            ];
-            
-            const vietnameseAuxiliaryStars = [
-                "化祿 (Hóa Lộc)", // Wealth Transformation
-                "化權 (Hóa Quyền)", // Power Transformation
-                "化科 (Hóa Khoa)", // Scholarly Transformation
-                "化忌 (Hóa Kỵ)", // Taboo Transformation
-                "天馬 (Thiên Mã)", // Heavenly Horse
-                "红鸾 (Hồng Loan)", // Red Phoenix
-                "天喜 (Thiên Hỉ)", // Heavenly Joy
-                "孤辰 (Cô Thần)", // Lonely Star
-                "寡宿 (Quả Tú)"  // Widow Star
-            ];
-            
-            // Simplified calculation of Ming Palace (Life Palace)
-            function calculateMingPalace(month, day, hour) {
-                // This is a simplified calculation
-                let mingPosition = (month * 2 + day / 3 + hour / 2) % 12;
-                return Math.floor(mingPosition) || 1; // Default to 1 if calculation gives 0
-            }
-            
-            // Calculate Chinese zodiac sign based on birth year
-            function calculateChineseZodiac(year) {
-                const startYear = 1900; // Year of the Rat
-                const offset = (year - startYear) % 12;
-                return branchNames[offset];
-            }
-            
-            // Calculate the Heavenly Stem and Earthly Branch for a year
-            function calculateStemBranch(year) {
-                const stemIndex = (year - 4) % 10;
-                const branchIndex = (year - 4) % 12;
-                
-                return {
-                    stem: heavenlyStems[stemIndex],
-                    branch: earthlyBranches[branchIndex],
-                    branchName: branchNames[branchIndex]
-                };
-            }
-            
-            // Distribute main stars to palaces (simplified)
-            function distributeMainStars(mingPalace) {
-                const palaceStars = {};
-                
-                // Initialize all palaces with empty arrays
-                for (let i = 1; i <= 12; i++) {
-                    palaceStars[i] = [];
-                }
-                
-                // Simplified distribution based on Ming Palace
-                palaceStars[mingPalace].push(mainStars[0]); // Emperor Star in Ming Palace
-                palaceStars[(mingPalace + 4) % 12 || 12].push(mainStars[1]); // Advisor Star
-                palaceStars[(mingPalace + 7) % 12 || 12].push(mainStars[2]); // Sun Star
-                palaceStars[(mingPalace + 8) % 12 || 12].push(mainStars[7]); // Moon Star
-                palaceStars[(mingPalace + 2) % 12 || 12].push(mainStars[8]); // Greedy Wolf Star
-                palaceStars[(mingPalace + 6) % 12 || 12].push(mainStars[13]); // Destroyer Star
-                
-                return palaceStars;
-            }
-            
-            // Distribute traditional stars to palaces (Vietnamese style)
-            function distributeTraditionalStars(mingPalace) {
-                const tradPalaceStars = {
-                    main: {},
-                    minor: {},
-                    auxiliary: {}
-                };
-                
-                // Initialize all palaces with empty arrays
-                for (let i = 1; i <= 12; i++) {
-                    tradPalaceStars.main[i] = [];
-                    tradPalaceStars.minor[i] = [];
-                    tradPalaceStars.auxiliary[i] = [];
-                }
-                
-                // Main stars distribution (simplified for demonstration)
-                tradPalaceStars.main[mingPalace].push(vietnameseMainStars[0]); // Emperor Star in Ming Palace
-                tradPalaceStars.main[(mingPalace + 4) % 12 || 12].push(vietnameseMainStars[1]); // Advisor Star
-                tradPalaceStars.main[(mingPalace + 7) % 12 || 12].push(vietnameseMainStars[2]); // Sun Star
-                tradPalaceStars.main[(mingPalace + 8) % 12 || 12].push(vietnameseMainStars[7]); // Moon Star
-                tradPalaceStars.main[(mingPalace + 2) % 12 || 12].push(vietnameseMainStars[8]); // Greedy Wolf Star
-                tradPalaceStars.main[(mingPalace + 6) % 12 || 12].push(vietnameseMainStars[13]); // Destroyer Star
-                
-                // Minor stars distribution (simplified)
-                tradPalaceStars.minor[mingPalace].push(vietnameseMinorStars[0]); // Left Assistant
-                tradPalaceStars.minor[(mingPalace + 6) % 12 || 12].push(vietnameseMinorStars[1]); // Right Assistant
-                tradPalaceStars.minor[(mingPalace + 3) % 12 || 12].push(vietnameseMinorStars[2]); // Literary Star
-                tradPalaceStars.minor[(mingPalace + 9) % 12 || 12].push(vietnameseMinorStars[3]); // Literary Brilliance
-                
-                // Auxiliary stars distribution (simplified)
-                tradPalaceStars.auxiliary[mingPalace].push(vietnameseAuxiliaryStars[0]); // Wealth Transformation
-                tradPalaceStars.auxiliary[(mingPalace + 1) % 12 || 12].push(vietnameseAuxiliaryStars[1]); // Power Transformation
-                tradPalaceStars.auxiliary[(mingPalace + 2) % 12 || 12].push(vietnameseAuxiliaryStars[2]); // Scholarly Transformation
-                
-                return tradPalaceStars;
-            }
-            
-            // Generate basic interpretation based on chart
-            function generateInterpretation(birthInfo, palaceStars) {
-                let interpretation = `<p><strong>Birth Year:</strong> ${birthInfo.year} - Year of the ${birthInfo.zodiac}</p>`;
-                interpretation += `<p><strong>Heavenly Stem and Earthly Branch:</strong> ${birthInfo.stemBranch.stem}${birthInfo.stemBranch.branch} (${birthInfo.stemBranch.branchName} Year)</p>`;
-                interpretation += `<p><strong>Life Palace Position:</strong> ${birthInfo.mingPalace}</p>`;
-                
-                interpretation += `<h3>Key Palace Interpretations:</h3>`;
-                
-                // Life Palace
-                interpretation += `<h4>Life Palace (命宮)</h4>`;
-                interpretation += `<p>The Life Palace represents your overall personality, appearance, and general destiny. `;
-                if (palaceStars[birthInfo.mingPalace].includes(mainStars[0])) {
-                    interpretation += `With the Emperor Star in your Life Palace, you may have a noble presence and leadership qualities. You tend to be respected by others and have good self-discipline.`;
-                } else {
-                    interpretation += `Your Life Palace contains ${palaceStars[birthInfo.mingPalace].length > 0 ? palaceStars[birthInfo.mingPalace].join(", ") : "no major stars"}, suggesting ${palaceStars[birthInfo.mingPalace].length > 0 ? "influences related to these energies" : "a more balanced and moderate personality"}.`;
-                }
-                interpretation += `</p>`;
-                
-                // Career Palace
-                const careerPalace = 4;
-                interpretation += `<h4>Career Palace (事業宮)</h4>`;
-                interpretation += `<p>The Career Palace indicates your professional life, achievements, and social status. `;
-                if (palaceStars[careerPalace].length > 0) {
-                    interpretation += `Your Career Palace contains ${palaceStars[careerPalace].join(", ")}, suggesting potential for ${palaceStars[careerPalace].includes(mainStars[0]) ? "leadership roles and high achievement" : "varied career experiences with both challenges and opportunities"}.`;
-                } else {
-                    interpretation += `Your Career Palace contains no major stars, suggesting a stable but potentially unremarkable career path that may require extra effort to achieve significant success.`;
-                }
-                interpretation += `</p>`;
-                
-                // Fortune Palace
-                const fortunePalace = 3;
-                interpretation += `<h4>Fortune Palace (財帛宮)</h4>`;
-                interpretation += `<p>The Fortune Palace relates to wealth, financial prospects, and material possessions. `;
-                if (palaceStars[fortunePalace].includes(mainStars[6])) {
-                    interpretation += `With the Wealth Star in your Fortune Palace, you may have good opportunities for financial abundance and steady wealth accumulation.`;
-                } else if (palaceStars[fortunePalace].length > 0) {
-                    interpretation += `Your Fortune Palace contains ${palaceStars[fortunePalace].join(", ")}, suggesting ${palaceStars[fortunePalace].includes(mainStars[13]) ? "potential financial volatility with both gains and losses" : "moderate financial prospects with effort-based rewards"}.`;
-                } else {
-                    interpretation += `Your Fortune Palace contains no major stars, suggesting that wealth accumulation may require consistent effort and prudent management.`;
-                }
-                interpretation += `</p>`;
-                
-                // Disclaimer
-                interpretation += `<p><em>Note: This is a simplified interpretation based on a basic calculation. A complete Ziwei Doushu reading would involve many more stars, palace relationships, and personal factors.</em></p>`;
-                
-                return interpretation;
-            }
-            
-            // Simple chart form submission
-            birthForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Get form values
-                const year = parseInt(document.getElementById('birthYear').value);
-                const month = parseInt(document.getElementById('birthMonth').value);
-                const day = parseInt(document.getElementById('birthDay').value);
-                const hour = parseInt(document.getElementById('birthHour').value);
-                const minute = parseInt(document.getElementById('birthMinute').value);
-                const gender = document.getElementById('gender').value;
-                
-                // Validate inputs
-                if (year < 1900 || year > 2100) {
-                    errorMessage.textContent = "Please enter a year between 1900 and 2100";
-                    return;
-                }
-                
-                if (day < 1 || day > 31) {
-                    errorMessage.textContent = "Please enter a valid day of the month";
-                    return;
-                }
-                
-                // Clear previous error
-                errorMessage.textContent = "";
-                
-                // Show loading
-                loading.style.display = 'block';
-                
-                // Simulate calculation delay
-                setTimeout(function() {
-                    try {
-                        // Calculate Ming Palace (simplified)
-                        const mingPalace = calculateMingPalace(month, day, hour);
-                        
-                        // Calculate Chinese zodiac
-                        const zodiac = calculateChineseZodiac(year);
-                        
-                        // Calculate Heavenly Stem and Earthly Branch
-                        const stemBranch = calculateStemBranch(year);
-                        
-                        // Birth information to display in the center
-                        const birthInfo = {
-                            year,
-                            month,
-                            day,
-                            hour,
-                            minute,
-                            gender,
-                            zodiac,
-                            stemBranch,
-                            mingPalace
-                        };
-                        
-                        // Distribute main stars (simplified)
-                        const palaceStars = distributeMainStars(mingPalace);
-                        
-                        // Display birth information in the center
-                        document.getElementById('birthInfo').innerHTML = `
-                            <p><strong>Date:</strong> ${month}/${day}/${year}</p>
-                            <p><strong>Time:</strong> ${hour}:${minute < 10 ? '0' + minute : minute}</p>
-                            <p><strong>Gender:</strong> ${gender.charAt(0).toUpperCase() + gender.slice(1)}</p>
-                            <p><strong>Zodiac:</strong> ${zodiac}</p>
-                        `;
-                        
-                        // Display stars in palaces
-                        for (let i = 1; i <= 12; i++) {
-                            const palaceContent = document.getElementById(`palace${i}-content`);
-                            if (palaceContent) {
-                                if (palaceStars[i] && palaceStars[i].length > 0) {
-                                    palaceContent.innerHTML = palaceStars[i].join('<br>');
-                                } else {
-                                    palaceContent.innerHTML = "<em>No major stars</em>";
-                                }
-                                
-                                // Highlight Ming Palace
-                                if (i === mingPalace) {
-                                    document.getElementById(`palace${i}`).style.backgroundColor = "#e1bee7";
-                                    document.getElementById(`palace${i}`).style.borderColor = "#9c27b0";
-                                    palaceContent.innerHTML = "<strong>Ming Palace</strong><br>" + palaceContent.innerHTML;
-                                } else {
-                                    document.getElementById(`palace${i}`).style.backgroundColor = "";
-                                    document.getElementById(`palace${i}`).style.borderColor = "";
-                                }
-                            }
-                        }
-                        
-                        // Generate and display interpretation
-                        const interpretationText = generateInterpretation(birthInfo, palaceStars);
-                        document.getElementById('interpretationContent').innerHTML = interpretationText;
-                        
-                        // Show chart and interpretation
-                        chartContainer.style.display = 'block';
-                        interpretation.style.display = 'block';
-                        
-                        // Scroll to chart
-                        chartContainer.scrollIntoView({ behavior: 'smooth' });
-                    } catch (err) {
-                        errorMessage.textContent = "An error occurred while calculating. Please check your inputs and try again.";
-                        console.error(err);
-                    } finally {
-                        // Hide loading
-                        loading.style.display = 'none';
-                    }
-                }, 1500); // Simulated delay for calculation
-            });
-            
-            // Traditional chart form submission
-            traditionalForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Get form values
-                const year = parseInt(document.getElementById('tradBirthYear').value);
-                const month = parseInt(document.getElementById('tradBirthMonth').value);
-                const day = parseInt(document.getElementById('tradBirthDay').value);
-                const hour = parseInt(document.getElementById('tradBirthHour').value);
-                const minute = parseInt(document.getElementById('tradBirthMinute').value);
-                const gender = document.getElementById('tradGender').value;
-                
-                // Validate inputs
-                if (year < 1900 || year > 2100) {
-                    tradErrorMessage.textContent = "Please enter a year between 1900 and 2100";
-                    return;
-                }
-                
-                if (day < 1 || day > 31) {
-                    tradErrorMessage.textContent = "Please enter a valid day of the month";
-                    return;
-                }
-                
-                // Clear previous error
-                tradErrorMessage.textContent = "";
-                
-                // Show loading
-                tradLoading.style.display = 'block';
-                
-                // Simulate calculation delay
-                setTimeout(function() {
-                    try {
-                        // Calculate Ming Palace (simplified)
-                        const mingPalace = calculateMingPalace(month, day, hour);
-                        
-                        // Calculate Chinese zodiac
-                        const zodiac = calculateChineseZodiac(year);
-                        
-                        // Calculate Heavenly Stem and Earthly Branch
-                        const stemBranch = calculateStemBranch(year);
-                        
-                        // Birth information for the traditional chart
-                        document.getElementById('trad-year').textContent = `${stemBranch.stem}${stemBranch.branch}`;
-                        document.getElementById('trad-month').textContent = `${month}月`;
-                        document.getElementById('trad-day').textContent = `${day}日`;
-                        document.getElementById('trad-hour').textContent = `${earthlyBranches[hour % 12]}時`;
-                        document.getElementById('trad-gender-info').textContent = `${gender === 'male' ? 'Male (陽造)' : 'Female (陰造)'}`;
-                        
-                        // Distribute traditional stars
-                        const tradPalaceStars = distributeTraditionalStars(mingPalace);
-                        
-                        // Display stars in traditional palaces
-                        for (let i = 1; i <= 12; i++) {
-                            // Set the earthly branch for each palace
-                            const branchElement = document.getElementById(`branch${i}`);
-                            if (branchElement) {
-                                branchElement.textContent = earthlyBranches[(i - 1) % 12];
-                            }
-                            
-                            // Main stars
-                            const mainStarsElement = document.getElementById(`main-stars${i}`);
-                            if (mainStarsElement) {
-                                if (tradPalaceStars.main[i] && tradPalaceStars.main[i].length > 0) {
-                                    mainStarsElement.innerHTML = tradPalaceStars.main[i].join('<br>');
-                                } else {
-                                    mainStarsElement.innerHTML = "";
-                                }
-                            }
-                            
-                            // Minor stars
-                            const minorStarsElement = document.getElementById(`minor-stars${i}`);
-                            if (minorStarsElement) {
-                                if (tradPalaceStars.minor[i] && tradPalaceStars.minor[i].length > 0) {
-                                    minorStarsElement.innerHTML = tradPalaceStars.minor[i].join('<br>');
-                                } else {
-                                    minorStarsElement.innerHTML = "";
-                                }
-                            }
-                            
-                            // Auxiliary stars
-                            const auxStarsElement = document.getElementById(`aux-stars${i}`);
-                            if (auxStarsElement) {
-                                if (tradPalaceStars.auxiliary[i] && tradPalaceStars.auxiliary[i].length > 0) {
-                                    auxStarsElement.innerHTML = tradPalaceStars.auxiliary[i].join('<br>');
-                                } else {
-                                    auxStarsElement.innerHTML = "";
-                                }
-                            }
-                            
-                            // Highlight Ming Palace in the traditional chart
-                            if (i === mingPalace) {
-                                document.getElementById(`trad-palace${i}`).style.backgroundColor = "#f3e5f5";
-                                // Add Ming Palace indicator
-                                if (mainStarsElement) {
-                                    mainStarsElement.innerHTML = "<strong>命宮 (Ming Palace)</strong><br>" + mainStarsElement.innerHTML;
-                                }
-                            } else {
-                                document.getElementById(`trad-palace${i}`).style.backgroundColor = "";
-                            }
-                        }
-                        
-                        // Show chart
-                        tradChartContainer.style.display = 'block';
-                        
-                        // Scroll to chart
-                        tradChartContainer.scrollIntoView({ behavior: 'smooth' });
-                    } catch (err) {
-                        tradErrorMessage.textContent = "An error occurred while calculating. Please check your inputs and try again.";
-                        console.error(err);
-                    } finally {
-                        // Hide loading
-                        tradLoading.style.display = 'none';
-                    }
-                }, 1500); // Simulated delay for calculation
-            });
-        });
-    </script>
-</body>
-</html>
+            const minorStars = [
+                { vi: "Tả Phụ", en: "Left Assistant", type: "support" },
+                { vi: "Hữu Bật", en: "Right Assistant", type: "support" },
