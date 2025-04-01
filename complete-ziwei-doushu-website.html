@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ziwei Doushu Calculator</title>
+    <style>
+        :root {
+            --primary-color: #673ab7;
+            --secondary-color: #9c27b0;
+            --accent-color: #e1bee7;
+            --background-color: #f5f5f5;
+            --chart-border: #d1c4e9;
+            --text-color: #333;
+            --nav-active: #673ab7;
+            --nav-inactive: #9e9e9e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .description {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 20px auto;
+            width: 200px;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .chart-container {
+            display: none;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .chart {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 3px;
+            margin: 20px auto;
+            max-width: 900px;
+        }
+        
+        .palace {
+            border: 2px solid var(--chart-border);
+            padding: 15px;
+            border-radius: 4px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+        
+        .palace-name {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .palace-content {
+            font-size: 14px;
+        }
+        
+        .center-info {
+            grid-column: 2 / span 2;
+            grid-row: 2;
+            background-color: var(--accent-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+        }
+        
+        .center-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .interpretation {
+            margin-top: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            color: red;
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-item {
+            padding: 15px 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            color: var(--nav-inactive);
+        }
+        
+        .nav-item.active {
+            color: var(--nav-active);
+            border-bottom: 3px solid var(--nav-active);
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(0,0,0,0.03);
+        }
+        
+        /* Traditional Chart Styles */
+        .traditional-chart {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 1px;
+            border: 2px solid #888;
+            background-color: #888;
+            margin: 20px auto;
+            max-width: 900px;
+        }
+        
+        .traditional-palace {
+            background-color: white;
+            padding: 10px;
+            min-height: 160px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .palace-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .palace-number {
+            color: #888;
+        }
+        
+        .palace-name-trad {
+            color: var(--primary-color);
+        }
+        
+        .palace-branch {
+            color: #d32f2f;
+        }
+        
+        .palace-stars {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            font-size: 13px;
+        }
+        
+        .main-stars {
+            color: #d32f2f;
+            margin-bottom: 5px;
+        }
+        
+        .minor-stars {
+            color: #1976d2;
+        }
+        
+        .auxiliary-stars {
+            color: #388e3c;
+            margin-top: 5px;
+        }
+        
+        .traditional-center {
+            grid-column: 2 / span 2;
+            grid-row: 2;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .center-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .birth-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .detail-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .detail-value {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .chart {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(6, 1fr);
+            }
+            
+            .center-info {
+                grid-column: 1 / span 2;
+                grid-row: 3 / span 2;
+            }
+            
+            .palace {
+                min-height: 120px;
+            }
+            
+            .nav-item {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .traditional-chart {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(6, 1fr);
+            }
+            
+            .traditional-center {
+                grid-column: 1 / span 2;
+                grid-row: 3 / span 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ziwei Doushu Calculator</h1>
+            <h2>Purple Star Astrology</h2>
+        </header>
+        
+        <div class="navigation">
+            <div id="nav-simple" class="nav-item active" onclick="navigateTo('simple')">Simple Chart</div>
+            <div id="nav-traditional" class="nav-item" onclick="navigateTo('traditional')">Traditional Chart</div>
+        </div>
+        
+        <!-- Simple Chart Section -->
+        <div id="simple-calculator">
+            <div class="description">
+                <p>Ziwei Doushu (紫微斗數) is an ancient Chinese astrological system that creates a personalized chart based on your birth date and time. Input your information below to generate your basic chart.</p>
+            </div>
+            
+            <div class="form-container">
+                <form id="birthForm">
+                    <div class="form-group">
+                        <label for="birthYear">Birth Year (Gregorian Calendar):</label>
+                        <input type="number" id="birthYear" min="1900" max="2100" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="birthMonth">Birth Month:</label>
+                        <select id="birthMonth" required>
+                            <option value="">Select Month</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="birthDay">Birth Day:</label>
+                        <input type="number" id="birthDay" min="1" max="31" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="birthHour">Birth Hour (24-hour format):</label>
+                        <input type="number" id="birthHour" min="0" max="23" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="birthMinute">Birth Minute:</label>
+                        <input type="number" id="birthMinute" min="0" max="59" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gender">Gender:</label>
+                        <select id="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" id="calculateBtn">Calculate Chart</button>
+                </form>
+                
+                <div class="error" id="errorMessage"></div>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Calculating your chart...</p>
+                </div>
+            </div>
+            
+            <div class="chart-container" id="chartContainer">
+                <h2>Your Ziwei Doushu Chart</h2>
+                
+                <div class="chart">
+                    <!-- Life (Ming) Palace -->
+                    <div class="palace" id="palace1">
+                        <div class="palace-name">Life Palace (命宮)</div>
+                        <div class="palace-content" id="palace1-content"></div>
+                    </div>
+                    
+                    <!-- Parents Palace -->
+                    <div class="palace" id="palace2">
+                        <div class="palace-name">Parents Palace (父母宮)</div>
+                        <div class="palace-content" id="palace2-content"></div>
+                    </div>
+                    
+                    <!-- Fortune Palace -->
+                    <div class="palace" id="palace3">
+                        <div class="palace-name">Fortune Palace (財帛宮)</div>
+                        <div class="palace-content" id="palace3-content"></div>
+                    </div>
+                    
+                    <!-- Career Palace -->
+                    <div class="palace" id="palace4">
+                        <div class="palace-name">Career Palace (事業宮)</div>
+                        <div class="palace-content" id="palace4-content"></div>
+                    </div>
+                    
+                    <!-- Marriage Palace -->
+                    <div class="palace" id="palace12">
+                        <div class="palace-name">Marriage Palace (夫妻宮)</div>
+                        <div class="palace-content" id="palace12-content"></div>
+                    </div>
+                    
+                    <!-- Center Info -->
+                    <div class="center-info" id="centerInfo">
+                        <div class="center-name">Birth Info</div>
+                        <div id="birthInfo"></div>
+                    </div>
+                    
+                    <!-- Children Palace -->
+                    <div class="palace" id="palace5">
+                        <div class="palace-name">Children Palace (子女宮)</div>
+                        <div class="palace-content" id="palace5-content"></div>
+                    </div>
+                    
+                    <!-- Health Palace -->
+                    <div class="palace" id="palace11">
+                        <div class="palace-name">Health Palace (疾厄宮)</div>
+                        <div class="palace-content" id="palace11-content"></div>
+                    </div>
+                    
+                    <!-- Travel Palace -->
+                    <div class="palace" id="palace10">
+                        <div class="palace-name">Travel Palace (遷移宮)</div>
+                        <div class="palace-content" id="palace10-content"></div>
+                    </div>
+                    
+                    <!-- Friends Palace -->
+                    <div class="palace" id="palace9">
+                        <div class="palace-name">Friends Palace (朋友宮)</div>
+                        <div class="palace-content" id="palace9-content"></div>
+                    </div>
+                    
+                    <!-- Property Palace -->
+                    <div class="palace" id="palace8">
+                        <div class="palace-name">Property Palace (田宅宮)</div>
+                        <div class="palace-content" id="palace8-content"></div>
+                    </div>
+                    
+                    <!-- Mental Palace -->
+                    <div class="palace" id="palace7">
+                        <div class="palace-name">Mental Palace (官祿宮)</div>
+                        <div class="palace-content" id="palace7-content"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="interpretation" id="interpretation">
+                <h2>Basic Interpretation</h2>
+                <div id="interpretationContent"></div>
+            </div>
+        </div>
+        
+        <!-- Traditional Chart Section -->
+        <div id="traditional-calculator" style="display: none;">
+            <div class="description">
+                <p>This traditional Ziwei Doushu chart follows the Vietnamese format, displaying main stars (red), minor stars (blue), and auxiliary stars (green) in each palace. Enter your birth information to generate a detailed traditional chart.</p>
+            </div>
+            
+            <div class="form-container">
+                <form id="traditionalForm">
+                    <div class="form-group">
+                        <label for="tradBirthYear">Birth Year (Gregorian Calendar):</label>
+                        <input type="number" id="tradBirthYear" min="1900" max="2100" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tradBirthMonth">Birth Month:</label>
+                        <select id="tradBirthMonth" required>
+                            <option value="">Select Month</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tradBirthDay">Birth Day:</label>
+                        <input type="number" id="tradBirthDay" min="1" max="31" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tradBirthHour">Birth Hour (24-hour format):</label>
+                        <input type="number" id="tradBirthHour" min="0" max="23" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tradBirthMinute">Birth Minute:</label>
+                        <input type="number" id="tradBirthMinute" min="0" max="59" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tradGender">Gender:</label>
+                        <select id="tradGender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" id="tradCalculateBtn">Calculate Traditional Chart</button>
+                </form>
+                
+                <div class="error" id="tradErrorMessage"></div>
+                
+                <div class="loading" id="tradLoading">
+                    <div class="spinner"></div>
+                    <p>Calculating your traditional chart...</p>
+                </div>
+            </div>
+            
+            <div class="chart-container" id="tradChartContainer">
+                <h2>Traditional Ziwei Doushu Chart</h2>
+                
+                <div class="traditional-chart">
+                    <!-- Palace 1 - Life Palace -->
+                    <div class="traditional-palace" id="trad-palace1">
+                        <div class="palace-header">
+                            <span class="palace-number">1</span>
+                            <span class="palace-name-trad">命宮</span>
+                            <span class="palace-branch" id="branch1">子</span>
+                        </div>
+                        <div class="palace-stars">
+                            <div class="main-stars" id="main-stars1"></div>
+                            <div class="minor-stars" id="minor-stars1"></div>
+                            <div class="auxiliary-stars" id="aux-stars1"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Palace 2 - Siblings Palace -->
+                    <div class="traditional-palace" id="trad-palace2">
+                        <div class="palace-header">
+                            <span class="palace-number">2</span>
+                            <span class="palace-name-trad">兄弟宮</span>
+                            <span class="palace-branch" id="branch2">丑</span>
+                        </div>
+                        <div class="palace-stars">
+                            <div class="main-stars" id="main-stars2"></div>
+                            <div class="minor-stars" id="minor-stars2"></div>
+                            <div class="auxiliary-stars" id="aux-stars2"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Palace 3 - Spouse Palace -->
+                    <div class="traditional-palace" id="trad-palace3">
+                        <div class="palace-header">
+                            <span class="palace-number">3</span>
+                            <span class="palace-name-trad">夫妻宮</span>
+                            <span class="palace-branch" id="branch3">寅</span>
+                        </div>
+                        <div class="palace-stars">
+                            <div class="main-stars" id="main-stars3"></div>
+                            <div class="minor-stars" id="minor-stars3"></div>
+                            <div class="auxiliary-stars" id="aux-stars3"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Palace 4 - Children Palace -->
+                    <div class="traditional-palace" id="trad-palace4">
+                        <div class="palace-header">
+                            <span class="palace-number">4</span>
+                            <span class="palace-name-trad">子女宮</span>
+                            <span class="palace-branch" id="branch4">卯</span>
+                        </div>
+                        <div class="palace-stars">
+                            <div class="main-stars" id="main-stars4"></div>
+                            <div class="minor-stars" id="minor-stars4"></div>
+                            <div class="auxiliary-stars" id="aux-stars4"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Palace 12 - Wealth Palace -->
+                    <div class="traditional-palace" id="trad-palace12">
+                        <div class="palace-header">
+                            <span class="palace-number">12</span>
+                            <span class="palace-name-trad">財帛宮</span>
+                            <span class="palace-branch" id="branch12">亥</span>
+                        </div>
+                        <div class="palace-stars">
+                            <div class="main-stars" id="main-stars12"></div>
+                            <div class="minor-stars" id="minor-stars12"></div>
+                            <div class="auxiliary-stars" id="aux-stars12"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Center Information -->
+                    <div class="traditional-center" id="tradCenterInfo">
+                        <div class="center-title">Birth Information</div>
+                        <div class="birth-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Year</span>
+                                <span class="detail-value" id="trad-year">甲子</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Month</span>
+                                <span class="detail-value" id="trad-month">正月</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Day</span>
+                                <span class="detail-value" id="trad-day">初一</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Hour</span>
+                                <span class="detail-value" id="trad-hour">子時</span>
+                            </div>
+                        </div>
+                        <div id="trad-gender-info">Male (陽造)</div>
+                    </div>
+                    
+                    <!-- Palace 5 - Wealth Palace -->
+                    <div class="traditional-palace" id="trad-palace5">
+                        <div class="palace-header">
+                            <span class="palace-number">5</span>
+                            <span class="palace-name-trad">財帛宮</span>
+                            <span class="palace-branch" id="branch5">辰</span>
+                        </div>
+                        <div class="palace-stars">
+                            <div class="main-stars" id="main-stars5"></div>
+                            <div class="minor-stars" id="minor-stars5"></div>
+                            <div class="auxiliary-stars" id="aux-stars5"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Palace 11 - Illness Palace -->
+                    <div class="traditional-palace" id="trad-palace11">
+                        <div class="palace-header">
+                            <span class="palace-number">11</span>
+                            <span class="palace-name-trad">疾厄宮</span>
+                            <span class="palace-branch" id="branch11">戌</span>
+                        </div>
+                        <div class="palace-stars">
+                            <div class="main-stars" id="main-stars11"></div>
+                            <div class="minor-stars" id="minor-stars11"></div>
+                            <div class="auxiliary-stars" id="aux-stars11"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Palace 10 - Career Palace -->
+                    <div class="traditional-palace" id="trad-palace10">
+                        <div class="palace-header">
+                            <span class="palace-number">10</span>
+                            <span class="palace-name-trad">官祿宮</span>
+                            <span class="palace-branch" id="branch10">酉</span>
+                        </div>
+                        <div class="palace-stars">
+                            <div class="main-stars" id="main-stars10"></div>
+                            <div class="minor-stars" id="minor-stars10"></div>
+                            <div class="auxiliary-stars" id="aux-stars10"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Palace 9 - Travel Palace -->
+                    <div class="traditional-palace" id="trad-palace9">
+                        <div class="palace-header">
+                            <span class="palace-number">9</span>
+                            <span class="palace-name-trad">遷移宮</span>
+                            <span class="palace-branch" id="branch9">申</span>
+                        </div>
+                        <div class="palace-stars">
+                            <div class="main-stars" id="main-stars9"></div>
+                            <div class="minor-stars" id="minor-stars9"></div>
+                            <div class="auxiliary-stars" id="aux-stars9"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Palace 8 - Friends Palace -->
+                    <div class="traditional-palace" id="trad-palace8">
+                        <div class="palace-header">
+                            <span class="palace-number">8</span>
+                            <span class="palace-name-trad">朋友宮</span>
+                            <span class="palace-branch" id="branch8">未</span>
+                        </div>
+                        <div class="palace-stars">
+                            <div class="main-stars" id="main-stars8"></div>
+                            <div class="minor-stars" id="minor-stars8"></div>
+                            <div class="auxiliary-stars" id="aux-stars8"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Palace 7 - Property Palace -->
+                    <div class="traditional-palace" id="trad-palace7">
+                        <div class="palace-header">
+                            <span class="palace-number">7</span>
+                            <span class="palace-name-trad">田宅宮</span>
+                            <span class="palace-branch" id="branch7">午</span>
+                        </div>
+                        <div class="palace-stars">
+                            <div class="main-stars" id="main-stars7"></div>
+                            <div class="minor-stars" id="minor-stars7"></div>
+                            <div class="auxiliary-stars" id="aux-stars7"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Palace 6 - Happiness Palace -->
+                    <div class="traditional-palace" id="trad-palace6">
+                        <div class="palace-header">
+                            <span class="palace-number">6</span>
+                            <span class="palace-name-trad">福德宮</span>
+                            <span class="palace-branch" id="branch6">巳</span>
+                        </div>
+                        <div class="palace-stars">
+                            <div class="main-stars" id="main-stars6"></div>
+                            <div
